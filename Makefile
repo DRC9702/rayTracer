@@ -16,7 +16,7 @@ hw1:
 #Need to make sure make knows clean and all are not file namesl
 .PHONY: clean
 clean:
-	rm -f *.o a.out main
+	rm -f *.o a.out hw1 hw1.exr
 
 .PHONY: all
 all: clean main 

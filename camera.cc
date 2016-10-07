@@ -5,7 +5,6 @@
 
 //Constructor // Don't know how valid this is yet.
 
-
 camera::camera()
 {
  	eye = point();

@@ -316,10 +316,10 @@ int main (int argc, char *argv[])
     try{
     	int w = cam->nx;
     	int h = cam->ny;
-        Array2D<Rgba> p (w,h);
+        Array2D<Rgba> p (h,w);
         
-        for(int j=0; j < cam->nx; j++){
-    	for(int i=0; i < cam->ny; i++) {
+        for(int i=0; i < cam->ny; i++){
+    	for(int j=0; j < cam->nx; j++) {
     		int index = 0;
     		float minT = -1;
 			for(int k=0; k < surfaceList -> size(); k++){
@@ -328,7 +328,7 @@ int main (int argc, char *argv[])
 					minT = surfaceList -> at(k) -> intersectT(cam -> generateRayForPixel(i,j));
 				}
 			}
-    		Rgba &px = p[j][i];
+    		Rgba &px = p[i][j];
     		if(minT > 0)
     		{
     			px.r=1; px.g=0; px.b=0;
