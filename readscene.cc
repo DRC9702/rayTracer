@@ -132,7 +132,7 @@ void parseSceneFile (char *filnam)
             //
             case 's':
             {
-            	cout << "got a sphere" << endl;
+            	//cout << "got a sphere" << endl;
                 // it's a sphere, load in the parameters
                 
                 float x, y, z, r;
@@ -148,19 +148,21 @@ void parseSceneFile (char *filnam)
                 // So something like;
                 // mySphereClass *ms = new mySphereClass (x, y, z, r);   // make a new instance of your sphere class
                 sphere *ms = new sphere(x,y,z,r);
-            	cout << "Didn't die making a new sphere" << endl;
+            	//cout << "Didn't die making a new sphere" << endl;
                 // ms->setMaterial (lastMaterialLoaded)
-                ms->setMaterial(lastMaterialLoaded);
-                cout << "Didn't die loading last material" << endl;
+                //ms->setMaterial(lastMaterialLoaded);
+				ms->setMaterialIndex(materialList.size()-1); //Load into ms the index of the last stored material
+                //cout << "Didn't die loading last material" << endl;
                 // objectsList->push_back (ms);  // objectsList is a global std:vector<surface *> for example.
                 surfaceList.push_back(ms);
-            	cout << "Didn't die pushing sphere on surfaceList" << endl;
+            	//cout << "Didn't die pushing sphere on surfaceList" << endl;
                 
                 
 #ifdef IM_DEBUGGING
                 // if we're debugging, show what we got:
                 cout << "got a sphere with ";
                 cout << "parameters: " << x << " " << y << " " << z << " " << r << endl;
+				//cout << "Current material index: " << ms->getMaterialIndex() << endl;
 #endif
                 break;
             }
@@ -288,18 +290,18 @@ void writeRgba (const char fileName[], const Rgba *pixels, int width, int height
 int main (int argc, char *argv[])
 {
   
-    if (argc != 2) {
-        cerr << "useage: raytra scenefilename" << endl;
+    if (argc != 3) {
+        cerr << "useage: raytra scenefilename writefilename" << endl;
         return -1;
     }
-    cout << "no error before parsing" << endl;
+    //cout << "no error before parsing" << endl;
     parseSceneFile (argv[1]);
-    cout << cam.nx << "\t" << cam.ny << endl;
+    //cout << cam.nx << "\t" << cam.ny << endl;
     
     
     
     //cout << surfaceList -> at(0) -> intersectT(ray (0, 13.67, 0, 0, 0, -1)) << endl;
-	cout << surfaceList.at(0) -> intersectT(ray (0, 13.67, 0, 0, 0, -1)) << endl;
+	//cout << surfaceList.at(0) -> intersectT(ray (0, 13.67, 0, 0, 0, -1)) << endl;
     
 
     try{
@@ -308,41 +310,43 @@ int main (int argc, char *argv[])
         Array2D<Rgba> p (h,w);
 		p.resizeErase(h,w);
 
-		//int totalPixels = w*h;
-		//int currentPixelCount =0;
-        
+		cout << "Progress: |0|";
         for(int i=0; i < h; i++){
 			for(int j=0; j < w; j++) {
 				bool assigned = false;
 				int index = -1;
 				float minT = -1;
-				for(int k=0; k < surfaceList.size(); k++){
+				for(unsigned int k=0; k < surfaceList.size(); k++){
 					//We need to flip the y axis orientation because while our math uses a traditional x+ right, y+ up grid, the pixels are created with x+ right,y+ down
 					//In this loop, I will represent the pixel index from the bottom, so since we want pixel index from the top, we calculate our rays with (h-i)
-					if(	(!assigned && surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) > 0) || (assigned && surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) < minT)	){
+					//Another note: i is the vertical index, j is the horizontal index, so compared to the book, we must call generateRayForPixel with (j, h-i);
+					if(	(!assigned && surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) > 0) || (assigned && surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) < minT	&& surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) != -1	)	){
 						assigned=true;						
 						index = k;
 						minT = surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i));
 					}
 				}
 				Rgba &px = p[i][j]; 
-				if(index != -1)
+				if(assigned)
 				{
-					material *mat = surfaceList.at(index)->getMaterial();
+					material *mat = materialList.at(surfaceList.at(index)->getMaterialIndex());
 					px.r=mat->dr; px.g=mat->dg; px.b=mat->db;
-					//px.r=0.7; px.g=0; px.b=1;
 				}
 				else
 				{
 					px.r=0; px.g=0; px.b=0;
 				}
-				//currentPixelCount++;
-				//if(currentPixelCount%(totalPixels/100)==0)
-				//	cout << "|";
+
 			}
-    		writeRgba (((std::string(argv[1]))+".exr").c_str(), &p[0][0], w, h);
+    		writeRgba (argv[2], &p[0][0], w, h);
+			if(i%(h/10)==0 && i!=0)
+					cout << "|" << i/(h/10)*10 << "|" ;
 		}
-		cout << "Didn't die while editing the pixels." << endl;
+		cout << "|100|" << endl;
+
+
+
+		//cout << "Didn't die while editing the pixels." << endl;
 
 		cout << "Finished writing file" << endl;
 

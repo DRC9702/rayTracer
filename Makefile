@@ -6,8 +6,8 @@ CC = g++
 CFLAGS = -std=c++11
 #
 
-hw1: readscene.cpp
-	g++ -std=c++11 -g readscene.cpp *.cc -I. -I/usr/include/OpenEXR -I/usr/local/include/OpenEXR -lIlmImf -lImath -lHalf -L/usr/local/lib -Wall -o hw1
+prog_out: readscene.cc
+	g++ -g *.cc -I. -I/usr/include/OpenEXR -lIlmImf -lImath -lHalf -Wall -std=c++11 -o prog_out 
 
 #.PHONY: main
 #main:
@@ -16,7 +16,7 @@ hw1: readscene.cpp
 #Need to make sure make knows clean and all are not file namesl
 .PHONY: clean
 clean:
-	rm -f *.o a.out hw1 hw1.exr
+	rm -f *.o a.out prog_out *.exr
 
 .PHONY: all
 all: clean main 

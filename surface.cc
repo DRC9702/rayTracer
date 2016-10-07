@@ -5,16 +5,27 @@
 
 surface::surface()
 {
-	mat = new material();
+	//mat = new material();
+	materialIndex=0; //Default material
 }
 
-void surface::setMaterial(material* input_mat_p)
+//void surface::setMaterial(material* input_mat_p)
+//{
+//	mat = input_mat_p;
+//}
+//material* surface::getMaterial()
+//{
+//	return mat;
+//}
+
+void surface::setMaterialIndex(int n)
 {
-	mat = input_mat_p;
+	materialIndex = n;
 }
-material* surface::getMaterial()
+
+int surface::getMaterialIndex()
 {
-	return mat;
+	return materialIndex;
 }
 
 float surface::intersectT(ray r)
