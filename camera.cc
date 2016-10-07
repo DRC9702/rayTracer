@@ -25,9 +25,9 @@ camera::camera()
 camera::camera(point p, vector u, vector v, vector w, float d, int nx, int ny, float width, float height)
 {
 	eye = p;
-	this->u = u;
-	this->v = v;
-	this->w = w;
+	this->u = u.normalize();
+	this->v = v.normalize();
+	this->w = w.normalize();
 	this->d = d;
 	this->nx = nx;
 	this->ny = ny;
@@ -42,8 +42,8 @@ camera::camera(point p, vector inputDir, float d, int nx, int ny, float width, f
 	eye = p;
 	vector dir = inputDir.normalize();
 	u = dir.crossProduct(vector(0,1,0));
-	v = u.crossProduct(dir);
-	w = dir.negationVector();
+	v = u.crossProduct(dir).normalize();
+	w = dir.negationVector().normalize(); //I know this should already be normalized, but i'm being safe
 	this->d = d;
 	this->nx = nx;
 	this->ny = ny;
@@ -57,9 +57,9 @@ camera::camera(float x, float y, float z, float vx, float vy, float vz, float d,
 {
 	eye = point(x,y,z);
 	vector dir = vector(vx,vy,vz).normalize();
-	u = dir.crossProduct(vector(0,1,0));
-	v = u.crossProduct(dir);
-	w = dir.negationVector();
+	u = dir.crossProduct(vector(0,1,0)).normalize();
+	v = u.crossProduct(dir).normalize();
+	w = dir.negationVector().normalize();
 	this->d = d;
 	this->nx = nx;
 	this->ny = ny;
@@ -72,8 +72,8 @@ camera::camera(float x, float y, float z, float vx, float vy, float vz, float d,
 
 ray camera::generateRayForPixel(int i, int j)
 {
-	int su = l + (r-l)*(i+0.5)/nx;
-	int sv = b + (t-b)*(j+0.5)/ny;
+	float su = l + (r-l)*(i+0.5)/nx;
+	float sv = b + (t-b)*(j+0.5)/ny;
 	vector dir = ((w.scalarMultiply(-d)).add(u.scalarMultiply(su))).add(v.scalarMultiply(sv));
 	return ray(eye,dir);
 	//Ask the TA.

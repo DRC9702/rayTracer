@@ -6,7 +6,7 @@ CC = g++
 CFLAGS = -std=c++11
 #
 
-hw1:
+hw1: readscene.cpp
 	g++ -std=c++11 -g readscene.cpp *.cc -I. -I/usr/include/OpenEXR -I/usr/local/include/OpenEXR -lIlmImf -lImath -lHalf -L/usr/local/lib -Wall -o hw1
 
 #.PHONY: main

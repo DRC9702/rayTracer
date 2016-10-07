@@ -89,8 +89,9 @@ float getTokenAsFloat (string inString, int whichToken)
 //
 
 
-std::vector<surface*>* surfaceList = new std::vector<surface*>;
-camera* cam;
+std::vector<surface*> surfaceList = std::vector<surface*>();
+std::vector<material*> materialList = std::vector<material*>();
+camera cam;
 //material lastMaterialLoaded;
 
 void parseSceneFile (char *filnam)
@@ -111,6 +112,7 @@ void parseSceneFile (char *filnam)
     //
     // myMaterialClass *lastMaterialLoaded = 0;  // 0 or maybe a default material?
     material *lastMaterialLoaded = new material();
+	materialList.push_back(lastMaterialLoaded);
     //
     // and each time you load in a new piece of geometry (sphere, triangle, plane)
     // you will set its material to lastMaterialLoaded.
@@ -151,7 +153,7 @@ void parseSceneFile (char *filnam)
                 ms->setMaterial(lastMaterialLoaded);
                 cout << "Didn't die loading last material" << endl;
                 // objectsList->push_back (ms);  // objectsList is a global std:vector<surface *> for example.
-                surfaceList->push_back(ms);
+                surfaceList.push_back(ms);
             	cout << "Didn't die pushing sphere on surfaceList" << endl;
                 
                 
@@ -190,7 +192,7 @@ void parseSceneFile (char *filnam)
                 pw = (int) getTokenAsFloat (line, 10);
                 ph = (int) getTokenAsFloat (line, 11);
                 
-                cam = new camera(x,y,z,vx,vy,vz,d,pw,ph,iw,ih);
+                cam = camera(x,y,z,vx,vy,vz,d,pw,ph,iw,ih);
                 break;
              }   
             //
@@ -213,8 +215,8 @@ void parseSceneFile (char *filnam)
                 break;
             
             //
-            // materials:
             //
+            // materials:
             case 'm':   // material
             {
                 // the trick here: we should keep a pointer to the last material we read in,
@@ -234,7 +236,8 @@ void parseSceneFile (char *filnam)
                 ig = getTokenAsFloat (line, 9);
                 ib = getTokenAsFloat (line, 10);
                 //  2. call lastMaterialLoaded->setMaterial(dr, dg, db,...);
-                lastMaterialLoaded->setMaterial(dr, dg, db, sr, sg, sb, r, ir, ig, ib);
+                lastMaterialLoaded = new material(dr, dg, db, sr, sg, sb, r, ir, ig, ib);
+				materialList.push_back(lastMaterialLoaded);
                 //
                 break;
 			}
@@ -291,57 +294,57 @@ int main (int argc, char *argv[])
     }
     cout << "no error before parsing" << endl;
     parseSceneFile (argv[1]);
-    cout << cam->eye.x << "\t" << cam->eye.y << "\t" << cam->eye.z << endl;
+    cout << cam.nx << "\t" << cam.ny << endl;
     
     
-    for(int i=0; i < cam->nx; i++){
-    	for(int j=0; j < cam->ny; j++) {
-    		int index = 0;
-    		float minT = -1;
-			for(int k=0; k < surfaceList -> size(); k++){
-				if(minT==-1 || surfaceList -> at(k) -> intersectT(cam -> generateRayForPixel(i,j)) < minT){
-					index = k;
-					minT = surfaceList -> at(k) -> intersectT(cam -> generateRayForPixel(i,j));
-				}
-			}
-			cout << minT << "\t";
-//    		cout << surfaceList -> at(0) -> intersectT(cam -> generateRayForPixel(i,j)) << "\t";
-    	}
-    	cout << endl;
-	}
-
     
     //cout << surfaceList -> at(0) -> intersectT(ray (0, 13.67, 0, 0, 0, -1)) << endl;
+	cout << surfaceList.at(0) -> intersectT(ray (0, 13.67, 0, 0, 0, -1)) << endl;
     
+
     try{
-    	int w = cam->nx;
-    	int h = cam->ny;
+    	int w = cam.nx;
+    	int h = cam.ny;
         Array2D<Rgba> p (h,w);
+		p.resizeErase(h,w);
+
+		//int totalPixels = w*h;
+		//int currentPixelCount =0;
         
-        for(int i=0; i < cam->ny; i++){
-    	for(int j=0; j < cam->nx; j++) {
-    		int index = 0;
-    		float minT = -1;
-			for(int k=0; k < surfaceList -> size(); k++){
-				if(minT==-1 || surfaceList -> at(k) -> intersectT(cam -> generateRayForPixel(i,j)) < minT){
-					index = k;
-					minT = surfaceList -> at(k) -> intersectT(cam -> generateRayForPixel(i,j));
+        for(int i=0; i < h; i++){
+			for(int j=0; j < w; j++) {
+				bool assigned = false;
+				int index = -1;
+				float minT = -1;
+				for(int k=0; k < surfaceList.size(); k++){
+					//We need to flip the y axis orientation because while our math uses a traditional x+ right, y+ up grid, the pixels are created with x+ right,y+ down
+					//In this loop, I will represent the pixel index from the bottom, so since we want pixel index from the top, we calculate our rays with (h-i)
+					if(	(!assigned && surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) > 0) || (assigned && surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) < minT)	){
+						assigned=true;						
+						index = k;
+						minT = surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i));
+					}
 				}
+				Rgba &px = p[i][j]; 
+				if(index != -1)
+				{
+					material *mat = surfaceList.at(index)->getMaterial();
+					px.r=mat->dr; px.g=mat->dg; px.b=mat->db;
+					//px.r=0.7; px.g=0; px.b=1;
+				}
+				else
+				{
+					px.r=0; px.g=0; px.b=0;
+				}
+				//currentPixelCount++;
+				//if(currentPixelCount%(totalPixels/100)==0)
+				//	cout << "|";
 			}
-    		Rgba &px = p[i][j];
-    		if(minT > 0)
-    		{
-    			px.r=1; px.g=0; px.b=0;
-    		}
-    		else
-    		{
-    			px.r=1; px.g=1; px.b=1;
-    		}
-    	}
-    	cout << "writing output image" << endl;
-        
-        writeRgba ("hw1.exr", &p[0][0], w, h);
-	}
+    		writeRgba (((std::string(argv[1]))+".exr").c_str(), &p[0][0], w, h);
+		}
+		cout << "Didn't die while editing the pixels." << endl;
+
+		cout << "Finished writing file" << endl;
 
         
     }
