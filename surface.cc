@@ -36,6 +36,6 @@ float surface::intersectT(ray r)
 }
 
 vector surface::getSurfaceNormal(point p){
-	std::cout <<"THE VIRTUAL SURFACE METHOD IS BEING CALLED" << std::endl;
+	//std::cout <<"THE VIRTUAL SURFACE METHOD IS BEING CALLED" << std::endl;
 	return vector();
 }

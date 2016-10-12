@@ -37,7 +37,7 @@ float plane::getOriginDistance(){
 
 vector plane::getSurfaceNormal(point p){
 	//ToDo: Should implement an assertion here to make sure p is on surface. //I can't figure out how
-	std::cout <<"PLANE IS THE GUY BEING CALLED" << std::endl;
+	//std::cout <<"PLANE IS THE GUY BEING CALLED" << std::endl;
 	return getNormal();
 
 }

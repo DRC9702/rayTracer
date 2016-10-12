@@ -70,11 +70,19 @@ void writePixels(){
 						point pnt = pixelRay.getPointFromT(minT);
 						float ldr=0, ldg=0, ldb=0;
 						for(unsigned int k=0; k < pointLightList.size(); k++){
-							float tempr, tempg, tempb;
-							pointLightList.at(k)->lambertianShading(pnt, surface, mat, tempr, tempg, tempb);
-							ldr += tempr;
-							ldg += tempg;
-							ldb += tempb;
+							//lambertian shading
+							float templsr, templsg, templsb;
+							pointLightList.at(k)->lambertianShading(pnt, surface, mat, templsr, templsg, templsb);
+							ldr += templsr;
+							ldg += templsg;
+							ldb += templsb;
+							//specular shading
+							float tempssr, tempssg, tempssb;
+							pointLightList.at(k)->specularShading(pnt, pixelRay, surface, mat, tempssr, tempssg, tempssb);
+							ldr += tempssr;
+							ldg += tempssg;
+							ldb += tempssb;
+							
 						}
 
 						px.r=ldr; px.g=ldg; px.b=ldb;

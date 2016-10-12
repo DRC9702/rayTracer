@@ -242,7 +242,7 @@ void readscene::parseSceneFile (char *filnam)
 #ifdef IM_DEBUGGING
 		                // if we're debugging, show what we got:
 		                cout << "got a PointLight with ";
-		                cout << "parameters: x[" << x << "] y[" << y << "] z[" << z << "] r[" << r << "] g[" << g << "] b[" << b << "]" << " [No intensity]"<<  endl;
+		                cout << "parameters: x[" << x << "] y[" << y << "] z[" << z << "] r[" << r << "] g[" << g << "] b[" << b << "]" << " [No intensity(1 for now)]"<<  endl;
 #endif
 
                     	break;
