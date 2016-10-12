@@ -15,6 +15,7 @@ public:
 	point addVector(vector vec);
 	bool isEqual(point other);
 	vector subtract(point other);
+	vector toVectorFromOrigin();
 };
 
 #endif

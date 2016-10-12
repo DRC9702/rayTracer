@@ -57,3 +57,7 @@ bool ray::isEqual(ray other){
 		return false;
 }
 
+point ray::getPointFromT(float t){
+	return origin.addVector(dir.scalarMultiply(t));
+}
+

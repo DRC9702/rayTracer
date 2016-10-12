@@ -19,6 +19,7 @@ public:
 	void setDir(vector v);
 	void setDir(float vx, float vy, float vz);
 	bool isEqual(ray other);
+	point getPointFromT(float t);
 };
 
 #endif

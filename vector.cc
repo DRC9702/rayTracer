@@ -73,7 +73,7 @@ void vector::applyNormalization()
 	applyScalar(1/m);
 }
 
-float vector::dotProduct(vector other)
+float vector::dotProduct(const vector other)
 {
 	return x*other.x + y*other.y + z*other.z;
 }

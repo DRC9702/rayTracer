@@ -6,7 +6,7 @@ CC = g++
 CFLAGS = -std=c++11
 #
 
-prog_out: readscene.cc
+prog_out: main.cc readscene.cc
 	g++ -g *.cc -I. -I/usr/include/OpenEXR -lIlmImf -lImath -lHalf -Wall -std=c++11 -o prog_out 
 
 #.PHONY: main
@@ -19,5 +19,5 @@ clean:
 	rm -f *.o a.out prog_out *.exr
 
 .PHONY: all
-all: clean main 
+all: clean prog_out 
 

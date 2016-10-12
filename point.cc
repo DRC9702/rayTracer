@@ -37,3 +37,8 @@ bool point::isEqual(point other){
 vector point::subtract(point other){
 	return vector(x-other.x, y-other.y, z-other.z);
 }
+
+vector point::toVectorFromOrigin(){
+	return subtract(point(0,0,0));
+}
+

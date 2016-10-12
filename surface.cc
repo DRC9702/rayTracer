@@ -3,6 +3,8 @@
 #include "vector.h"
 #include "point.h"
 
+#include <iostream>
+
 surface::surface()
 {
 	//mat = new material();
@@ -31,4 +33,9 @@ int surface::getMaterialIndex()
 float surface::intersectT(ray r)
 {
 	return -1;
+}
+
+vector surface::getSurfaceNormal(point p){
+	std::cout <<"THE VIRTUAL SURFACE METHOD IS BEING CALLED" << std::endl;
+	return vector();
 }

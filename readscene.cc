@@ -7,14 +7,19 @@
 //My classes
 #include "surface.h"
 #include "sphere.h"
+#include "plane.h"
 #include "camera.h"
 #include "material.h"
 #include "ray.h"
 #include "exr_test.h"
 
+#include "readscene.h"
+
+#include <cstdlib>	//Nope! Don't need this!
+
 using namespace std;
 
-#define IM_DEBUGGING
+
 
 
 // this is called from the parseSceneFile function, which uses
@@ -25,7 +30,7 @@ using namespace std;
 //
 // you really don't need to know what is going on in here, I think.
 //
-float getTokenAsFloat (string inString, int whichToken)
+float readscene::getTokenAsFloat (string inString, int whichToken)
 {
     
     float thisFloatVal = 0.;    // the return value
@@ -89,12 +94,11 @@ float getTokenAsFloat (string inString, int whichToken)
 //
 
 
-std::vector<surface*> surfaceList = std::vector<surface*>();
-std::vector<material*> materialList = std::vector<material*>();
-camera cam;
-//material lastMaterialLoaded;
+//std::vector<surface*> surfaceList = std::vector<surface*>();
+//std::vector<material*> materialList = std::vector<material*>();
+//camera cam;
 
-void parseSceneFile (char *filnam)
+void readscene::parseSceneFile (char *filnam)
 {
     
     ifstream inFile(filnam);    // open the file
@@ -170,7 +174,25 @@ void parseSceneFile (char *filnam)
                 break;
                 
             case 'p':   // plane
+            {
+            	float nx, ny, nz, d;
+            	nx = getTokenAsFloat (line, 1);
+				ny = getTokenAsFloat (line, 2);
+				nz = getTokenAsFloat (line, 3);
+				d = getTokenAsFloat (line, 4);
+				plane *mp = new plane(nx,ny,nz,d);
+				mp->setMaterialIndex(materialList.size()-1);
+				surfaceList.push_back(mp);
+
+#ifdef IM_DEBUGGING
+                // if we're debugging, show what we got:
+                cout << "got a Plane with ";
+                cout << "parameters: nx[" << nx << "] ny[" << ny << "] nz[" << nz << "] d[" << d << "]" <<  endl;
+				//cout << "Current material index: " << ms->getMaterialIndex() << endl;
+#endif
+
                 break;
+            }
                 
             //
             // camera:
@@ -204,9 +226,27 @@ void parseSceneFile (char *filnam)
                 
                 // slightly different from the rest, we need to examine the second param,
                 // which is at the third position on the line:
-                switch (line[2]) {
-                    case 'p':   // point light
-                        break;
+                switch (line[2]) { //I'm pretty sure this should be a 1 not a 2. It's in the 2nd position, not third.
+                    case 'p':{   // point light
+                    	float x,y,z,r,g,b;
+                    	x = getTokenAsFloat (line, 2);
+						y = getTokenAsFloat (line, 3);
+						z = getTokenAsFloat (line, 4);
+						r = getTokenAsFloat (line, 5);
+						g = getTokenAsFloat (line, 6);
+						b = getTokenAsFloat (line, 7);
+
+						pointLight *pl = new pointLight(x,y,z,r,g,b,1); //I have no idea what intensity should be set to.
+						pointLightList.push_back(pl);
+
+#ifdef IM_DEBUGGING
+		                // if we're debugging, show what we got:
+		                cout << "got a PointLight with ";
+		                cout << "parameters: x[" << x << "] y[" << y << "] z[" << z << "] r[" << r << "] g[" << g << "] b[" << b << "]" << " [No intensity]"<<  endl;
+#endif
+
+                    	break;
+                    }
                     case 'd':   // directional light
                         break;
                     case 'a':   // ambient light
@@ -259,13 +299,7 @@ void parseSceneFile (char *filnam)
     }
 }
 
-
-
-
-
-
-
-void writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
+void readscene::writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
 {
     //
     // Write an RGBA image using class RgbaOutputFile.
@@ -281,12 +315,19 @@ void writeRgba (const char fileName[], const Rgba *pixels, int width, int height
     file.writePixels (height);
 }
 
-
+void readscene::getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, camera *cam){
+	*surfaceList = this->surfaceList;
+	*materialList = this->materialList;
+	*pointLightList = this->pointLightList;
+	*cam = this->cam;
+}
 
 //
 // the main just makes sure that there is an argument passed, which is
 // supposed to be the scenefile.
 //
+
+/*
 int main (int argc, char *argv[])
 {
   
@@ -338,7 +379,8 @@ int main (int argc, char *argv[])
 				}
 
 			}
-    		writeRgba (argv[2], &p[0][0], w, h);
+    		//writeRgba (argv[2], &p[0][0], w, h);
+			writeRgba ("hw1.exr", &p[0][0], w, h);
 			if(i%(h/10)==0 && i!=0)
 					cout << "|" << i/(h/10)*10 << "|" ;
 		}
@@ -363,3 +405,5 @@ int main (int argc, char *argv[])
     
     return 0;
 }
+
+*/

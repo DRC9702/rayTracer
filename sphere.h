@@ -19,6 +19,7 @@ public:
 	float getRadius();
 	//virtual float intersectT(ray r);
 	float intersectT(ray r_ray);
+	vector getSurfaceNormal(point p);
 };
 
 #endif

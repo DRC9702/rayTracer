@@ -20,7 +20,8 @@ public:
 	//material* getMaterial();
 	void setMaterialIndex(int n);
 	int getMaterialIndex();
-	virtual float intersectT(ray r);
+	virtual float intersectT(ray r_ray);
+	virtual vector getSurfaceNormal(point p);
 };
 
 #endif

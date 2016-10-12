@@ -4,6 +4,9 @@
 #include "vector.h"
 #include "point.h"
 #include <cmath>
+#include <cassert>
+
+#include <iostream>
 
 sphere::sphere(point center, float r)
 {
@@ -55,4 +58,12 @@ float sphere::intersectT(ray r_ray)
 			return t2;
 	}
 
+}
+
+vector sphere::getSurfaceNormal(point p){
+	vector sn = (p.subtract(getCenter()));
+	//std::cout <<"Diff: " << std::abs(sn.getMagnitude()-getRadius()) << std::endl;
+	//assert(std::abs(sn.getMagnitude()-getRadius())<.1);
+	std::cout <<"SPHERE IS THE GUY BEING CALLED" << std::endl;
+	return sn.normalize();
 }
