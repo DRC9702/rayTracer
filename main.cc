@@ -97,7 +97,7 @@ void writePixels(){
 
 				}
 	    		//writeRgba (argv[2], &p[0][0], w, h);
-				writeRgba ("hw1.exr", &p[0][0], w, h);
+				writeRgba ("hw2.exr", &p[0][0], w, h);
 				if(i%(h/10)==0 && i!=0)
 						cout << "|" << i/(h/10)*10 << "|" ;
 			}
