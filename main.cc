@@ -59,7 +59,7 @@ void writePixels(){
 						if(	(!assigned && surfaceList.at(k) -> intersectT(pixelRay) > 0) || (assigned && surfaceList.at(k) -> intersectT(pixelRay) < minT	&& surfaceList.at(k) -> intersectT(pixelRay) != -1	)	){
 							assigned=true;
 							index = k;
-							minT = surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i));
+							minT = surfaceList.at(k) -> intersectT(pixelRay);
 						}
 					}
 					Rgba &px = p[i][j];
@@ -78,7 +78,7 @@ void writePixels(){
 							ldb += templsb;
 							//specular shading
 							float tempssr, tempssg, tempssb;
-							pointLightList.at(k)->specularShading(pnt, pixelRay, surface, mat, tempssr, tempssg, tempssb);
+							pointLightList.at(k)->specularShading(pnt, cam, surface, mat, tempssr, tempssg, tempssb);
 							ldr += tempssr;
 							ldg += tempssg;
 							ldb += tempssb;

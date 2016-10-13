@@ -9,6 +9,7 @@
 #include "point.h"
 #include "material.h"
 #include "surface.h"
+#include "camera.h"
 #include <cassert>
 #include <cmath>
 #include <iostream>
@@ -52,8 +53,8 @@ void pointLight::lambertianShading(point p, surface *surface, material *m, float
 	ldb = db * dotMultiplier * b * intensityCoefficient;
 }
 
-void pointLight::specularShading(point p, ray rToP, surface *surface, material *m, float &lsr, float &lsg, float &lsb){
-	vector v = (rToP.dir).negationVector().normalize();
+void pointLight::specularShading(point p, camera cam, surface *surface, material *m, float &lsr, float &lsg, float &lsb){
+	vector v = (cam.eye).subtract(p).normalize();
 	vector surfaceNormal = surface->getSurfaceNormal(p);
 	vector l = position.subtract(p); l.normalize();
 	float distance = position.subtract(p).getMagnitude();

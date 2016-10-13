@@ -2,6 +2,7 @@
 #include "ray.h"
 #include "vector.h"
 #include "point.h"
+#include <iostream>
 
 //Constructor // Don't know how valid this is yet.
 
@@ -74,7 +75,8 @@ ray camera::generateRayForPixel(int i, int j)
 {
 	float su = l + (r-l)*(i+0.5)/nx;
 	float sv = b + (t-b)*(j+0.5)/ny;
-	vector dir = ((w.scalarMultiply(-d)).add(u.scalarMultiply(su))).add(v.scalarMultiply(sv));
+	vector dir = (((w.scalarMultiply(-d)).add(u.scalarMultiply(su))).add(v.scalarMultiply(sv))).normalize();
+	//std::cout << "camera generated a ray with magnitude[" << dir.getMagnitude() << "]" << std::endl;
 	return ray(eye,dir);
 	//Ask the TA.
 }

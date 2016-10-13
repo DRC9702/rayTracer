@@ -8,6 +8,7 @@
 #include "material.h"
 #include "surface.h"
 #include "ray.h"
+#include "camera.h"
 
 #ifndef POINTLIGHT_H_
 #define POINTLIGHT_H_
@@ -21,7 +22,7 @@ public:
 	pointLight(float x, float y, float z, float r, float g, float b, float intensity);
 	virtual ~pointLight();
 	void lambertianShading(point p, surface *surface, material *m, float &ldr, float &ldg, float &ldb);
-	void specularShading(point p, ray rToP, surface *surface, material *m, float &ldr, float &ldg, float &ldb);
+	void specularShading(point p, camera cam, surface *surface, material *m, float &lsr, float &lsg, float &lsb);
 };
 
 #endif /* POINTLIGHT_H_ */

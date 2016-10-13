@@ -62,7 +62,7 @@ float sphere::intersectT(ray r_ray)
 
 vector sphere::getSurfaceNormal(point p){
 	vector sn = (p.subtract(getCenter()));
-	//std::cout <<"Diff: " << std::abs(sn.getMagnitude()-getRadius()) << std::endl;
+	//std::cout <<"Magnitude: " << sn.getMagnitude() << "\tRadius: " << getRadius() << std::endl;
 	//assert(std::abs(sn.getMagnitude()-getRadius())<.1);
 	//std::cout <<"SPHERE IS THE GUY BEING CALLED" << std::endl;
 	return sn.normalize();
