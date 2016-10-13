@@ -13,25 +13,25 @@ plane::plane() {
 	originDistance = 0;
 }
 
-plane::plane(vector normal, float originDistance){
+plane::plane(vector normal, double originDistance){
 	this->normal = normal;
 	this->originDistance = originDistance;
 }
 
-plane::plane(float nx, float ny, float nz, float originDistance){
+plane::plane(double nx, double ny, double nz, double originDistance){
 	this->normal = vector(nx,ny,nz);
 	this->originDistance = originDistance;
 }
 
 plane::plane(point p1, point p2, point p3){
-	normal = (p2.subtract(p1)).crossProduct((p3.subtract(p1))).normalize();
+	normal = (p2.subtract(p1)).crossProduct((p3.subtract(p1))).getNormalizedVector();
 	originDistance = normal.dotProduct(p1.toVectorFromOrigin());
 }
 
 vector plane::getNormal(){
 	return normal;
 }
-float plane::getOriginDistance(){
+double plane::getOriginDistance(){
 	return originDistance;
 }
 
@@ -42,13 +42,13 @@ vector plane::getSurfaceNormal(point p){
 
 }
 
-float plane::intersectT(ray r_ray){
-	float dirDotNormal = (r_ray.dir).dotProduct(normal);
+double plane::intersectT(ray r_ray){
+	double dirDotNormal = (r_ray.dir).dotProduct(normal);
 	if(dirDotNormal==0){
 		return -1; //No intersection. Plane and ray are parallel
 	}
 	else{ //Yes intersection
-		float t = -(	(r_ray.origin).toVectorFromOrigin().dotProduct(normal) - originDistance	)/dirDotNormal;
+		double t = -(	(r_ray.origin).toVectorFromOrigin().dotProduct(normal) - originDistance	)/dirDotNormal;
 		return t;
 		//return 1000;
 	}

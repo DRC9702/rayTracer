@@ -23,17 +23,17 @@ using namespace std;
 
 
 // this is called from the parseSceneFile function, which uses
-// it to get the float from the correspoding position on the line.
+// it to get the double from the correspoding position on the line.
 //
 // return the corresponding token in the inString. Errors out
 // if you've asked for more than are in the line.
 //
 // you really don't need to know what is going on in here, I think.
 //
-float readscene::getTokenAsFloat (string inString, int whichToken)
+double readscene::getTokenAsDouble (string inString, int whichToken)
 {
     
-    float thisFloatVal = 0.;    // the return value
+    double thisDoubleVal = 0.;    // the return value
     
     if (whichToken == 0) {
         cerr << "error: the first token on a line is a character!" << endl;
@@ -59,11 +59,11 @@ float readscene::getTokenAsFloat (string inString, int whichToken)
         }
     }
     
-    thisFloatVal = atof (p);
+    thisDoubleVal = atof (p);
     
     delete[] cstr;
     
-    return thisFloatVal;
+    return thisDoubleVal;
 }
 
 
@@ -77,9 +77,9 @@ float readscene::getTokenAsFloat (string inString, int whichToken)
 //
 // This should be pretty self-explanatory: it reads through the lines, and
 // using the first character figures out what kind of command it is. It
-// then calls the "getTokenAsFloat" routine to pull out the needed values.
+// then calls the "getTokenAsDouble" routine to pull out the needed values.
 // NOTE: since different commands take different number of arguments, you
-// must take care not to call getTokenAsFloat for an index that is beyond the
+// must take care not to call getTokenAsDouble for an index that is beyond the
 // end of the line!
 //
 // One tricky bit: when a material is read in, we want
@@ -139,11 +139,11 @@ void readscene::parseSceneFile (char *filnam)
             	//cout << "got a sphere" << endl;
                 // it's a sphere, load in the parameters
                 
-                float x, y, z, r;
-                x = getTokenAsFloat (line, 1); 
-                y = getTokenAsFloat (line, 2); 
-                z = getTokenAsFloat (line, 3); 
-                r = getTokenAsFloat (line, 4);
+                double x, y, z, r;
+                x = getTokenAsDouble (line, 1);
+                y = getTokenAsDouble (line, 2);
+                z = getTokenAsDouble (line, 3);
+                r = getTokenAsDouble (line, 4);
 
                 // build your sphere here from the parameters
                 // i.e. you must call your sphere constructor and set its position
@@ -175,11 +175,11 @@ void readscene::parseSceneFile (char *filnam)
                 
             case 'p':   // plane
             {
-            	float nx, ny, nz, d;
-            	nx = getTokenAsFloat (line, 1);
-				ny = getTokenAsFloat (line, 2);
-				nz = getTokenAsFloat (line, 3);
-				d = getTokenAsFloat (line, 4);
+            	double nx, ny, nz, d;
+            	nx = getTokenAsDouble (line, 1);
+				ny = getTokenAsDouble (line, 2);
+				nz = getTokenAsDouble (line, 3);
+				d = getTokenAsDouble (line, 4);
 				plane *mp = new plane(nx,ny,nz,d);
 				mp->setMaterialIndex(materialList.size()-1);
 				surfaceList.push_back(mp);
@@ -201,20 +201,20 @@ void readscene::parseSceneFile (char *filnam)
             {   // camera
                 // one trick here: the cameras pixel count (width, height) are integers,
                 // so cast them.
-                float x, y, z, vx, vy, vz, d, iw, ih;
+                double x, y, z, vx, vy, vz, d, iw, ih;
                 int pw, ph;
                 
-                x = getTokenAsFloat (line, 1); 
-                y = getTokenAsFloat (line, 2); 
-                z = getTokenAsFloat (line, 3); 
-                vx = getTokenAsFloat (line, 4);
-                vy = getTokenAsFloat (line, 5);
-                vz = getTokenAsFloat (line, 6);
-                d = getTokenAsFloat (line, 7);
-                iw = getTokenAsFloat (line, 8);
-                ih = getTokenAsFloat (line, 9);
-                pw = (int) getTokenAsFloat (line, 10);
-                ph = (int) getTokenAsFloat (line, 11);
+                x = getTokenAsDouble (line, 1);
+                y = getTokenAsDouble (line, 2);
+                z = getTokenAsDouble (line, 3);
+                vx = getTokenAsDouble (line, 4);
+                vy = getTokenAsDouble (line, 5);
+                vz = getTokenAsDouble (line, 6);
+                d = getTokenAsDouble (line, 7);
+                iw = getTokenAsDouble (line, 8);
+                ih = getTokenAsDouble (line, 9);
+                pw = (int) getTokenAsDouble (line, 10);
+                ph = (int) getTokenAsDouble (line, 11);
                 
                 cam = camera(x,y,z,vx,vy,vz,d,pw,ph,iw,ih);
                 break;
@@ -228,13 +228,13 @@ void readscene::parseSceneFile (char *filnam)
                 // which is at the third position on the line:
                 switch (line[2]) { //I'm pretty sure this should be a 1 not a 2. It's in the 2nd position, not third.
                     case 'p':{   // point light
-                    	float x,y,z,r,g,b;
-                    	x = getTokenAsFloat (line, 2);
-						y = getTokenAsFloat (line, 3);
-						z = getTokenAsFloat (line, 4);
-						r = getTokenAsFloat (line, 5);
-						g = getTokenAsFloat (line, 6);
-						b = getTokenAsFloat (line, 7);
+                    	double x,y,z,r,g,b;
+                    	x = getTokenAsDouble (line, 2);
+						y = getTokenAsDouble (line, 3);
+						z = getTokenAsDouble (line, 4);
+						r = getTokenAsDouble (line, 5);
+						g = getTokenAsDouble (line, 6);
+						b = getTokenAsDouble (line, 7);
 
 						pointLight *pl = new pointLight(x,y,z,r,g,b,1); //I have no idea what intensity should be set to.
 						pointLightList.push_back(pl);
@@ -266,17 +266,17 @@ void readscene::parseSceneFile (char *filnam)
                 // we migh then do something like this:
                 //
                 //  1. read in the 10 material parameters: dr, dg, db, sr, sg, sb, r, ir, ig, ib
-                float dr, dg, db, sr, sg, sb, r, ir, ig, ib;
-                dr = getTokenAsFloat (line, 1); 
-                dg = getTokenAsFloat (line, 2); 
-                db = getTokenAsFloat (line, 3); 
-                sr = getTokenAsFloat (line, 4);
-                sg = getTokenAsFloat (line, 5);
-                sb = getTokenAsFloat (line, 6);
-                r = getTokenAsFloat (line, 7);
-                ir = getTokenAsFloat (line, 8);
-                ig = getTokenAsFloat (line, 9);
-                ib = getTokenAsFloat (line, 10);
+                double dr, dg, db, sr, sg, sb, r, ir, ig, ib;
+                dr = getTokenAsDouble (line, 1);
+                dg = getTokenAsDouble (line, 2);
+                db = getTokenAsDouble (line, 3);
+                sr = getTokenAsDouble (line, 4);
+                sg = getTokenAsDouble (line, 5);
+                sb = getTokenAsDouble (line, 6);
+                r = getTokenAsDouble (line, 7);
+                ir = getTokenAsDouble (line, 8);
+                ig = getTokenAsDouble (line, 9);
+                ib = getTokenAsDouble (line, 10);
                 //  2. call lastMaterialLoaded->setMaterial(dr, dg, db,...);
                 lastMaterialLoaded = new material(dr, dg, db, sr, sg, sb, r, ir, ig, ib);
 				materialList.push_back(lastMaterialLoaded);
@@ -356,7 +356,7 @@ int main (int argc, char *argv[])
 			for(int j=0; j < w; j++) {
 				bool assigned = false;
 				int index = -1;
-				float minT = -1;
+				double minT = -1;
 				for(unsigned int k=0; k < surfaceList.size(); k++){
 					//We need to flip the y axis orientation because while our math uses a traditional x+ right, y+ up grid, the pixels are created with x+ right,y+ down
 					//In this loop, I will represent the pixel index from the bottom, so since we want pixel index from the top, we calculate our rays with (h-i)

@@ -15,12 +15,12 @@ public:
 	//material* mat;
 	int materialIndex;
 	surface();
-	
+	virtual ~surface();
 	//void setMaterial(material* input_mat_p);
 	//material* getMaterial();
 	void setMaterialIndex(int n);
 	int getMaterialIndex();
-	virtual float intersectT(ray r_ray);
+	virtual double intersectT(ray r_ray);
 	virtual vector getSurfaceNormal(point p);
 };
 

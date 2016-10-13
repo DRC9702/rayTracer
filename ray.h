@@ -12,14 +12,14 @@ public:
 	vector dir; //Make sure this is always normalized
 	ray();
 	ray(point origin, vector dir);
-	ray(float px, float py, float pz, float vx, float vy, float vz);
+	ray(double px, double py, double pz, double vx, double vy, double vz);
 	ray(point p1, point p2);
 	void setOrigin(point p);
-	void setOrigin(float px, float py, float pz);
+	void setOrigin(double px, double py, double pz);
 	void setDir(vector v);
-	void setDir(float vx, float vy, float vz);
+	void setDir(double vx, double vy, double vz);
 	bool isEqual(ray other);
-	point getPointFromT(float t);
+	point getPointFromT(double t);
 };
 
 #endif

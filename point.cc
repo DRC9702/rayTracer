@@ -10,12 +10,12 @@ point::point ()
 	z=0;
 }
 
-point::point(int x, int y, int z)
+point::point(double x, double y, double z)
 {
 	setCoords(x,y,z);
 }
 
-void point::setCoords(int x, int y, int z)
+void point::setCoords(double x, double y, double z)
 {
 	this->x = x;
 	this->y = y;

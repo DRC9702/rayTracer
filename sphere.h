@@ -12,13 +12,13 @@ class sphere : public surface
 {
 public:
 	point center; //origin
-	float r; //radius
-	sphere(point center, float r);
-	sphere(float x, float y, float z, float r);
+	double r; //radius
+	sphere(point center, double r);
+	sphere(double x, double y, double z, double r);
 	point getCenter();
-	float getRadius();
-	//virtual float intersectT(ray r);
-	float intersectT(ray r_ray);
+	double getRadius();
+	//virtual double intersectT(ray r);
+	double intersectT(ray r_ray);
 	vector getSurfaceNormal(point p);
 };
 

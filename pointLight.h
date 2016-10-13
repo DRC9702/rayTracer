@@ -16,13 +16,13 @@
 class pointLight {
 public:
 	point position;
-	float r, g, b; //I prefer RGB over just indices. //It makes it easier for me to read the code //All of these should be between 0 and 1
-	float intensity; //Multiplier on each color
+	double r, g, b; //I prefer RGB over just indices. //It makes it easier for me to read the code //All of these should be between 0 and 1
+	double intensity; //Multiplier on each color
 	pointLight();
-	pointLight(float x, float y, float z, float r, float g, float b, float intensity);
+	pointLight(double x, double y, double z, double r, double g, double b, double intensity);
 	virtual ~pointLight();
-	void lambertianShading(point p, surface *surface, material *m, float &ldr, float &ldg, float &ldb);
-	void specularShading(point p, camera cam, surface *surface, material *m, float &lsr, float &lsg, float &lsb);
+	void lambertianShading(point p, surface *surface, material *m, double &ldr, double &ldg, double &ldb);
+	void specularShading(point p, camera cam, surface *surface, material *m, double &lsr, double &lsg, double &lsb);
 };
 
 #endif /* POINTLIGHT_H_ */

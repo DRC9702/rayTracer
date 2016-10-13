@@ -15,6 +15,7 @@
 
 #include "readscene.h"
 #include "vector.h"
+#include "pointLight.h"
 
 #include <cstdlib>	//Nope! Don't need this!
 
@@ -51,15 +52,16 @@ void writePixels(){
 					ray pixelRay = cam.generateRayForPixel(j,h-i);
 					bool assigned = false;
 					int index = -1;
-					float minT = -1;
+					double minT = -1;
 					for(unsigned int k=0; k < surfaceList.size(); k++){
 						//We need to flip the y axis orientation because while our math uses a traditional x+ right, y+ up grid, the pixels are created with x+ right,y+ down
 						//In this loop, I will represent the pixel index from the bottom, so since we want pixel index from the top, we calculate our rays with (h-i)
 						//Another note: i is the vertical index, j is the horizontal index, so compared to the book, we must call generateRayForPixel with (j, h-i);
-						if(	(!assigned && surfaceList.at(k) -> intersectT(pixelRay) > 0) || (assigned && surfaceList.at(k) -> intersectT(pixelRay) < minT	&& surfaceList.at(k) -> intersectT(pixelRay) != -1	)	){
+						double tempT = surfaceList.at(k) -> intersectT(pixelRay);
+						if(	(!assigned && tempT > 0) || (assigned && tempT < minT && tempT != -1)	){
 							assigned=true;
 							index = k;
-							minT = surfaceList.at(k) -> intersectT(pixelRay);
+							minT = tempT;
 						}
 					}
 					Rgba &px = p[i][j];
@@ -68,16 +70,16 @@ void writePixels(){
 						surface* surface = surfaceList.at((unsigned int)index);
 						material* mat = materialList.at(surface->getMaterialIndex());
 						point pnt = pixelRay.getPointFromT(minT);
-						float ldr=0, ldg=0, ldb=0;
+						double ldr=0, ldg=0, ldb=0;
 						for(unsigned int k=0; k < pointLightList.size(); k++){
 							//lambertian shading
-							float templsr, templsg, templsb;
+							double templsr, templsg, templsb;
 							pointLightList.at(k)->lambertianShading(pnt, surface, mat, templsr, templsg, templsb);
 							ldr += templsr;
 							ldg += templsg;
 							ldb += templsb;
 							//specular shading
-							float tempssr, tempssg, tempssb;
+							double tempssr, tempssg, tempssb;
 							pointLightList.at(k)->specularShading(pnt, cam, surface, mat, tempssr, tempssg, tempssb);
 							ldr += tempssr;
 							ldg += tempssg;
@@ -137,9 +139,18 @@ int main (int argc, char *argv[])
         return 1;
     }
 
-
-
-
+    //Free surfaces pointed to in surface list
+    for(surface* s : surfaceList){
+    	delete(s);
+    }
+    //Free materials pointed to in material list
+    for(material* m : materialList){
+    	delete(m);
+    }
+    //Free pointLights pointed to in pointLight list
+    for(pointLight* p : pointLightList){
+    	delete(p);
+    }
 
     return 0;
 }

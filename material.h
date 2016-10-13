@@ -6,22 +6,22 @@ class material
 {
 public:
 	//Diffuse components
-	float dr;
-	float dg;
-	float db;
+	double dr;
+	double dg;
+	double db;
 	//Specular components
-	float sr;
-	float sg;
-	float sb;
+	double sr;
+	double sg;
+	double sb;
 	//roughness phong exponent
-	float r;
+	double r;
 	//ideal specular components
-	float ir;
-	float ig;
-	float ib;
+	double ir;
+	double ig;
+	double ib;
 	material();
-	material(float dr, float dg, float db, float sr, float sg, float sb, float r, float ir, float ig, float ib);
-	void setMaterial(float dr, float dg, float db, float sr, float sg, float sb, float r, float ir, float ig, float ib);
+	material(double dr, double dg, double db, double sr, double sg, double sb, double r, double ir, double ig, double ib);
+	void setMaterial(double dr, double dg, double db, double sr, double sg, double sb, double r, double ir, double ig, double ib);
 };
 
 #endif

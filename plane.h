@@ -13,15 +13,15 @@
 class plane: public surface {
 public:
 	vector normal;
-	float originDistance; //distance between origin and closest point on plane in direction of normal
+	double originDistance; //distance between origin and closest point on plane in direction of normal
 	plane();
-	plane(vector normal, float originDistance);
-	plane(float nx, float ny, float nz, float originDistance);
+	plane(vector normal, double originDistance);
+	plane(double nx, double ny, double nz, double originDistance);
 	plane(point p1, point p2, point p3);
 	virtual ~plane(); //I think this is called a deconstructor. Not quite sure what it does.
 	vector getNormal();
-	float getOriginDistance();
-	float intersectT(ray r_ray);
+	double getOriginDistance();
+	double intersectT(ray r_ray);
 	vector getSurfaceNormal(point p);
 };
 

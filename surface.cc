@@ -30,12 +30,17 @@ int surface::getMaterialIndex()
 	return materialIndex;
 }
 
-float surface::intersectT(ray r)
+double surface::intersectT(ray r)
 {
+	std::cout <<"The virtual surface method inersectT is being called." << std::endl;
 	return -1;
 }
 
 vector surface::getSurfaceNormal(point p){
-	//std::cout <<"THE VIRTUAL SURFACE METHOD IS BEING CALLED" << std::endl;
+	std::cout <<"THE VIRTUAL SURFACE METHOD getSurfaceNormal IS BEING CALLED" << std::endl;
 	return vector();
+}
+
+surface::~surface() {
+	// TODO Auto-generated destructor stub
 }

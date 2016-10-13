@@ -7,11 +7,11 @@ material::material(){
 	ir=0; ig=0; ib=0;
 }
 
-material::material(float dr, float dg, float db, float sr, float sg, float sb, float r, float ir, float ig, float ib){
+material::material(double dr, double dg, double db, double sr, double sg, double sb, double r, double ir, double ig, double ib){
 	setMaterial(dr, dg, db, sr, sg, sb, r, ir, ig, ib);
 }
 
-void material::setMaterial(float dr, float dg, float db, float sr, float sg, float sb, float r, float ir, float ig, float ib)
+void material::setMaterial(double dr, double dg, double db, double sr, double sg, double sb, double r, double ir, double ig, double ib)
 {
 	//Diffuse components
 	this->dr = dr;
