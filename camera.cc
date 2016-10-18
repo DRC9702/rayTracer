@@ -2,6 +2,7 @@
 #include "ray.h"
 #include "vector.h"
 #include "point.h"
+#include <iostream>
 
 //Constructor // Don't know how valid this is yet.
 
@@ -22,12 +23,12 @@ camera::camera()
 }
 
 //We're going to make everything centered by default
-camera::camera(point p, vector u, vector v, vector w, float d, int nx, int ny, float width, float height)
+camera::camera(point p, vector u, vector v, vector w, double d, int nx, int ny, double width, double height)
 {
 	eye = p;
-	this->u = u.normalize();
-	this->v = v.normalize();
-	this->w = w.normalize();
+	this->u = u.getNormalizedVector();
+	this->v = v.getNormalizedVector();
+	this->w = w.getNormalizedVector();
 	this->d = d;
 	this->nx = nx;
 	this->ny = ny;
@@ -37,13 +38,13 @@ camera::camera(point p, vector u, vector v, vector w, float d, int nx, int ny, f
 	b = t - height;
 }
 //We're going to make everything centered by default
-camera::camera(point p, vector inputDir, float d, int nx, int ny, float width, float height)
+camera::camera(point p, vector inputDir, double d, int nx, int ny, double width, double height)
 {
 	eye = p;
-	vector dir = inputDir.normalize();
+	vector dir = inputDir.getNormalizedVector();
 	u = dir.crossProduct(vector(0,1,0));
-	v = u.crossProduct(dir).normalize();
-	w = dir.negationVector().normalize(); //I know this should already be normalized, but i'm being safe
+	v = u.crossProduct(dir).getNormalizedVector();
+	w = dir.negationVector().getNormalizedVector(); //I know this should already be normalized, but i'm being safe
 	this->d = d;
 	this->nx = nx;
 	this->ny = ny;
@@ -53,13 +54,13 @@ camera::camera(point p, vector inputDir, float d, int nx, int ny, float width, f
 	b = t - height;
 }
 
-camera::camera(float x, float y, float z, float vx, float vy, float vz, float d, int nx, int ny, float width, float height)
+camera::camera(double x, double y, double z, double vx, double vy, double vz, double d, int nx, int ny, double width, double height)
 {
 	eye = point(x,y,z);
-	vector dir = vector(vx,vy,vz).normalize();
-	u = dir.crossProduct(vector(0,1,0)).normalize();
-	v = u.crossProduct(dir).normalize();
-	w = dir.negationVector().normalize();
+	vector dir = vector(vx,vy,vz).getNormalizedVector();
+	u = dir.crossProduct(vector(0,1,0)).getNormalizedVector();
+	v = u.crossProduct(dir).getNormalizedVector();
+	w = dir.negationVector().getNormalizedVector();
 	this->d = d;
 	this->nx = nx;
 	this->ny = ny;
@@ -72,9 +73,10 @@ camera::camera(float x, float y, float z, float vx, float vy, float vz, float d,
 
 ray camera::generateRayForPixel(int i, int j)
 {
-	float su = l + (r-l)*(i+0.5)/nx;
-	float sv = b + (t-b)*(j+0.5)/ny;
-	vector dir = ((w.scalarMultiply(-d)).add(u.scalarMultiply(su))).add(v.scalarMultiply(sv));
+	double su = l + (r-l)*(i+0.5)/nx;
+	double sv = b + (t-b)*(j+0.5)/ny;
+	vector dir = (((w.scalarMultiply(-d)).add(u.scalarMultiply(su))).add(v.scalarMultiply(sv))).getNormalizedVector();
+	//std::cout << "camera generated a ray with magnitude[" << dir.getMagnitude() << "]" << std::endl;
 	return ray(eye,dir);
 	//Ask the TA.
 }

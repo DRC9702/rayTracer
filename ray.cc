@@ -15,7 +15,7 @@ ray::ray(point origin, vector dir) //Will normalize the input vector
 	setDir(dir);
 }
 
-ray::ray(float px, float py, float pz, float vx, float vy, float vz)
+ray::ray(double px, double py, double pz, double vx, double vy, double vz)
 {
 	setOrigin(px,py,pz);
 	setDir(vx,vy,vz);
@@ -32,7 +32,7 @@ void ray::setOrigin(point p)
 	origin=p;
 }
 
-void ray::setOrigin(float px, float py, float pz)
+void ray::setOrigin(double px, double py, double pz)
 {
 	point p (px, py, pz);
 	setOrigin(p);
@@ -41,10 +41,10 @@ void ray::setOrigin(float px, float py, float pz)
 void ray::setDir(vector v)
 {
 	dir = v;
-	dir.applyNormalization();
+	dir.normalize();
 }
 
-void ray::setDir(float vx, float vy, float vz)
+void ray::setDir(double vx, double vy, double vz)
 {
 	vector v (vx, vy, vz);
 	setDir(v);
@@ -57,7 +57,7 @@ bool ray::isEqual(ray other){
 		return false;
 }
 
-point ray::getPointFromT(float t){
+point ray::getPointFromT(double t){
 	return origin.addVector(dir.scalarMultiply(t));
 }
 

@@ -10,12 +10,12 @@ vector::vector()
 	z=0;
 }
 
-vector::vector(float x, float y, float z)
+vector::vector(double x, double y, double z)
 {
 	setComponents(x,y,z);
 }
 
-void vector::setComponents(float x, float y, float z)
+void vector::setComponents(double x, double y, double z)
 {
 	this->x = x;
 	this->y = y;
@@ -30,19 +30,19 @@ bool vector::isEqual(vector other)
 		return false;
 }
 
-float vector::getMagnitude()
+double vector::getMagnitude()
 {
 	return std::sqrt( x*x + y*y + z*z );
 }
 
-void vector::applyScalar(float s)
+void vector::applyScalar(double s)
 {
 	x *= s;
 	y *= s;
 	z *= s;
 }
 
-vector vector::scalarMultiply(float s)
+vector vector::scalarMultiply(double s)
 {
 	return vector (x*s, y*s, z*s);
 }
@@ -62,18 +62,27 @@ vector vector::subtract(vector other)
 	return add(other.negationVector());
 }
 
-vector vector::normalize(){
-	float m = getMagnitude();
+void vector::normalize(){
+	double m = getMagnitude();
+	applyScalar(1/m);
+}
+vector vector::getNormalizedVector(){
+	double m = getMagnitude();
 	return scalarMultiply(1/m);
 }
 
-void vector::applyNormalization()
-{
-	float m = getMagnitude();
-	applyScalar(1/m);
-}
+//vector vector::normalize(){
+//	double m = getMagnitude();
+//	return scalarMultiply(1/m);
+//}
 
-float vector::dotProduct(const vector other)
+//void vector::applyNormalization()
+//{
+//	double m = getMagnitude();
+//	applyScalar(1/m);
+//}
+
+double vector::dotProduct(const vector other)
 {
 	return x*other.x + y*other.y + z*other.z;
 }

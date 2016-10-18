@@ -11,7 +11,7 @@ class camera
 public:
 	point eye;
 	
-	float d; // focal length
+	double d; // focal length
 	
 	//Basis
 	vector u;
@@ -22,12 +22,12 @@ public:
 	int ny; //Number of pixels in the y dimension
 	
 	//Let's try make the camera centered for now
-	float l, r, t, b;
+	double l, r, t, b;
 	
 	camera(); // I don't know if this is valid yet.
-	camera(point p, vector u, vector v, vector w, float d, int nx, int ny, float width, float height);
-	camera(point p, vector dir, float d, int nx, int ny, float width, float height);
-	camera(float x, float y, float z, float vx, float vy, float vz, float d, int nx, int ny, float width, float height);
+	camera(point p, vector u, vector v, vector w, double d, int nx, int ny, double width, double height);
+	camera(point p, vector dir, double d, int nx, int ny, double width, double height);
+	camera(double x, double y, double z, double vx, double vy, double vz, double d, int nx, int ny, double width, double height);
 	ray generateRayForPixel(int i, int j);
 	
 };

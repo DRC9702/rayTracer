@@ -6,12 +6,12 @@
 class point
 {
 public:
-	int x;
-	int y;
-	int z;
+	double x;
+	double y;
+	double z;
 	point();
-	point(int x, int y, int z);
-	void setCoords(int x, int y, int z);
+	point(double x, double y, double z);
+	void setCoords(double x, double y, double z);
 	point addVector(vector vec);
 	bool isEqual(point other);
 	vector subtract(point other);

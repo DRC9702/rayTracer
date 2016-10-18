@@ -28,7 +28,7 @@
 class readscene
 {
 public:
-	float getTokenAsFloat (string inString, int whichToken);
+	double getTokenAsDouble (string inString, int whichToken);
 	std::vector<surface*> surfaceList = std::vector<surface*>();
 	std::vector<material*> materialList = std::vector<material*>();
 	std::vector<pointLight*> pointLightList = std::vector<pointLight*>();

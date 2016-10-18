@@ -4,22 +4,22 @@
 class vector
 {
 public:
-	float x;
-	float y;
-	float z;
+	double x;
+	double y;
+	double z;
 	vector();
-	vector(float x, float y, float z);
-	void setComponents(float x, float y, float z);
+	vector(double x, double y, double z);
+	void setComponents(double x, double y, double z);
 	bool isEqual(vector other);
-	float getMagnitude();
-	void applyScalar(float s);
-	vector scalarMultiply(float s);
+	double getMagnitude();
+	void applyScalar(double s);
+	vector scalarMultiply(double s);
 	vector add(vector other);
 	vector negationVector();
 	vector subtract(vector other);
-	vector normalize();
-	void applyNormalization();
-	float dotProduct(vector other);
+	void normalize();
+	vector getNormalizedVector();
+	double dotProduct(vector other);
 	vector crossProduct(vector other);
 	
 	
