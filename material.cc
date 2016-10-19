@@ -1,10 +1,10 @@
 #include "material.h"
 
 material::material(){
-	dr=0; dg=0; db=0;
-	sr=0; sg=0; sb=0;
+	diffuse = rgbTriple();
+	specular = rgbTriple();
 	r=0;
-	ir=0; ig=0; ib=0;
+	idealSpec = rgbTriple();
 }
 
 material::material(double dr, double dg, double db, double sr, double sg, double sb, double r, double ir, double ig, double ib){
@@ -14,17 +14,11 @@ material::material(double dr, double dg, double db, double sr, double sg, double
 void material::setMaterial(double dr, double dg, double db, double sr, double sg, double sb, double r, double ir, double ig, double ib)
 {
 	//Diffuse components
-	this->dr = dr;
-	this->dg = dg;
-	this->db = db;
+	diffuse.setRGB(dr,dg,db);
 	//Specular components
-	this->sr = sr;
-	this->sg = sg;
-	this->sb = sb;
+	specular.setRGB(sr,sg,sb);
 	//roughness phong exponent
 	this->r = r;
 	//ideal specular components
-	this->ir = ir;
-	this->ig = ig;
-	this->ib = ib;
+	idealSpec.setRGB(ir,ig,ib);
 }

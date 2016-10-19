@@ -299,21 +299,21 @@ void readscene::parseSceneFile (char *filnam)
     }
 }
 
-void readscene::writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
-{
-    //
-    // Write an RGBA image using class RgbaOutputFile.
-    //
-    //	- open the file
-    //	- describe the memory layout of the pixels
-    //	- store the pixels in the file
-    //
-    
-    
-    RgbaOutputFile file (fileName, width, height, WRITE_RGBA);
-    file.setFrameBuffer (pixels, 1, width);
-    file.writePixels (height);
-}
+//void readscene::writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
+//{
+//    //
+//    // Write an RGBA image using class RgbaOutputFile.
+//    //
+//    //	- open the file
+//    //	- describe the memory layout of the pixels
+//    //	- store the pixels in the file
+//    //
+//
+//
+//    RgbaOutputFile file (fileName, width, height, WRITE_RGBA);
+//    file.setFrameBuffer (pixels, 1, width);
+//    file.writePixels (height);
+//}
 
 void readscene::getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, camera *cam){
 	*surfaceList = this->surfaceList;

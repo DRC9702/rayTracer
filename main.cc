@@ -17,6 +17,7 @@
 #include "vector.h"
 #include "pointLight.h"
 
+
 #include <cstdlib>	//Nope! Don't need this!
 
 using namespace std;
@@ -70,24 +71,22 @@ void writePixels(){
 						surface* surface = surfaceList.at((unsigned int)index);
 						material* mat = materialList.at(surface->getMaterialIndex());
 						point pnt = pixelRay.getPointFromT(minT);
-						double ldr=0, ldg=0, ldb=0;
+						rgbTriple pixelLight;
 						for(unsigned int k=0; k < pointLightList.size(); k++){
 							//lambertian shading
-							double templsr, templsg, templsb;
-							pointLightList.at(k)->lambertianShading(pnt, surface, mat, templsr, templsg, templsb);
-							ldr += templsr;
-							ldg += templsg;
-							ldb += templsb;
+							rgbTriple lambertianShading;
+							//double templsr, templsg, templsb;
+							pointLightList.at(k)->lambertianShading(pnt, surface, mat, lambertianShading);
+							pixelLight.addRGBFrom(lambertianShading);
 							//specular shading
-							double tempssr, tempssg, tempssb;
-							pointLightList.at(k)->specularShading(pnt, cam, surface, mat, tempssr, tempssg, tempssb);
-							ldr += tempssr;
-							ldg += tempssg;
-							ldb += tempssb;
+							rgbTriple specularShading;
+							//double tempssr, tempssg, tempssb;
+							pointLightList.at(k)->specularShading(pnt, cam, surface, mat, specularShading);
+							pixelLight.addRGBFrom(specularShading);
 							
 						}
 
-						px.r=ldr; px.g=ldg; px.b=ldb;
+						px.r = pixelLight.getR(); px.g = pixelLight.getG(); px.b =pixelLight.getB();
 //						px.r=mat->dr; px.g=mat->dg; px.b=mat->db;
 					}
 					else
