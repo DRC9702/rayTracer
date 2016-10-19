@@ -4,7 +4,6 @@
  *  Created on: Oct 18, 2016
  *      Author: david
  */
-
 #include "rgbTriple.h"
 
 rgbTriple::rgbTriple() {
@@ -47,4 +46,3 @@ void rgbTriple::addRGBFrom(rgbTriple other){
 rgbTriple::~rgbTriple() {
 	// TODO Auto-generated destructor stub
 }
-

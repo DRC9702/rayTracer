@@ -72,20 +72,23 @@ void writePixels(){
 						material* mat = materialList.at(surface->getMaterialIndex());
 						point pnt = pixelRay.getPointFromT(minT);
 						rgbTriple pixelLight;
-						for(unsigned int k=0; k < pointLightList.size(); k++){
-							//lambertian shading
-							rgbTriple lambertianShading;
-							//double templsr, templsg, templsb;
-							pointLightList.at(k)->lambertianShading(pnt, surface, mat, lambertianShading);
-							pixelLight.addRGBFrom(lambertianShading);
-							//specular shading
-							rgbTriple specularShading;
-							//double tempssr, tempssg, tempssb;
-							pointLightList.at(k)->specularShading(pnt, cam, surface, mat, specularShading);
-							pixelLight.addRGBFrom(specularShading);
-							
-						}
 
+						rgbTriple shadeLight = mat-> shading(pnt, cam, index, surfaceList, pointLightList);
+
+//						for(unsigned int k=0; k < pointLightList.size(); k++){
+//							//lambertian shading
+//							rgbTriple lambertianShading;
+//							//double templsr, templsg, templsb;
+//							mat->lambertianShading(pnt, index, surfaceList, pointLightList.at(k), lambertianShading);
+//							pixelLight.addRGBFrom(lambertianShading);
+//							//specular shading
+//							rgbTriple specularShading;
+//							//double tempssr, tempssg, tempssb;
+//							mat->specularShading(pnt, cam, index, surfaceList, pointLightList.at(k), specularShading);
+//							pixelLight.addRGBFrom(specularShading);
+//
+//						}
+						pixelLight.addRGBFrom(shadeLight);
 						px.r = pixelLight.getR(); px.g = pixelLight.getG(); px.b =pixelLight.getB();
 //						px.r=mat->dr; px.g=mat->dg; px.b=mat->db;
 					}
