@@ -8,6 +8,7 @@
 #include "surface.h"
 #include "sphere.h"
 #include "plane.h"
+#include "triangle.h"
 #include "camera.h"
 #include "material.h"
 #include "ray.h"
@@ -171,8 +172,41 @@ void readscene::parseSceneFile (char *filnam)
                 break;
             }
             case 't':   // triangle
-                break;
-                
+            {
+			double x1, y1, z1, x2, y2, z2, x3, y3, z3;
+			//Point1
+			x1 = getTokenAsDouble (line, 1);
+			y1 = getTokenAsDouble (line, 2);
+			z1 = getTokenAsDouble (line, 3);
+			//Point2
+			x2 = getTokenAsDouble (line, 4);
+			y2 = getTokenAsDouble (line, 5);
+			z2 = getTokenAsDouble (line, 6);
+			//Point3
+			x3 = getTokenAsDouble (line, 7);
+			y3 = getTokenAsDouble (line, 8);
+			z3 = getTokenAsDouble (line, 9);
+
+			triangle *mt = new triangle(x1,y1,z1,x2,y2,z2,x3,y3,z3);
+			mt->setMaterialIndex(materialList.size()-1);
+			surfaceList.push_back(mt);
+
+//			triangle *mt2 = new triangle(x3,y3,z3,x2,y2,z2,x1,y1,z1);
+//			mt2->setMaterialIndex(materialList.size()-1);
+//			surfaceList.push_back(mt2);
+
+#ifdef IM_DEBUGGING
+			// if we're debugging, show what we got:
+			cout << "got a Triangle with ";
+			cout << "parameters: p1[" << x1 << ", " << y1 << ", " << z1
+					<< "] p2[" << x2 << ", " << y2 << ", " << z2
+					<< "] p3[" << x3 << ", " << y3 << ", " << z3 << "]"
+					<< endl;
+			//cout << "Current material index: " << ms->getMaterialIndex() << endl;
+#endif
+
+			break;
+			}
             case 'p':   // plane
             {
             	double nx, ny, nz, d;

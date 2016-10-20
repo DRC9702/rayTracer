@@ -30,6 +30,22 @@ rgbTriple material::shading(point p, camera cam, unsigned int surfaceIndex, std:
 	rgbTriple lambertianShading;
 	rgbTriple specularShading;
 	for(unsigned int k=0; k < pointLightList.size(); k++){
+
+		bool lightHit = false;
+		ray ray_pToL = ray(p,pointLightList.at(k)->position);
+		for(unsigned int k=0; k < surfaceList.size(); k++){
+			if(k==surfaceIndex){
+				continue; //Skip your own surface
+			}
+			double tempT = surfaceList.at(k) -> intersectT(ray_pToL);
+			if(tempT > 0){
+				lightHit = true;
+			}
+		}
+		if(lightHit){
+			continue;
+		}
+
 		//lambertian shading
 		lambertianShadingForPointLight(p, surfaceIndex, surfaceList, pointLightList.at(k), lambertianShading);
 		//specular shading
