@@ -7,19 +7,28 @@
 
 class ray
 {
-public:
+private:
 	point origin;
 	vector dir; //Make sure this is always normalized
+public:
 	ray();
-	ray(point origin, vector dir);
-	ray(double px, double py, double pz, double vx, double vy, double vz);
-	ray(point p1, point p2);
-	void setOrigin(point p);
-	void setOrigin(double px, double py, double pz);
-	void setDir(vector v);
-	void setDir(double vx, double vy, double vz);
-	bool isEqual(ray other);
-	point getPointFromT(double t);
+	ray(const point origin, const vector dir);
+	ray(const double px, const double py, const double pz, const double vx, double vy, double vz);
+	ray(const point p1, const point p2);
+	void setOrigin(const point p);
+	void setOrigin(const double px, const double py, const double pz);
+	void setDir(const vector v);
+	void setDir(const double vx, const double vy, const double vz);
+	bool isEqual(const ray other) const;
+	point getPointFromT(const double t) const;
+
+	const vector& getDir() const {
+		return dir;
+	}
+
+	const point& getOrigin() const {
+		return origin;
+	}
 };
 
 #endif

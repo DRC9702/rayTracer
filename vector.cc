@@ -22,42 +22,42 @@ void vector::setComponents(double x, double y, double z)
 	this->z = z;
 }
 
-bool vector::isEqual(vector other)
+bool vector::isEqual(const vector other) const
 {
-	if(x==other.x && y==other.y && z==other.z)
+	if(x==other.getX() && y==other.getY() && z==other.getZ())
 		return true;
 	else
 		return false;
 }
 
-double vector::getMagnitude()
+double vector::getMagnitude() const
 {
 	return std::sqrt( x*x + y*y + z*z );
 }
 
-void vector::applyScalar(double s)
+void vector::applyScalar(const double s)
 {
 	x *= s;
 	y *= s;
 	z *= s;
 }
 
-vector vector::scalarMultiply(double s)
+vector vector::scalarMultiply(const double s) const
 {
 	return vector (x*s, y*s, z*s);
 }
 
-vector vector::add(vector other)
+vector vector::add(const vector other) const
 {
-	return vector (x+other.x, y+other.y, z+other.z);
+	return vector (x+other.getX(), y+other.getY(), z+other.getZ());
 }
 
-vector vector::negationVector()
+vector vector::negationVector() const
 {
 	return scalarMultiply(-1);
 }
 
-vector vector::subtract(vector other)
+vector vector::subtract(const vector other) const
 {
 	return add(other.negationVector());
 }
@@ -66,7 +66,7 @@ void vector::normalize(){
 	double m = getMagnitude();
 	applyScalar(1/m);
 }
-vector vector::getNormalizedVector(){
+vector vector::getNormalizedVector() const{
 	double m = getMagnitude();
 	return scalarMultiply(1/m);
 }
@@ -82,12 +82,12 @@ vector vector::getNormalizedVector(){
 //	applyScalar(1/m);
 //}
 
-double vector::dotProduct(const vector other)
+double vector::dotProduct(const vector other) const
 {
-	return x*other.x + y*other.y + z*other.z;
+	return x*other.getX() + y*other.getY() + z*other.getZ();
 }
 
-vector vector::crossProduct(vector other)
+vector vector::crossProduct(const vector other) const
 {
-	return vector(y*other.z - z*other.y, z*other.x - x*other.z, x*other.y - y*other.x);
+	return vector(y*other.getZ() - z*other.getY(), z*other.getX() - x*other.getZ(), x*other.getY() - y*other.getX());
 }

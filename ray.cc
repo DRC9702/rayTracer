@@ -6,58 +6,57 @@
 
 ray::ray(){
 	origin = point();
-	dir = vector();
+	dir = vector().getNormalizedVector();
 }
 
-ray::ray(point origin, vector dir) //Will normalize the input vector
+ray::ray(const point origin, const vector dir) //Will normalize the input vector
 {
 	setOrigin(origin);
 	setDir(dir);
 }
 
-ray::ray(double px, double py, double pz, double vx, double vy, double vz)
+ray::ray(const double px, const double py, const double pz, const double vx, const double vy, const double vz)
 {
 	setOrigin(px,py,pz);
 	setDir(vx,vy,vz);
 }
 
-ray::ray(point p1, point p2){
+ray::ray(const point p1, const point p2){
 	setOrigin(p1);
 	vector vec = p2.subtract(p1);
 	setDir(vec);
 }
 
-void ray::setOrigin(point p)
+void ray::setOrigin(const point p)
 {
 	origin=p;
 }
 
-void ray::setOrigin(double px, double py, double pz)
+void ray::setOrigin(const double px, const double py, const double pz)
 {
 	point p (px, py, pz);
 	setOrigin(p);
 }
 
-void ray::setDir(vector v)
+void ray::setDir(const vector v)
 {
-	dir = v;
-	dir.normalize();
+	dir = v.getNormalizedVector();
 }
 
-void ray::setDir(double vx, double vy, double vz)
+void ray::setDir(const double vx, const double vy, const double vz)
 {
 	vector v (vx, vy, vz);
 	setDir(v);
 }
 
-bool ray::isEqual(ray other){
+bool ray::isEqual(const ray other) const{
 	if(	origin.isEqual(other.origin) && dir.isEqual(other.dir)	)
 		return true;
 	else
 		return false;
 }
 
-point ray::getPointFromT(double t){
+point ray::getPointFromT(const double t) const{
 	return origin.addVector(dir.scalarMultiply(t));
 }
 

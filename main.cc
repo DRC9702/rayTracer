@@ -41,16 +41,16 @@ void writeRgba (const char fileName[], const Rgba *pixels, int width, int height
     file.writePixels (height);
 }
 
-void writePixels(){
-	int w = cam.nx;
-	int h = cam.ny;
+void writePixels(char* outputName){
+	int w = cam.getNx();
+	int h = cam.getNy();
 	Array2D<Rgba> p (h,w);
 	p.resizeErase(h,w);
 
 	cout << "Progress: |0|";
 	        for(int i=0; i < h; i++){
 				for(int j=0; j < w; j++) {
-					ray pixelRay = cam.generateRayForPixel(j,h-i);
+					ray pixelRay = cam.generateRayForPixel(j,h-1-i);
 					bool assigned = false;
 					int index = -1;
 					double minT = -1;
@@ -88,18 +88,23 @@ void writePixels(){
 //							pixelLight.addRGBFrom(specularShading);
 //
 //						}
+
+
 						pixelLight.addRGBFrom(shadeLight);
 						px.r = pixelLight.getR(); px.g = pixelLight.getG(); px.b =pixelLight.getB();
 //						px.r=mat->dr; px.g=mat->dg; px.b=mat->db;
+
 					}
+
+
 					else
 					{
 						px.r=0; px.g=0; px.b=0;
 					}
 
 				}
-	    		//writeRgba (argv[2], &p[0][0], w, h);
-				writeRgba ("hw3.exr", &p[0][0], w, h);
+	    		writeRgba (outputName, &p[0][0], w, h);
+				//writeRgba ("hw3.exr", &p[0][0], w, h);
 				if(i%(h/10)==0 && i!=0)
 						cout << "|" << i/(h/10)*10 << "|" ;
 			}
@@ -120,7 +125,7 @@ int main (int argc, char *argv[])
         return -1;
     }
 
-    cout << "no error before parsing" << endl;
+    //cout << "no error before parsing" << endl;
     readscene RS;
     RS.parseSceneFile (argv[1]);
     RS.getData(&surfaceList, &materialList, &pointLightList, &cam);
@@ -134,7 +139,7 @@ int main (int argc, char *argv[])
 
 
     try{
-    	writePixels();
+    	writePixels(argv[2]);
     }
     catch (const std::exception &exc) {
         std::cerr << exc.what() << std::endl;

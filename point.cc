@@ -22,23 +22,23 @@ void point::setCoords(double x, double y, double z)
 	this->z = z;
 }
 
-point point::addVector(vector vec)
+point point::addVector(const vector vec) const
 {
-	return point(x+vec.x, y+vec.y, z+vec.z);
+	return point(x+vec.getX(), y+vec.getY(), z+vec.getZ());
 }
 
-bool point::isEqual(point other){
-	if(x==other.x && y==other.y && z==other.z)
+bool point::isEqual(const point other) const{
+	if(x==other.getX() && y==other.getY() && z==other.getZ())
 		return true;
 	else
 		return false;
 }
 
-vector point::subtract(point other){
-	return vector(x-other.x, y-other.y, z-other.z);
+vector point::subtract(const point other) const{
+	return vector(x-other.getX(), y-other.getY(), z-other.getZ());
 }
 
-vector point::toVectorFromOrigin(){
+vector point::toVectorFromOrigin() const{
 	return subtract(point(0,0,0));
 }
 

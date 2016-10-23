@@ -14,7 +14,7 @@ plane::plane() {
 }
 
 plane::plane(vector normal, double originDistance){
-	this->normal = normal;
+	this->normal = normal.getNormalizedVector();
 	this->originDistance = originDistance;
 }
 
@@ -28,29 +28,33 @@ plane::plane(point p1, point p2, point p3){
 	originDistance = normal.dotProduct(p1.toVectorFromOrigin());
 }
 
-vector plane::getNormal(){
+vector plane::getNormal() const{
 	return normal;
 }
-double plane::getOriginDistance(){
+double plane::getOriginDistance() const{
 	return originDistance;
 }
 
-vector plane::getSurfaceNormal(point p){
+vector plane::getSurfaceNormal(const point p) const{
 	//ToDo: Should implement an assertion here to make sure p is on surface. //I can't figure out how
 	//std::cout <<"PLANE IS THE GUY BEING CALLED" << std::endl;
 	return getNormal();
 
 }
 
-double plane::intersectT(ray r_ray){
-	double dirDotNormal = (r_ray.dir).dotProduct(normal);
+double plane::intersectT(const ray r_ray) const{
+	double dirDotNormal = (r_ray.getDir()).dotProduct(normal);
 	if(dirDotNormal==0){
 		return -1; //No intersection. Plane and ray are parallel
 	}
 	else{ //Yes intersection
-		double t = -(	(r_ray.origin).toVectorFromOrigin().dotProduct(normal) - originDistance	)/dirDotNormal;
-		return t;
+		double t = -(	(r_ray.getOrigin()).toVectorFromOrigin().dotProduct(normal) - originDistance	)/dirDotNormal;
+		if(t<0)
+			return -1;
+		else
+			return t;
 		//return 1000;
+
 	}
 }
 

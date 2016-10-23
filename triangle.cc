@@ -34,14 +34,14 @@ void triangle::initTrianglePlane(){
 	trianglePlane = plane(p1,p2,p3);
 }
 
-vector triangle::getNormal(){
+vector triangle::getNormal() const{
 	return normal;
 }
-plane triangle::getPlane(){
+plane triangle::getPlane() const{
 	return trianglePlane;
 }
 
-double triangle::intersectT(ray r_ray){
+double triangle::intersectT(const ray r_ray) const{
 	if(checkIfRaySameDirectionAsNormal(r_ray)) //This works!
 		return -1;
 
@@ -63,7 +63,7 @@ double triangle::intersectT(ray r_ray){
 	return T;
 }
 
-bool triangle::crossProductInsideTriangle(point p){
+bool triangle::crossProductInsideTriangle(const point p) const{
 	vector AB = p2.subtract(p1);
 	vector BC = p3.subtract(p2);
 	vector CA = p1.subtract(p3);
@@ -85,7 +85,7 @@ bool triangle::crossProductInsideTriangle(point p){
 	return true;
 }
 
-bool triangle::barycentricInsideTriangle(point p){
+bool triangle::barycentricInsideTriangle(const point p) const{
 	vector A = p1.toVectorFromOrigin();
 	vector B = p2.toVectorFromOrigin();
 	vector C = p3.toVectorFromOrigin();
@@ -123,14 +123,14 @@ bool triangle::barycentricInsideTriangle(point p){
 	return true;
 }
 
-bool triangle::checkIfRaySameDirectionAsNormal(ray r_ray){
-	if(	r_ray.dir.dotProduct(normal) > 0 )
+bool triangle::checkIfRaySameDirectionAsNormal(const ray r_ray) const{
+	if(	r_ray.getDir().dotProduct(normal) > 0 )
 		return true;
 	else
 		return false;
 }
 
-vector triangle::getSurfaceNormal(point p){
+vector triangle::getSurfaceNormal(const point p) const{
 	return normal;
 }
 

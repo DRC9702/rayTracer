@@ -10,16 +10,23 @@
 
 class sphere : public surface
 {
-public:
+private:
 	point center; //origin
-	double r; //radius
-	sphere(point center, double r);
-	sphere(double x, double y, double z, double r);
-	point getCenter();
-	double getRadius();
+	double radius; //radius
+public:
+	sphere(const point center, const double radius);
+	sphere(const double x, const double y, const double z, const double radius);
 	//virtual double intersectT(ray r);
-	double intersectT(ray r_ray);
-	vector getSurfaceNormal(point p);
+	double intersectT(const ray r_ray) const;
+	vector getSurfaceNormal(const point p) const;
+
+	const point& getCenter() const {
+		return center;
+	}
+
+	double getRadius() const {
+		return radius;
+	}
 };
 
 #endif

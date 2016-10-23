@@ -11,18 +11,19 @@
 #include "surface.h"
 
 class plane: public surface {
-public:
+private:
 	vector normal;
 	double originDistance; //distance between origin and closest point on plane in direction of normal
+public:
 	plane();
-	plane(vector normal, double originDistance);
+	plane(const vector normal, const double originDistance);
 	plane(double nx, double ny, double nz, double originDistance);
-	plane(point p1, point p2, point p3);
+	plane(const point p1, const point p2, const point p3);
 	virtual ~plane(); //I think this is called a deconstructor. Not quite sure what it does.
-	vector getNormal();
-	double getOriginDistance();
-	double intersectT(ray r_ray);
-	vector getSurfaceNormal(point p);
+	vector getNormal() const;
+	double getOriginDistance() const;
+	double intersectT(const ray r_ray) const;
+	vector getSurfaceNormal(const point p) const;
 };
 
 #endif /* PLANE_H_ */

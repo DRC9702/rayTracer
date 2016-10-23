@@ -11,7 +11,7 @@
 
 class material
 {
-public:
+private:
 	//Diffuse components
 	rgbTriple diffuse;
 	//Specular components
@@ -20,12 +20,13 @@ public:
 	double r;
 	//ideal specular components
 	rgbTriple idealSpec;
+public:
 	material();
 	material(double dr, double dg, double db, double sr, double sg, double sb, double r, double ir, double ig, double ib);
 	void setMaterial(double dr, double dg, double db, double sr, double sg, double sb, double r, double ir, double ig, double ib);
-	rgbTriple shading(point p, camera cam, unsigned int surfaceIndex, std::vector<surface*> &surfaceList, std::vector<pointLight*> &pointLightList);
-	void lambertianShadingForPointLight(point p, unsigned int surfaceIndex, std::vector<surface*> &surfaceList, pointLight* pL, rgbTriple &lambertianRGB);
-	void specularShadingForPointLight(point p, camera cam, unsigned int surfaceIndex, std::vector<surface*> &surfaceList, pointLight* pL, rgbTriple &specularRGB);
+	rgbTriple shading(const point p, const camera cam, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const std::vector<pointLight*> &pointLightList) const;
+	void lambertianShadingForPointLight(const point p, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const pointLight* pL, rgbTriple &lambertianRGB) const;
+	void specularShadingForPointLight(const point p, const camera cam, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const pointLight* pL, rgbTriple &specularRGB) const;
 };
 
 #endif

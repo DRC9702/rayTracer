@@ -20,15 +20,15 @@ public:
 	triangle();
 	virtual ~triangle();
 	triangle(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3);
-	triangle(point p1, point p2, point p3);
+	triangle(const point p1, const point p2, const point p3);
 	void initTrianglePlane();
-	vector getNormal();
-	plane getPlane();
-	double intersectT(ray r_ray);
-	bool barycentricInsideTriangle(point p);
-	bool crossProductInsideTriangle(point p);
-	bool checkIfRaySameDirectionAsNormal(ray ray_r);
-	vector getSurfaceNormal(point p);
+	vector getNormal() const;
+	plane getPlane() const;
+	double intersectT(const ray r_ray) const;
+	bool barycentricInsideTriangle(const point p) const;
+	bool crossProductInsideTriangle(const point p) const;
+	bool checkIfRaySameDirectionAsNormal(const ray ray_r) const;
+	vector getSurfaceNormal(const point p) const;
 };
 
 #endif /* TRIANGLE_H_ */

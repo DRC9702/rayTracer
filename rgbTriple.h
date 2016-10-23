@@ -9,18 +9,19 @@
 #define RGBTRIPLE_H_
 
 class rgbTriple {
-public:
+private:
 	double r;
 	double g;
 	double b;
-	double getR();
-	void setR(double r);
-	double getG();
-	void setG(double g);
-	double getB();
-	void setB(double b);
-	void setRGB(double r, double g, double b);
-	void addRGBFrom(rgbTriple other);
+public:
+	double getR() const;
+	void setR(const double r);
+	double getG() const;
+	void setG(const double g);
+	double getB() const;
+	void setB(const double b);
+	void setRGB(const double r, const double g, const double b);
+	void addRGBFrom(const rgbTriple other);
 	rgbTriple();
 	rgbTriple(double r, double g, double b);
 	virtual ~rgbTriple();

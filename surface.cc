@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+#include <stdexcept> //This should let me throw standard exceptions
+
 surface::surface()
 {
 	//mat = new material();
@@ -25,18 +27,18 @@ void surface::setMaterialIndex(int n)
 	materialIndex = n;
 }
 
-int surface::getMaterialIndex()
+int surface::getMaterialIndex() const
 {
 	return materialIndex;
 }
 
-double surface::intersectT(ray r)
+double surface::intersectT(const ray r) const
 {
 	std::cout <<"The virtual surface method inersectT is being called." << std::endl;
 	return -1;
 }
 
-vector surface::getSurfaceNormal(point p){
+vector surface::getSurfaceNormal(const point p) const{
 	std::cout <<"THE VIRTUAL SURFACE METHOD getSurfaceNormal IS BEING CALLED" << std::endl;
 	return vector();
 }

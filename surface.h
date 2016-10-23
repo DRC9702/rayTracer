@@ -11,17 +11,18 @@
 
 class surface
 {
-public:
+private:
 	//material* mat;
 	int materialIndex;
+public:
 	surface();
 	virtual ~surface();
 	//void setMaterial(material* input_mat_p);
 	//material* getMaterial();
 	void setMaterialIndex(int n);
-	int getMaterialIndex();
-	virtual double intersectT(ray r_ray);
-	virtual vector getSurfaceNormal(point p);
+	int getMaterialIndex() const;
+	virtual double intersectT(const ray r_ray) const;
+	virtual vector getSurfaceNormal(const point p) const;
 };
 
 #endif

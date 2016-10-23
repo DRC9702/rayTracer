@@ -165,8 +165,8 @@ void readscene::parseSceneFile (char *filnam)
                 
 #ifdef IM_DEBUGGING
                 // if we're debugging, show what we got:
-                cout << "got a sphere with ";
-                cout << "parameters: " << x << " " << y << " " << z << " " << r << endl;
+                //cout << "got a sphere with ";
+                //cout << "parameters: " << x << " " << y << " " << z << " " << r << endl;
 				//cout << "Current material index: " << ms->getMaterialIndex() << endl;
 #endif
                 break;
@@ -197,11 +197,11 @@ void readscene::parseSceneFile (char *filnam)
 
 #ifdef IM_DEBUGGING
 			// if we're debugging, show what we got:
-			cout << "got a Triangle with ";
-			cout << "parameters: p1[" << x1 << ", " << y1 << ", " << z1
-					<< "] p2[" << x2 << ", " << y2 << ", " << z2
-					<< "] p3[" << x3 << ", " << y3 << ", " << z3 << "]"
-					<< endl;
+			//cout << "got a Triangle with ";
+			//cout << "parameters: p1[" << x1 << ", " << y1 << ", " << z1
+			//		<< "] p2[" << x2 << ", " << y2 << ", " << z2
+			//		<< "] p3[" << x3 << ", " << y3 << ", " << z3 << "]"
+			//		<< endl;
 			//cout << "Current material index: " << ms->getMaterialIndex() << endl;
 #endif
 
@@ -220,8 +220,8 @@ void readscene::parseSceneFile (char *filnam)
 
 #ifdef IM_DEBUGGING
                 // if we're debugging, show what we got:
-                cout << "got a Plane with ";
-                cout << "parameters: nx[" << nx << "] ny[" << ny << "] nz[" << nz << "] d[" << d << "]" <<  endl;
+                //cout << "got a Plane with ";
+                //cout << "parameters: nx[" << nx << "] ny[" << ny << "] nz[" << nz << "] d[" << d << "]" <<  endl;
 				//cout << "Current material index: " << ms->getMaterialIndex() << endl;
 #endif
 
@@ -275,8 +275,8 @@ void readscene::parseSceneFile (char *filnam)
 
 #ifdef IM_DEBUGGING
 		                // if we're debugging, show what we got:
-		                cout << "got a PointLight with ";
-		                cout << "parameters: x[" << x << "] y[" << y << "] z[" << z << "] r[" << r << "] g[" << g << "] b[" << b << "]" << " [No intensity(1 for now)]"<<  endl;
+		                //cout << "got a PointLight with ";
+		                //cout << "parameters: x[" << x << "] y[" << y << "] z[" << z << "] r[" << r << "] g[" << g << "] b[" << b << "]" << " [No intensity(1 for now)]"<<  endl;
 #endif
 
                     	break;
