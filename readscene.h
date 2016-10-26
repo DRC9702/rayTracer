@@ -18,6 +18,7 @@
 #include "ray.h"
 #include "exr_test.h"
 #include "pointLight.h"
+#include "ambientLight.h"
 
 
 #ifndef READSCENE_H_
@@ -32,10 +33,11 @@ public:
 	std::vector<surface*> surfaceList = std::vector<surface*>();
 	std::vector<material*> materialList = std::vector<material*>();
 	std::vector<pointLight*> pointLightList = std::vector<pointLight*>();
+	ambientLight ambLight = ambientLight(0,0,0);
 	camera cam;
 	void parseSceneFile (char *filnam);
 	void writeRgba (const char fileName[], const Rgba *pixels, int width, int height);
-	void getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, camera *cam);
+	void getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, camera *cam, ambientLight* ambLight);
 };
 
 

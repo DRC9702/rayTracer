@@ -23,6 +23,7 @@ public:
 	int getMaterialIndex() const;
 	virtual double intersectT(const ray r_ray) const;
 	virtual vector getSurfaceNormal(const point p) const;
+	bool checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) const;
 };
 
 #endif

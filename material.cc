@@ -25,11 +25,13 @@ void material::setMaterial(double dr, double dg, double db, double sr, double sg
 	idealSpec.setRGB(ir,ig,ib);
 }
 
-rgbTriple material::shading(const point p, const camera cam, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const std::vector<pointLight*> &pointLightList) const{
+
+rgbTriple material::shading(const point p, const camera cam, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const std::vector<pointLight*> &pointLightList, const ambientLight &ambLight) const{
 	rgbTriple shadeLight;
 
 	rgbTriple lambertianShading;
 	rgbTriple specularShading;
+	rgbTriple ambientShading;
 	for(unsigned int k=0; k < pointLightList.size(); k++){
 
 		ray ray_pToL = ray(p,pointLightList.at(k)->getPosition());
@@ -54,7 +56,6 @@ rgbTriple material::shading(const point p, const camera cam, const unsigned int 
 		}
 		if(!lightHit) {
 
-
 		//lambertian shading
 		lambertianShadingForPointLight(p, surfaceIndex, surfaceList, pointLightList.at(k), lambertianShading);
 		//specular shading
@@ -64,14 +65,36 @@ rgbTriple material::shading(const point p, const camera cam, const unsigned int 
 		shadeLight.addRGBFrom(specularShading);
 		}
 	}
+	shadingFromAmbientLight(ambLight,ambientShading);
+	shadeLight.addRGBFrom(ambientShading);
 	return shadeLight;
 }
+
+
+void material::shadingFromAmbientLight(const ambientLight &ambLight, rgbTriple &ambient) const{
+	//These are my diffuse coefficients
+	double dr = diffuse.getR();
+	double dg = diffuse.getG();
+	double db = diffuse.getB();
+
+	//These are my light intensity coefficients
+	double IaR = ambLight.getLightValue().getR();
+	double IaG = ambLight.getLightValue().getG();
+	double IaB = ambLight.getLightValue().getB();
+
+	//Diffusely reflect light in each of the three channels
+	ambient.setR(dr*IaR);
+	ambient.setG(dg*IaG);
+	ambient.setB(db*IaB);
+}
+
 
 void material::lambertianShadingForPointLight(const point p, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const pointLight* pL, rgbTriple &lambertianRGB) const{
 	surface *pointSurface = surfaceList.at(surfaceIndex);
 	vector l = pL->getPosition().subtract(p); l.normalize();
 	double distance = pL->getPosition().subtract(p).getMagnitude();
 	vector surfaceNormal = pointSurface->getSurfaceNormal(p);
+
 	//std::cout << "l.x:" << l.x << std::endl;
 	//std::cout << "sn.x:" << surfaceNormal.x << std::endl;
 

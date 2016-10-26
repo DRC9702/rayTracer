@@ -43,6 +43,14 @@ vector surface::getSurfaceNormal(const point p) const{
 	return vector();
 }
 
+bool surface::checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) const{
+	if(	r_ray.getDir().dotProduct(getSurfaceNormal(p)) > 0 )
+		return true;
+	else
+		return false;
+}
+
+
 surface::~surface() {
 	// TODO Auto-generated destructor stub
 }

@@ -283,8 +283,14 @@ void readscene::parseSceneFile (char *filnam)
                     }
                     case 'd':   // directional light
                         break;
-                    case 'a':   // ambient light
-                        break;
+                    case 'a':{   // ambient light
+                    	double r,g,b;
+                    	r = getTokenAsDouble (line, 2);
+						g = getTokenAsDouble (line, 3);
+						b = getTokenAsDouble (line, 4);
+						ambLight = ambientLight(r,g,b);
+                    	break;
+                    }
                         
                 }
                 
@@ -349,11 +355,12 @@ void readscene::parseSceneFile (char *filnam)
 //    file.writePixels (height);
 //}
 
-void readscene::getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, camera *cam){
+void readscene::getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, camera *cam, ambientLight *ambLight){
 	*surfaceList = this->surfaceList;
 	*materialList = this->materialList;
 	*pointLightList = this->pointLightList;
 	*cam = this->cam;
+	*ambLight = this->ambLight;
 }
 
 //

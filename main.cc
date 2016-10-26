@@ -26,6 +26,7 @@ std::vector<surface*> surfaceList = std::vector<surface*>();
 std::vector<material*> materialList = std::vector<material*>();
 std::vector<pointLight*> pointLightList = std::vector<pointLight*>();
 camera cam;
+ambientLight ambLight = ambientLight(.876,0,0);
 
 void writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
 {
@@ -73,7 +74,7 @@ void writePixels(char* outputName){
 						point pnt = pixelRay.getPointFromT(minT);
 						rgbTriple pixelLight;
 
-						rgbTriple shadeLight = mat-> shading(pnt, cam, index, surfaceList, pointLightList);
+						rgbTriple shadeLight = mat-> shading(pnt, cam, index, surfaceList, pointLightList, ambLight);
 
 //						for(unsigned int k=0; k < pointLightList.size(); k++){
 //							//lambertian shading
@@ -103,15 +104,14 @@ void writePixels(char* outputName){
 					}
 
 				}
-	    		writeRgba (outputName, &p[0][0], w, h);
+	    		//writeRgba (outputName, &p[0][0], w, h);
 				//writeRgba ("hw3.exr", &p[0][0], w, h);
 				if(i%(h/10)==0 && i!=0)
 						cout << "|" << i/(h/10)*10 << "|" ;
 			}
 			cout << "|100|" << endl;
 
-
-
+			writeRgba (outputName, &p[0][0], w, h);
 			//cout << "Didn't die while editing the pixels." << endl;
 
 			cout << "Finished writing file" << endl;
@@ -128,7 +128,8 @@ int main (int argc, char *argv[])
     //cout << "no error before parsing" << endl;
     readscene RS;
     RS.parseSceneFile (argv[1]);
-    RS.getData(&surfaceList, &materialList, &pointLightList, &cam);
+
+    RS.getData(&surfaceList, &materialList, &pointLightList, &cam, &ambLight);
 
     //cout << cam.nx << "\t" << cam.ny << endl;
 
@@ -139,6 +140,7 @@ int main (int argc, char *argv[])
 
 
     try{
+
     	writePixels(argv[2]);
     }
     catch (const std::exception &exc) {
