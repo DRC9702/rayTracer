@@ -28,6 +28,8 @@ std::vector<pointLight*> pointLightList = std::vector<pointLight*>();
 camera cam;
 ambientLight ambLight = ambientLight(.876,0,0);
 
+static material BACKSIDE_MATERIAL = material(0, 1, 1, 0, 0, 0, 0, 0, 0, 0);
+
 void writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
 {
     //
@@ -74,7 +76,12 @@ void writePixels(char* outputName){
 						point pnt = pixelRay.getPointFromT(minT);
 						rgbTriple pixelLight;
 						bool isFlipped = surface->getSurfaceNormal(pnt).dotProduct(pixelRay.getDir()) < 0; //Check if you're hitting the backside
-						rgbTriple shadeLight = mat-> shading(pnt, cam, index, surfaceList, pointLightList, ambLight);
+
+						rgbTriple shadeLight;
+						if(!isFlipped)
+							shadeLight = mat-> shading(pnt, cam, index, surfaceList, pointLightList, ambLight);
+						else
+							shadeLight = BACKSIDE_MATERIAL.shading(pnt, cam, index, surfaceList, pointLightList, ambLight);
 
 //						for(unsigned int k=0; k < pointLightList.size(); k++){
 //							//lambertian shading
