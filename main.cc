@@ -73,7 +73,7 @@ void writePixels(char* outputName){
 						material* mat = materialList.at(surface->getMaterialIndex());
 						point pnt = pixelRay.getPointFromT(minT);
 						rgbTriple pixelLight;
-
+						bool isFlipped = surface->getSurfaceNormal(pnt).dotProduct(pixelRay.getDir()) < 0; //Check if you're hitting the backside
 						rgbTriple shadeLight = mat-> shading(pnt, cam, index, surfaceList, pointLightList, ambLight);
 
 //						for(unsigned int k=0; k < pointLightList.size(); k++){

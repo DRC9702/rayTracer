@@ -51,8 +51,10 @@ double plane::intersectT(const ray r_ray) const{
 		double t = -(	(r_ray.getOrigin()).toVectorFromOrigin().dotProduct(normal) - originDistance	)/dirDotNormal;
 		if(t<0)
 			return -1;
-		else
+		else{
+			std::cout <<"PLANE IS Intersected!" << std::endl;
 			return t;
+		}
 		//return 1000;
 
 	}
