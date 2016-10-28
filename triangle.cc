@@ -34,7 +34,7 @@ void triangle::initTrianglePlane(){
 	trianglePlane = plane(p1,p2,p3);
 }
 
-vector triangle::getNormal() const{
+Vector triangle::getNormal() const{
 	return normal;
 }
 plane triangle::getPlane() const{
@@ -42,8 +42,8 @@ plane triangle::getPlane() const{
 }
 
 double triangle::intersectT(const ray r_ray) const{
-	if(checkIfRaySameDirectionAsNormal(r_ray)) //This works!
-		return -1;
+//	if(checkIfRaySameDirectionAsNormal(r_ray)) //This works!
+//		return -1;
 
 	double T = trianglePlane.intersectT(r_ray); //This definitely works by now.
 	if(T < 0){
@@ -64,17 +64,17 @@ double triangle::intersectT(const ray r_ray) const{
 }
 
 bool triangle::crossProductInsideTriangle(const point p) const{
-	vector AB = p2.subtract(p1);
-	vector BC = p3.subtract(p2);
-	vector CA = p1.subtract(p3);
+	Vector AB = p2.subtract(p1);
+	Vector BC = p3.subtract(p2);
+	Vector CA = p1.subtract(p3);
 
-	vector AP = p.subtract(p1);
-	vector BP = p.subtract(p2);
-	vector CP = p.subtract(p3);
+	Vector AP = p.subtract(p1);
+	Vector BP = p.subtract(p2);
+	Vector CP = p.subtract(p3);
 
-	vector n1 = AB.crossProduct(AP);
-	vector n2 = BC.crossProduct(BP);
-	vector n3 = CA.crossProduct(CP);
+	Vector n1 = AB.crossProduct(AP);
+	Vector n2 = BC.crossProduct(BP);
+	Vector n3 = CA.crossProduct(CP);
 
 	if(normal.dotProduct(n1) < 0)
 		return false;
@@ -86,28 +86,28 @@ bool triangle::crossProductInsideTriangle(const point p) const{
 }
 
 bool triangle::barycentricInsideTriangle(const point p) const{
-	vector A = p1.toVectorFromOrigin();
-	vector B = p2.toVectorFromOrigin();
-	vector C = p3.toVectorFromOrigin();
+	Vector A = p1.toVectorFromOrigin();
+	Vector B = p2.toVectorFromOrigin();
+	Vector C = p3.toVectorFromOrigin();
 
-	vector P = p.toVectorFromOrigin();
+	Vector P = p.toVectorFromOrigin();
 
-	vector AB = B.subtract(A);
-	vector BC = C.subtract(B);
-	vector CA = A.subtract(C);
+	Vector AB = B.subtract(A);
+	Vector BC = C.subtract(B);
+	Vector CA = A.subtract(C);
 
 	//double areaABC = AB.crossProduct(C.subtract(A)).getMagnitude()/2;
-	vector AC = C.subtract(A);
-	vector N = AB.crossProduct(AC);
+	Vector AC = C.subtract(A);
+	Vector N = AB.crossProduct(AC);
 
-	vector BP = P.subtract(B);
-	vector CP = P.subtract(C);
-	vector AP = P.subtract(A);
+	Vector BP = P.subtract(B);
+	Vector CP = P.subtract(C);
+	Vector AP = P.subtract(A);
 
 
-	vector na = BC.crossProduct(BP);
-	vector nb = CA.crossProduct(CP);
-	vector nc = AB.crossProduct(AP);
+	Vector na = BC.crossProduct(BP);
+	Vector nb = CA.crossProduct(CP);
+	Vector nc = AB.crossProduct(AP);
 
 	double alpha = (N.dotProduct(na))/ (N.dotProduct(N));
 	double beta = (N.dotProduct(nb))/ (N.dotProduct(N));
@@ -130,7 +130,7 @@ bool triangle::checkIfRaySameDirectionAsNormal(const ray r_ray) const{
 		return false;
 }
 
-vector triangle::getSurfaceNormal(const point p) const{
+Vector triangle::getSurfaceNormal(const point p) const{
 	return normal;
 }
 

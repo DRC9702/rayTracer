@@ -1,8 +1,7 @@
 #include "surface.h"
 #include "ray.h"
-#include "vector.h"
+#include "Vector.h"
 #include "point.h"
-#include <cmath>
 
 #ifndef SPHERE_H
 #define SPHERE_H
@@ -18,7 +17,7 @@ public:
 	sphere(const double x, const double y, const double z, const double radius);
 	//virtual double intersectT(ray r);
 	double intersectT(const ray r_ray) const;
-	vector getSurfaceNormal(const point p) const;
+	Vector getSurfaceNormal(const point p) const;
 
 	const point& getCenter() const {
 		return center;

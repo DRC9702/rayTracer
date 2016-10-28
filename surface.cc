@@ -1,7 +1,4 @@
 #include "surface.h"
-#include "ray.h"
-#include "vector.h"
-#include "point.h"
 
 #include <iostream>
 
@@ -38,9 +35,9 @@ double surface::intersectT(const ray r) const
 	return -1;
 }
 
-vector surface::getSurfaceNormal(const point p) const{
+Vector surface::getSurfaceNormal(const point p) const{
 	std::cout <<"THE VIRTUAL SURFACE METHOD getSurfaceNormal IS BEING CALLED" << std::endl;
-	return vector();
+	return Vector();
 }
 
 bool surface::checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) const{

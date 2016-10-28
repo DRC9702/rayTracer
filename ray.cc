@@ -1,15 +1,13 @@
 #include "ray.h"
-#include "point.h"
-#include "vector.h"
 
 //Constructor
 
 ray::ray(){
 	origin = point();
-	dir = vector().getNormalizedVector();
+	dir = Vector().getNormalizedVector();
 }
 
-ray::ray(const point origin, const vector dir) //Will normalize the input vector
+ray::ray(const point origin, const Vector dir) //Will normalize the input Vector
 {
 	setOrigin(origin);
 	setDir(dir);
@@ -23,7 +21,7 @@ ray::ray(const double px, const double py, const double pz, const double vx, con
 
 ray::ray(const point p1, const point p2){
 	setOrigin(p1);
-	vector vec = p2.subtract(p1);
+	Vector vec = p2.subtract(p1);
 	setDir(vec);
 }
 
@@ -38,14 +36,14 @@ void ray::setOrigin(const double px, const double py, const double pz)
 	setOrigin(p);
 }
 
-void ray::setDir(const vector v)
+void ray::setDir(const Vector v)
 {
 	dir = v.getNormalizedVector();
 }
 
 void ray::setDir(const double vx, const double vy, const double vz)
 {
-	vector v (vx, vy, vz);
+	Vector v (vx, vy, vz);
 	setDir(v);
 }
 

@@ -9,17 +9,17 @@
 #include <iostream>
 
 plane::plane() {
-	normal = vector(0,1,0);
+	normal = Vector(0,1,0);
 	originDistance = 0;
 }
 
-plane::plane(vector normal, double originDistance){
+plane::plane(Vector normal, double originDistance){
 	this->normal = normal.getNormalizedVector();
 	this->originDistance = originDistance;
 }
 
 plane::plane(double nx, double ny, double nz, double originDistance){
-	this->normal = vector(nx,ny,nz);
+	this->normal = Vector(nx,ny,nz).getNormalizedVector();
 	this->originDistance = originDistance;
 }
 
@@ -28,14 +28,14 @@ plane::plane(point p1, point p2, point p3){
 	originDistance = normal.dotProduct(p1.toVectorFromOrigin());
 }
 
-vector plane::getNormal() const{
+Vector plane::getNormal() const{
 	return normal;
 }
 double plane::getOriginDistance() const{
 	return originDistance;
 }
 
-vector plane::getSurfaceNormal(const point p) const{
+Vector plane::getSurfaceNormal(const point p) const{
 	//ToDo: Should implement an assertion here to make sure p is on surface. //I can't figure out how
 	//std::cout <<"PLANE IS THE GUY BEING CALLED" << std::endl;
 	return getNormal();
@@ -51,12 +51,10 @@ double plane::intersectT(const ray r_ray) const{
 	else{ //Yes intersection
 		double t = -(	(r_ray.getOrigin()).toVectorFromOrigin().dotProduct(normal) - originDistance	)/dirDotNormal;
 		if(t<0){ //Plane should be hit from the back
-			std::cout <<"PLANE IS Intersected from back!" << std::endl;
 			return -1;
 			//return -t;
 		}
 		else{
-			//std::cout <<"PLANE IS Intersected! from front!" << std::endl;
 			return t;
 		}
 		//return 1000;

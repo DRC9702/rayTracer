@@ -46,3 +46,14 @@ void rgbTriple::addRGBFrom(const rgbTriple other){
 rgbTriple::~rgbTriple() {
 	// TODO Auto-generated destructor stub
 }
+
+bool rgbTriple::isBlank() const{
+	if(r!=0 || g!=0 || b!=0)
+		return false;
+	else
+		return true;
+}
+
+rgbTriple rgbTriple::componentMultiplication(const rgbTriple other) const{
+	return rgbTriple(r*other.r, g*other.g, b*other.b);
+}

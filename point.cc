@@ -1,6 +1,4 @@
-#include<iostream>
 #include "point.h"
-#include "vector.h"
 
 //Constructor
 point::point ()
@@ -22,7 +20,7 @@ void point::setCoords(double x, double y, double z)
 	this->z = z;
 }
 
-point point::addVector(const vector vec) const
+point point::addVector(const Vector vec) const
 {
 	return point(x+vec.getX(), y+vec.getY(), z+vec.getZ());
 }
@@ -34,11 +32,11 @@ bool point::isEqual(const point other) const{
 		return false;
 }
 
-vector point::subtract(const point other) const{
-	return vector(x-other.getX(), y-other.getY(), z-other.getZ());
+Vector point::subtract(const point other) const{
+	return Vector(x-other.getX(), y-other.getY(), z-other.getZ());
 }
 
-vector point::toVectorFromOrigin() const{
+Vector point::toVectorFromOrigin() const{
 	return subtract(point(0,0,0));
 }
 

@@ -26,9 +26,11 @@ void material::setMaterial(double dr, double dg, double db, double sr, double sg
 }
 
 
-rgbTriple material::shading(const point p, const camera cam, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const std::vector<pointLight*> &pointLightList, const ambientLight &ambLight) const{
-	rgbTriple shadeLight;
+rgbTriple material::shading(const point p, const camera cam, const unsigned int surfaceIndex,
+		const std::vector<surface*> &surfaceList, const std::vector<pointLight*> &pointLightList,
+		const ambientLight &ambLight, const Vector surfaceNormal, const Vector pToSource, const bool isFlipped) const{
 
+	rgbTriple shadeLight;
 	rgbTriple lambertianShading;
 	rgbTriple specularShading;
 	rgbTriple ambientShading;
@@ -56,13 +58,14 @@ rgbTriple material::shading(const point p, const camera cam, const unsigned int 
 		}
 		if(!lightHit) {
 
-		//lambertian shading
-		lambertianShadingForPointLight(p, surfaceIndex, surfaceList, pointLightList.at(k), lambertianShading);
-		//specular shading
-		specularShadingForPointLight(p, cam, surfaceIndex, surfaceList, pointLightList.at(k), specularShading);
-		//Adding all shading from pointlight
-		shadeLight.addRGBFrom(lambertianShading);
-		shadeLight.addRGBFrom(specularShading);
+			Vector tempSurfaceNormal = (isFlipped) ? surfaceNormal.scalarMultiply(-1) : surfaceNormal;
+			//lambertian shading
+			lambertianShadingForPointLight(p, pointLightList.at(k), lambertianShading, tempSurfaceNormal);
+			//specular shading
+			specularShadingForPointLight(p, pointLightList.at(k), specularShading, tempSurfaceNormal, pToSource);
+			//Adding all shading from pointlight
+			shadeLight.addRGBFrom(lambertianShading);
+			shadeLight.addRGBFrom(specularShading);
 		}
 	}
 	shadingFromAmbientLight(ambLight,ambientShading);
@@ -89,11 +92,9 @@ void material::shadingFromAmbientLight(const ambientLight &ambLight, rgbTriple &
 }
 
 
-void material::lambertianShadingForPointLight(const point p, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const pointLight* pL, rgbTriple &lambertianRGB) const{
-	surface *pointSurface = surfaceList.at(surfaceIndex);
-	vector l = pL->getPosition().subtract(p); l.normalize();
+void material::lambertianShadingForPointLight(const point p,const pointLight* pL, rgbTriple &lambertianRGB, const Vector surfaceNormal) const{
+	Vector l = pL->getPosition().subtract(p); l.normalize();
 	double distance = pL->getPosition().subtract(p).getMagnitude();
-	vector surfaceNormal = pointSurface->getSurfaceNormal(p);
 
 	//std::cout << "l.x:" << l.x << std::endl;
 	//std::cout << "sn.x:" << surfaceNormal.x << std::endl;
@@ -114,14 +115,12 @@ void material::lambertianShadingForPointLight(const point p, const unsigned int 
 	lambertianRGB.setB(db * dotMultiplier * pL->getLightValue().getB() * intensityCoefficient);
 }
 
-void material::specularShadingForPointLight(const point p, const camera cam, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const pointLight* pL, rgbTriple &specularRGB) const{
-	surface* pointSurface = surfaceList.at(surfaceIndex);
-	vector v = (cam.getEye()).subtract(p).getNormalizedVector();
-	vector surfaceNormal = pointSurface->getSurfaceNormal(p);
+void material::specularShadingForPointLight(const point p, const pointLight* pL, rgbTriple &specularRGB, const Vector &surfaceNormal, const Vector &pToSource) const{
+	Vector v = pToSource;
 	//std::cout << "surface normal before stuff[" << surfaceNormal.getMagnitude() << "]" << std::endl;
-	vector l = pL->getPosition().subtract(p); l.normalize();
+	Vector l = pL->getPosition().subtract(p); l.normalize();
 	double distance = pL->getPosition().subtract(p).getMagnitude();
-	vector h = v.add(l); h.normalize(); //Since both v and l are unit vectors, this should bisect them
+	Vector h = v.add(l); h.normalize(); //Since both v and l are unit vectors, this should bisect them
 
 	//These are my specular coefficients
 	double sr = specular.getR();

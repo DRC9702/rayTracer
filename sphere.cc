@@ -1,12 +1,7 @@
 #include "sphere.h"
 #include "surface.h"
-#include "ray.h"
-#include "vector.h"
-#include "point.h"
 #include <cmath>
 #include <cassert>
-
-#include <iostream>
 
 sphere::sphere(const point center,const double radius)
 {
@@ -23,7 +18,7 @@ sphere::sphere(const double x, const double y, const double z, const double radi
 
 double sphere::intersectT(const ray r_ray) const
 {
-	vector p0minusO = r_ray.getOrigin().subtract(center);
+	Vector p0minusO = r_ray.getOrigin().subtract(center);
 	double a1 = (r_ray.getDir().scalarMultiply(-1)).dotProduct(p0minusO);
 	
 	double a2 = (r_ray.getDir()).dotProduct(p0minusO);
@@ -68,8 +63,8 @@ double sphere::intersectT(const ray r_ray) const
 
 }
 
-vector sphere::getSurfaceNormal(const point p) const{
-	vector sn = p.subtract(getCenter());
+Vector sphere::getSurfaceNormal(const point p) const{
+	Vector sn = p.subtract(getCenter());
 	//std::cout <<"Magnitude: " << sn.getMagnitude() << "\tRadius: " << getRadius() << std::endl;
 	assert(std::abs(sn.getMagnitude()-getRadius())<.1); //I don't know how much precision is needed.
 	//std::cout <<"SPHERE IS THE GUY BEING CALLED" << std::endl;

@@ -1,7 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
 
-#include "vector.h"
+#include "Vector.h"
 
 class point
 {
@@ -13,10 +13,10 @@ public:
 	point();
 	point(double x, double y, double z);
 	void setCoords(double x, double y, double z);
-	point addVector(const vector vec) const;
+	point addVector(const Vector vec) const;
 	bool isEqual(const point other) const;
-	vector subtract(const point other) const;
-	vector toVectorFromOrigin() const;
+	Vector subtract(const point other) const;
+	Vector toVectorFromOrigin() const;
 
 	double getX() const {
 		return x;

@@ -1,5 +1,5 @@
 #include "ray.h"
-#include "vector.h"
+#include "Vector.h"
 #include "point.h"
 //#include "material.h"
 
@@ -22,7 +22,7 @@ public:
 	void setMaterialIndex(int n);
 	int getMaterialIndex() const;
 	virtual double intersectT(const ray r_ray) const;
-	virtual vector getSurfaceNormal(const point p) const;
+	virtual Vector getSurfaceNormal(const point p) const;
 	bool checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) const;
 };
 
