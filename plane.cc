@@ -44,17 +44,19 @@ vector plane::getSurfaceNormal(const point p) const{
 
 double plane::intersectT(const ray r_ray) const{
 	double dirDotNormal = (r_ray.getDir()).dotProduct(normal);
+
 	if(dirDotNormal==0){
 		return -1; //No intersection. Plane and ray are parallel
 	}
 	else{ //Yes intersection
 		double t = -(	(r_ray.getOrigin()).toVectorFromOrigin().dotProduct(normal) - originDistance	)/dirDotNormal;
-		if(t<0){
+		if(t<0){ //Plane should be hit from the back
 			std::cout <<"PLANE IS Intersected from back!" << std::endl;
 			return -1;
+			//return -t;
 		}
 		else{
-			std::cout <<"PLANE IS Intersected! from front!" << std::endl;
+			//std::cout <<"PLANE IS Intersected! from front!" << std::endl;
 			return t;
 		}
 		//return 1000;
