@@ -334,26 +334,39 @@ void readscene::parseSceneFile (char *filnam)
             //
             case 'o':   // make your own options if you wish
                 break;
+
+            case 'w':{ //obj file
+            	std::vector<int> tris;
+            	std::vector<double> verts;
+            	const char *fileLoc = line.substr(2).c_str();
+
+            	read_wavefront_file(fileLoc, tris, verts); //
+            	for(unsigned int i=0; i<tris.size()/3; i++){
+            		double x1, y1, z1, x2, y2, z2, x3, y3, z3;
+					//Point1
+					x1 = verts[3*tris[3*i]];
+					y1 = verts[3*tris[3*i]+1];
+					z1 = verts[3*tris[3*i]+2];
+					//Point2
+					x2 = verts[3*tris[3*i+1]];
+					y2 = verts[3*tris[3*i+1]+1];
+					z2 = verts[3*tris[3*i+1]+2];
+					//Point3
+					x3 = verts[3*tris[3*i+2]];
+					y3 = verts[3*tris[3*i+2]+1];
+					z3 = verts[3*tris[3*i+2]+2];
+
+					triangle *mt = new triangle(x1,y1,z1,x2,y2,z2,x3,y3,z3);
+					mt->setMaterialIndex(materialList.size()-1);
+					surfaceList.push_back(mt);
+            	}
+            	break;
+            }
         }
         
     }
 }
 
-//void readscene::writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
-//{
-//    //
-//    // Write an RGBA image using class RgbaOutputFile.
-//    //
-//    //	- open the file
-//    //	- describe the memory layout of the pixels
-//    //	- store the pixels in the file
-//    //
-//
-//
-//    RgbaOutputFile file (fileName, width, height, WRITE_RGBA);
-//    file.setFrameBuffer (pixels, 1, width);
-//    file.writePixels (height);
-//}
 
 void readscene::getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, camera *cam, ambientLight *ambLight){
 	*surfaceList = this->surfaceList;
@@ -363,88 +376,66 @@ void readscene::getData(std::vector<surface*> *surfaceList, std::vector<material
 	*ambLight = this->ambLight;
 }
 
-//
-// the main just makes sure that there is an argument passed, which is
-// supposed to be the scenefile.
-//
 
-/*
-int main (int argc, char *argv[])
-{
-  
-    if (argc != 3) {
-        cerr << "useage: raytra scenefilename writefilename" << endl;
-        return -1;
-    }
-    //cout << "no error before parsing" << endl;
-    parseSceneFile (argv[1]);
-    //cout << cam.nx << "\t" << cam.ny << endl;
+void readscene::read_wavefront_file (const char *file, std::vector< int > &tris, std::vector< double > &verts){
+    
+    // clear out the tris and verts vectors:
+    tris.clear ();
+    verts.clear ();
+
+    ifstream in(file);
+    char buffer[1025];
+    string cmd;
     
     
-    
-    //cout << surfaceList -> at(0) -> intersectT(ray (0, 13.67, 0, 0, 0, -1)) << endl;
-	//cout << surfaceList.at(0) -> intersectT(ray (0, 13.67, 0, 0, 0, -1)) << endl;
-    
+    for (int line=1; in.good(); line++) {
+        in.getline(buffer,1024);
+        buffer[in.gcount()]=0;
 
-    try{
-    	int w = cam.nx;
-    	int h = cam.ny;
-        Array2D<Rgba> p (h,w);
-		p.resizeErase(h,w);
+        cmd="";
 
-		cout << "Progress: |0|";
-        for(int i=0; i < h; i++){
-			for(int j=0; j < w; j++) {
-				bool assigned = false;
-				int index = -1;
-				double minT = -1;
-				for(unsigned int k=0; k < surfaceList.size(); k++){
-					//We need to flip the y axis orientation because while our math uses a traditional x+ right, y+ up grid, the pixels are created with x+ right,y+ down
-					//In this loop, I will represent the pixel index from the bottom, so since we want pixel index from the top, we calculate our rays with (h-i)
-					//Another note: i is the vertical index, j is the horizontal index, so compared to the book, we must call generateRayForPixel with (j, h-i);
-					if(	(!assigned && surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) > 0) || (assigned && surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) < minT	&& surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i)) != -1	)	){
-						assigned=true;						
-						index = k;
-						minT = surfaceList.at(k) -> intersectT(cam.generateRayForPixel(j,h-i));
-					}
-				}
-				Rgba &px = p[i][j]; 
-				if(assigned)
-				{
-					material *mat = materialList.at(surfaceList.at(index)->getMaterialIndex());
-					px.r=mat->dr; px.g=mat->dg; px.b=mat->db;
-				}
-				else
-				{
-					px.r=0; px.g=0; px.b=0;
-				}
+        istringstream iss (buffer);
 
-			}
-    		//writeRgba (argv[2], &p[0][0], w, h);
-			writeRgba ("hw1.exr", &p[0][0], w, h);
-			if(i%(h/10)==0 && i!=0)
-					cout << "|" << i/(h/10)*10 << "|" ;
-		}
-		cout << "|100|" << endl;
+        iss >> cmd;
 
+        //cout << "trisSize: " << tris.size() << endl;
 
+        if (cmd[0]=='#' or cmd.empty()) {
+            // ignore comments or blank lines
+            continue;
+        }
+        else if (cmd=="v") {
+            // got a vertex:
 
-		//cout << "Didn't die while editing the pixels." << endl;
+            // read in the parameters:
+            double pa, pb, pc;
+            iss >> pa >> pb >> pc;
 
-		cout << "Finished writing file" << endl;
+            verts.push_back (pa);
+            verts.push_back (pb);
+            verts.push_back (pc);
+         }
+        else if (cmd=="f") {
+            // got a face (triangle)
 
+            // read in the parameters:
+            int i, j, k;
+            iss >> i >> j >> k;
+
+            // vertex numbers in OBJ files start with 1, but in C++ array
+            // indices start with 0, so we're shifting everything down by
+            // 1
+            tris.push_back (i-1);
+            tris.push_back (j-1);
+            tris.push_back (k-1);
+        }
+        else {
+            std::cerr << "Parser error: invalid command at line " << line << std::endl;
+        }
         
-    }
-    catch (const std::exception &exc) {
-        std::cerr << exc.what() << std::endl;
-        return 1;
-    }
+     }
     
+    in.close();
     
-    
-    
-    
-    return 0;
+ //   std::cout << "found this many tris, verts: " << tris.size () / 3.0 << "  " << verts.size () / 3.0 << std::endl;
 }
-
-*/

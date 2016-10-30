@@ -38,6 +38,7 @@ public:
 	void parseSceneFile (char *filnam);
 	void writeRgba (const char fileName[], const Rgba *pixels, int width, int height);
 	void getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, camera *cam, ambientLight* ambLight);
+	void read_wavefront_file (const char *file, std::vector< int > &tris, std::vector< double > &verts);
 };
 
 

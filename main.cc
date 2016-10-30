@@ -33,8 +33,9 @@ static material *BACKSIDE_MATERIAL= new material(1, 1, 0, 0, 0, 0, 0, 0, 0, 0);
 
 static int RECURSION_LIMIT = 20;
 
-static int REGULAR_RAY = 0;
-static int SHADOW_RAY = 1;
+static int PRIMARY_RAY = 0; //This one tells you when to do ambient shading
+static int REGULAR_RAY = 1;
+static int SHADOW_RAY = 2;
 
 void writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
 {
@@ -113,9 +114,12 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 			  R.addRGBFrom(specularShading);
 		  }
 	  }
-	  rgbTriple ambientShading;
-	  materialPointer -> shadingFromAmbientLight(ambLight,ambientShading);
-	  R.addRGBFrom(ambientShading);
+
+	  if(rayType == PRIMARY_RAY){
+		  rgbTriple ambientShading;
+		  //materialPointer -> shadingFromAmbientLight(ambLight,ambientShading);
+		  R.addRGBFrom(ambientShading);
+	  }
 
 //	  cout << "r" << materialPointer -> getIdealSpec().getR() << "g" << materialPointer -> getIdealSpec().getG() << endl;
 
@@ -145,7 +149,7 @@ void writePixels(char* outputName){
 				for(int j=0; j < w; j++) {
 					ray pixelRay = cam.generateRayForPixel(j,h-1-i);
 
-					rgbTriple pixelLight = L (pixelRay, 0.0001, INFINITY, RECURSION_LIMIT, REGULAR_RAY, pointLight());
+					rgbTriple pixelLight = L (pixelRay, 0.0001, INFINITY, RECURSION_LIMIT, PRIMARY_RAY, pointLight());
 					Rgba &px = p[i][j];
 					px.r = pixelLight.getR(); px.g = pixelLight.getG(); px.b =pixelLight.getB();
 				}
