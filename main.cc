@@ -117,7 +117,7 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 
 	  if(rayType == PRIMARY_RAY){
 		  rgbTriple ambientShading;
-		  //materialPointer -> shadingFromAmbientLight(ambLight,ambientShading);
+		  materialPointer -> shadingFromAmbientLight(ambLight,ambientShading);
 		  R.addRGBFrom(ambientShading);
 	  }
 
