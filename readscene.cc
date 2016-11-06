@@ -209,22 +209,22 @@ void readscene::parseSceneFile (char *filnam)
 			}
             case 'p':   // plane
             {
-            	double nx, ny, nz, d;
-            	nx = getTokenAsDouble (line, 1);
-				ny = getTokenAsDouble (line, 2);
-				nz = getTokenAsDouble (line, 3);
-				d = getTokenAsDouble (line, 4);
-				plane *mp = new plane(nx,ny,nz,d);
-				mp->setMaterialIndex(materialList.size()-1);
-				surfaceList.push_back(mp);
-
-#ifdef IM_DEBUGGING
-                // if we're debugging, show what we got:
-                //cout << "got a Plane with ";
-                //cout << "parameters: nx[" << nx << "] ny[" << ny << "] nz[" << nz << "] d[" << d << "]" <<  endl;
-				//cout << "Current material index: " << ms->getMaterialIndex() << endl;
-#endif
-
+//            	double nx, ny, nz, d;
+//            	nx = getTokenAsDouble (line, 1);
+//				ny = getTokenAsDouble (line, 2);
+//				nz = getTokenAsDouble (line, 3);
+//				d = getTokenAsDouble (line, 4);
+//				plane *mp = new plane(nx,ny,nz,d);
+//				mp->setMaterialIndex(materialList.size()-1);
+//				surfaceList.push_back(mp);
+//
+//#ifdef IM_DEBUGGING
+//                // if we're debugging, show what we got:
+//                //cout << "got a Plane with ";
+//                //cout << "parameters: nx[" << nx << "] ny[" << ny << "] nz[" << nz << "] d[" << d << "]" <<  endl;
+//				//cout << "Current material index: " << ms->getMaterialIndex() << endl;
+//#endif
+            	cout << "We got a plane but no way to handle them as inputs because of bounding boxes. :/. Will figure out later." << endl;
                 break;
             }
                 

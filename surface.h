@@ -1,6 +1,7 @@
 #include "ray.h"
 #include "Vector.h"
 #include "point.h"
+#include "BBox.h"
 //#include "material.h"
 
 #ifndef SURFACE_H
@@ -14,6 +15,7 @@ class surface
 private:
 	//material* mat;
 	int materialIndex;
+	BBox boundingBox;
 public:
 	surface();
 	virtual ~surface();
@@ -21,6 +23,7 @@ public:
 	//material* getMaterial();
 	void setMaterialIndex(int n);
 	int getMaterialIndex() const;
+	double intersectWithBBox(const ray r_ray, bool useBBox) const;
 	virtual double intersectT(const ray r_ray) const;
 	virtual Vector getSurfaceNormal(const point p) const;
 	bool checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) const;

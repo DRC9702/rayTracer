@@ -8,6 +8,7 @@ surface::surface()
 {
 	//mat = new material();
 	materialIndex=0; //Default material
+	boundingBox = BBox();
 }
 
 //void surface::setMaterial(material* input_mat_p)
@@ -27,6 +28,15 @@ void surface::setMaterialIndex(int n)
 int surface::getMaterialIndex() const
 {
 	return materialIndex;
+}
+
+double surface::intersectWithBBox(const ray r_ray, bool useBBox) const{
+	if(useBBox){
+		return boundingBox.intersectRay(r_ray);
+	}
+	else{
+		return intersectT(r_ray);
+	}
 }
 
 double surface::intersectT(const ray r) const

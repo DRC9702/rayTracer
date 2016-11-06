@@ -37,6 +37,11 @@ static int PRIMARY_RAY = 0; //This one tells you when to do ambient shading
 static int REGULAR_RAY = 1;
 static int SHADOW_RAY = 2;
 
+int renderBoxFlag = -1;
+static int USE_BVH_TREE = 2;
+static int NO_BVH_TREE = 0;
+static int BBOXED = 1;
+
 void writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
 {
     //
@@ -61,7 +66,7 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  if (rayType == SHADOW_RAY) {
 		  //bool intersectionFound = false; //I don't think I need it here at all
 		  for(unsigned int k=0; k < surfaceList.size(); k++){
-			  double tempT = surfaceList.at(k) -> intersectT(inputRay);
+			  double tempT = surfaceList.at(k) -> intersectWithBBox(inputRay,renderBoxFlag==1);
 			  if (tempT > minT && tempT < maxT){
 				  return rgbTriple(0,0,0);
 			  }
@@ -72,9 +77,9 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  //Get closest intersection with scene
 	  bool intersectionFound = false;
 	  int index = -1;
-	  double closestT;
+	  double closestT = -1;
 	  for(unsigned int k=0; k < surfaceList.size(); k++){
-		  double tempT = surfaceList.at(k) -> intersectT(inputRay);
+		  double tempT = surfaceList.at(k) -> intersectWithBBox(inputRay,renderBoxFlag	==1);
 		  if(tempT < minT || tempT > maxT){
 			  continue;
 		  }
@@ -166,106 +171,28 @@ void writePixels(char* outputName){
 			cout << "Finished writing file" << endl;
 }
 
-//void writePixels(char* outputName){
-//	int w = cam.getNx();
-//	int h = cam.getNy();
-//	Array2D<Rgba> p (h,w);
-//	p.resizeErase(h,w);
-//
-//	cout << "Progress: |0|";
-//	        for(int i=0; i < h; i++){
-//				for(int j=0; j < w; j++) {
-//					ray pixelRay = cam.generateRayForPixel(j,h-1-i);
-//					bool assigned = false;
-//					int index = -1;
-//					double minT = -1;
-//					for(unsigned int k=0; k < surfaceList.size(); k++){
-//						//We need to flip the y axis orientation because while our math uses a traditional x+ right, y+ up grid, the pixels are created with x+ right,y+ down
-//						//In this loop, I will represent the pixel index from the bottom, so since we want pixel index from the top, we calculate our rays with (h-i)
-//						//Another note: i is the vertical index, j is the horizontal index, so compared to the book, we must call generateRayForPixel with (j, h-i);
-//						double tempT = surfaceList.at(k) -> intersectT(pixelRay);
-//						if(	(!assigned && tempT > 0) || (assigned && tempT < minT && tempT != -1)	){
-//							assigned=true;
-//							index = k;
-//							minT = tempT;
-//						}
-//					}
-//					Rgba &px = p[i][j];
-//					if(assigned)
-//					{
-//						surface* surface = surfaceList.at((unsigned int)index);
-//						material* mat = materialList.at(surface->getMaterialIndex());
-//						point pnt = pixelRay.getPointFromT(minT);
-//						rgbTriple pixelLight;
-//						Vector surfaceNormal = surface->getSurfaceNormal(pnt);
-//						Vector pToSource = (pixelRay.getOrigin()).subtract(pnt).getNormalizedVector();
-//						bool isFlipped = surfaceNormal.dotProduct(pixelRay.getDir()) > 0; //Check if you're hitting the backside
-//
-//
-////						cout << "surfaceNormal[" << surfaceNormal.getX() << "," << surfaceNormal.getY() << "," << surfaceNormal.getZ()<< "]"<< endl;
-////						cout << "pixelRayDir[" << pixelRay.getDir().getX() << "," << pixelRay.getDir().getY() << "," << pixelRay.getDir().getZ()<< "]"<< endl;
-////
-////						cout << "dotProduct[" << surfaceNormal.dotProduct(pixelRay.getDir()) << "]"<< endl;
-////						cout << "isFlipped[" << isFlipped << "]"<< endl;
-//						rgbTriple shadeLight;
-//						if(!isFlipped){
-////							cout << "shading with surface's material" << endl;
-//							shadeLight = mat-> shading(pnt, cam, index, surfaceList, pointLightList, ambLight,surfaceNormal, pToSource, isFlipped);
-//						}
-//						else{
-////							cout << "Shading with yellow material" << endl;
-//							shadeLight = BACKSIDE_MATERIAL->shading(pnt, cam, index, surfaceList, pointLightList, ambLight, surfaceNormal, pToSource, isFlipped);
-//							shadeLight = rgbTriple(1,1,0);
-//						}
-//
-////						for(unsigned int k=0; k < pointLightList.size(); k++){
-////							//lambertian shading
-////							rgbTriple lambertianShading;
-////							//double templsr, templsg, templsb;
-////							mat->lambertianShading(pnt, index, surfaceList, pointLightList.at(k), lambertianShading);
-////							pixelLight.addRGBFrom(lambertianShading);
-////							//specular shading
-////							rgbTriple specularShading;
-////							//double tempssr, tempssg, tempssb;
-////							mat->specularShading(pnt, cam, index, surfaceList, pointLightList.at(k), specularShading);
-////							pixelLight.addRGBFrom(specularShading);
-////
-////						}
-//
-//
-//						pixelLight.addRGBFrom(shadeLight);
-//						px.r = pixelLight.getR(); px.g = pixelLight.getG(); px.b =pixelLight.getB();
-////						px.r=mat->dr; px.g=mat->dg; px.b=mat->db;
-//
-//					}
-//
-//
-//					else
-//					{
-//						px.r=0; px.g=0; px.b=0;
-//					}
-//
-//				}
-//	    		//writeRgba (outputName, &p[0][0], w, h);
-//				//writeRgba ("hw3.exr", &p[0][0], w, h);
-//				if(i%(h/10)==0 && i!=0)
-//						cout << "|" << i/(h/10)*10 << "|" ;
-//			}
-//			cout << "|100|" << endl;
-//
-//			writeRgba (outputName, &p[0][0], w, h);
-//			//cout << "Didn't die while editing the pixels." << endl;
-//
-//			cout << "Finished writing file" << endl;
-//}
 
 int main (int argc, char *argv[])
 {
 
-    if (argc != 3) {
-        cerr << "useage: raytra scenefilename writefilename" << endl;
+	if(argc == 3){
+		renderBoxFlag = USE_BVH_TREE;
+	}
+	else if(argc==4){
+		//Get the renderBoxFlag
+		renderBoxFlag = atoi( argv[3] ); //I tried stoi but it didn't work :(
+		cout << renderBoxFlag << endl;
+		if(renderBoxFlag != 0 && renderBoxFlag != 1){
+			cerr << "flag_render_bboxes must be of: {omitted,0,1}" << endl;
+			return -1;
+		}
+	}
+	else {
+        cerr << "useage: raytra scenefilename writefilename flag_render_bboxes[Optional]" << endl;
         return -1;
     }
+
+
 
     //cout << "no error before parsing" << endl;
     readscene RS;
@@ -274,11 +201,6 @@ int main (int argc, char *argv[])
     RS.getData(&surfaceList, &materialList, &pointLightList, &cam, &ambLight);
 
     //cout << cam.nx << "\t" << cam.ny << endl;
-
-
-
-    //cout << surfaceList -> at(0) -> intersectT(ray (0, 13.67, 0, 0, 0, -1)) << endl;
-	//cout << surfaceList.at(0) -> intersectT(ray (0, 13.67, 0, 0, 0, -1)) << endl;
 
 
     try{

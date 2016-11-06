@@ -10,7 +10,8 @@
 
 #include "surface.h"
 
-class plane: public surface {
+//class plane: public surface {
+class plane{
 private:
 	Vector normal;
 	double originDistance; //distance between origin and closest point on plane in direction of normal
