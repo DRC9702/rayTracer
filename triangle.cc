@@ -58,6 +58,17 @@ plane triangle::getPlane() const{
 	return trianglePlane;
 }
 
+
+
+Intersection triangle::checkIntersect(const ray r_ray) const{
+	double tVal = intersectT(r_ray);
+	if(tVal < 0) //Miss
+		return Intersection();
+	else
+		return Intersection(getMaterialIndex(), tVal, getSurfaceNormal(r_ray.getPointFromT(tVal)));
+}
+
+
 double triangle::intersectT(const ray r_ray) const{
 //	if(checkIfRaySameDirectionAsNormal(r_ray)) //This works!
 //		return -1;

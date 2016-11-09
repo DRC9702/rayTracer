@@ -15,13 +15,13 @@ private:
 	int materialIndex;
 	double tVal;
 	Vector surfaceNormal;
-	bool isHit;
+	bool hit;
 
 public:
 	Intersection();
 	Intersection(int materialIndex, double tVal, Vector surfaceNormal);
 	virtual ~Intersection();
-	bool isIsHit() const;
+	bool isHit() const;
 	int getMaterialIndex() const;
 	const Vector& getSurfaceNormal() const;
 	double getVal() const;

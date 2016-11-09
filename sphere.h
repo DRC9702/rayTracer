@@ -18,6 +18,7 @@ public:
 	//virtual double intersectT(ray r);
 	void initBBox();
 	double intersectT(const ray r_ray) const;
+	Intersection checkIntersect(const ray r_ray) const;
 	Vector getSurfaceNormal(const point p) const;
 
 	const point& getCenter() const {

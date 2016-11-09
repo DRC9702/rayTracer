@@ -26,10 +26,12 @@ public:
 	int getMaterialIndex() const;
 	//double intersectWithBBox(const ray r_ray, bool useBBox) const;
 	virtual void setBoundingBox(BBox bbox);
-	virtual double checkIntersect(const ray r_ray, int useBBox) const;
+	Intersection checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const;
+	virtual Intersection checkIntersect(const ray r_ray) const;
 	//virtual double intersectT(const ray r_ray) const;
 	virtual Vector getSurfaceNormal(const point p) const;
 	bool checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) const;
+	const BBox& getBoundingBox() const;
 };
 
 #endif

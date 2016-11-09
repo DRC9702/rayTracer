@@ -10,7 +10,7 @@
 Intersection::Intersection(){
 	materialIndex=0; //Default material index
 	tVal = -1; //Miss
-	isHit = false;
+	hit = false;
 	surfaceNormal = Vector();
 }
 
@@ -18,11 +18,11 @@ Intersection::Intersection(int materialIndex, double tVal, Vector surfaceNormal)
 	this->materialIndex = materialIndex;
 	this->tVal = tVal;
 	this->surfaceNormal = surfaceNormal;
-	isHit = true;
+	hit = true;
 }
 
-bool Intersection::isIsHit() const {
-	return isHit;
+bool Intersection::isHit() const {
+	return hit;
 }
 
 int Intersection::getMaterialIndex() const {

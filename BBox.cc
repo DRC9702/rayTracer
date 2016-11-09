@@ -21,7 +21,7 @@ BBox::~BBox() {
 	// TODO Auto-generated destructor stub
 }
 
-double BBox::intersectRay(const ray& r) const{
+Intersection BBox::checkIntersect(const ray& r) const{
 	point rayO = r.getOrigin();
 	Vector rayDir = r.getDir();
 
@@ -70,30 +70,37 @@ double BBox::intersectRay(const ray& r) const{
 
 	//Check if the t-intervals overlap
 	//First check if the tx interval isn't outside the others
-	if(	(txMin>tyMax) || (txMin>tzMax)	)
-		return -1;
+	if(	(txMin>tyMax) || (txMin>tzMax)	){
+		return Intersection();
+	}
 	//Then check if the ty interval isn't outside the others
-	if(	(tyMin>txMax) || (tyMin>tzMax)	)
-			return -1;
+	if(	(tyMin>txMax) || (tyMin>tzMax)	){
+		return Intersection();
+	}
 	//Finally check if the tz interval isn't outside the others
-	if(	(tzMin>txMax) || (tzMin>tyMax)	)
-				return -1;
-
+	if(	(tzMin>txMax) || (tzMin>tyMax)	){
+		return Intersection();
+	}
 	//Now find the largest minimum t to return (in terms of x,y,and z)
 	//Must make sure they're non-negative
 	double tMin;
 	if(	(txMin>tyMin) && (txMin>tzMin) && (txMin>0)	){
 		tMin = txMin;
+		//ToDo: Fix vector direction
+		return Intersection(0, tMin, Vector(1,0,0));
 	}
 	else if(	(tyMin>txMin) && (tyMin>tzMin) && (tyMin>0)	){
 		tMin = tyMin;
+		//ToDo: Fix vector direction
+		return Intersection(0, tMin, Vector(0,1,0));
 	}
 	else if(	(tzMin>txMin) && (tzMin>tyMin) && (tzMin>0)	){
 		tMin = tzMin;
+		//ToDo: Fix vector direction
+		return Intersection(0, tMin, Vector(0,0,1));
 	}
 	else{
 		tMin = -1; //No intersection;
+		return Intersection();
 	}
-
-	return tMin;
 }

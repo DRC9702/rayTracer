@@ -66,7 +66,8 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  if (rayType == SHADOW_RAY) {
 		  //bool intersectionFound = false; //I don't think I need it here at all
 		  for(unsigned int k=0; k < surfaceList.size(); k++){
-			  double tempT = surfaceList.at(k) -> intersectWithBBox(inputRay,renderBoxFlag==1);
+			  //double tempT = surfaceList.at(k) -> intersectWithBBox(inputRay,renderBoxFlag==1);
+			  double tempT = surfaceList.at(k) -> checkIntersectWithBBox(inputRay,renderBoxFlag).getVal();
 			  if (tempT > minT && tempT < maxT){
 				  return rgbTriple(0,0,0);
 			  }
@@ -75,17 +76,21 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  }
 
 	  //Get closest intersection with scene
+	  Intersection intersect;
 	  bool intersectionFound = false;
-	  int index = -1;
+//	  int index = -1;
 	  double closestT = -1;
 	  for(unsigned int k=0; k < surfaceList.size(); k++){
-		  double tempT = surfaceList.at(k) -> intersectWithBBox(inputRay,renderBoxFlag	==1);
+		  //double tempT = surfaceList.at(k) -> intersectWithBBox(inputRay,renderBoxFlag	==1);
+		  Intersection tempIntersect = surfaceList.at(k) ->checkIntersectWithBBox(inputRay,renderBoxFlag);
+		  double tempT = tempIntersect.getVal();
 		  if(tempT < minT || tempT > maxT){
 			  continue;
 		  }
 		  if(	(!intersectionFound && tempT > 0) || (intersectionFound && tempT < closestT && tempT != -1)	){
+			  intersect = tempIntersect;
 			  intersectionFound = true;
-			  index = k;
+			  //index = k;
 			  closestT = tempT;
 		  }
 	  }
@@ -95,9 +100,11 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  point p = inputRay.getPointFromT(closestT);
 
 	  //We need these to determine which material to use.
-	  surface *surfacePointer = surfaceList.at(index);
-	  Vector surfaceNormal = surfacePointer ->getSurfaceNormal(p);
-	  material *materialPointer = materialList.at(surfacePointer->getMaterialIndex());
+	  //surface *surfacePointer = surfaceList.at(index);
+//	  Vector surfaceNormal = surfacePointer ->getSurfaceNormal(p);
+//	  material *materialPointer = materialList.at(surfacePointer->getMaterialIndex());
+	  Vector surfaceNormal = intersect.getSurfaceNormal();
+	  material *materialPointer = materialList.at(intersect.getMaterialIndex());
 	  bool isFlipped = surfaceNormal.dotProduct(inputRay.getDir()) > 0; //Check if you're hitting the backside
 
 	  Vector tempSurfaceNormal = (isFlipped)? surfaceNormal.scalarMultiply(-1) : surfaceNormal;

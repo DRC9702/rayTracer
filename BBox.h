@@ -21,6 +21,7 @@ public:
 	BBox(point minVals, point maxVals);
 	//double intersectRay(const ray& r) const;
 	Intersection checkIntersect(const ray& r) const;
+	//double BBox::intersectRay(const ray& r) const;
 	virtual ~BBox();
 };
 

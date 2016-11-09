@@ -26,6 +26,7 @@ public:
 	Vector getNormal() const;
 	plane getPlane() const;
 	double intersectT(const ray r_ray) const;
+	Intersection checkIntersect(const ray r_ray) const;
 	bool barycentricInsideTriangle(const point p) const;
 	bool crossProductInsideTriangle(const point p) const;
 	bool checkIfRaySameDirectionAsNormal(const ray ray_r) const;

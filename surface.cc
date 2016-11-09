@@ -4,6 +4,10 @@
 
 #include <stdexcept> //This should let me throw standard exceptions
 
+static int USE_BVH_TREE = 2;
+static int NO_BVH_TREE = 0;
+static int BBOXED = 1;
+
 surface::surface()
 {
 	//mat = new material();
@@ -34,8 +38,27 @@ int surface::getMaterialIndex() const
 	return materialIndex;
 }
 
-Intersection surface::checkIntersect(const ray r_ray, int useBBox) const{
+Intersection surface::checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const{
+	if(BBoxFlag==1){
+		return getBoundingBox().checkIntersect(r_ray);
+	}
+	else if(BBoxFlag==2){
+		Intersection  intersect1 = getBoundingBox().checkIntersect(r_ray);
+		if(intersect1.isHit()){
+			return checkIntersect(r_ray);
+		}
+		else{
+			return intersect1;
+		}
+	}
+	else{ //BBoxFlag==0
+		return checkIntersect(r_ray);
+	}
+}
 
+Intersection surface::checkIntersect(const ray r_ray) const{
+	std::cout <<"The virtual surface method checkIntersect is being called." << std::endl;
+	return Intersection();
 }
 
 /*
@@ -58,6 +81,10 @@ double surface::intersectT(const ray r) const
 Vector surface::getSurfaceNormal(const point p) const{
 	std::cout <<"THE VIRTUAL SURFACE METHOD getSurfaceNormal IS BEING CALLED" << std::endl;
 	return Vector();
+}
+
+const BBox& surface::getBoundingBox() const {
+	return boundingBox;
 }
 
 bool surface::checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) const{

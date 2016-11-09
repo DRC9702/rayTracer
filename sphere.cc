@@ -30,6 +30,14 @@ void sphere::initBBox(){
 	setBoundingBox(BBox(point(xMin,yMin,zMin), point(xMax,yMax,zMax)));
 }
 
+Intersection sphere::checkIntersect(const ray r_ray) const{
+	double tVal = intersectT(r_ray);
+	if(tVal < 0) //Miss
+		return Intersection();
+	else
+		return Intersection(getMaterialIndex(), tVal, getSurfaceNormal(r_ray.getPointFromT(tVal)));
+}
+
 double sphere::intersectT(const ray r_ray) const
 {
 	Vector p0minusO = r_ray.getOrigin().subtract(center);
