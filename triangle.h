@@ -21,6 +21,7 @@ public:
 	virtual ~triangle();
 	triangle(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3);
 	triangle(const point p1, const point p2, const point p3);
+	void initBBox();
 	void initTrianglePlane();
 	Vector getNormal() const;
 	plane getPlane() const;

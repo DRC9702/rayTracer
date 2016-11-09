@@ -7,14 +7,28 @@ sphere::sphere(const point center,const double radius)
 {
 	this->center=center;
 	this->radius=radius;
+	initBBox();
 }
 
 sphere::sphere(const double x, const double y, const double z, const double radius)
 {
 	this->center = point(x,y,z);
 	this->radius=radius;
+	initBBox();
 }
 
+void sphere::initBBox(){
+	double xMin = center.getX() - radius;
+	double xMax = center.getX() + radius;
+
+	double yMin = center.getY() - radius;
+	double yMax = center.getY() + radius;
+
+	double zMin = center.getZ() - radius;
+	double zMax = center.getZ() + radius;
+
+	setBoundingBox(BBox(point(xMin,yMin,zMin), point(xMax,yMax,zMax)));
+}
 
 double sphere::intersectT(const ray r_ray) const
 {
@@ -66,7 +80,10 @@ double sphere::intersectT(const ray r_ray) const
 Vector sphere::getSurfaceNormal(const point p) const{
 	Vector sn = p.subtract(getCenter());
 	//std::cout <<"Magnitude: " << sn.getMagnitude() << "\tRadius: " << getRadius() << std::endl;
-	assert(std::abs(sn.getMagnitude()-getRadius())<.1); //I don't know how much precision is needed.
+
+	//ToDo: Remember to put this back in when you refactor intersection stuff
+	//assert(std::abs(sn.getMagnitude()-getRadius())<.1); //I don't know how much precision is needed.
+
 	//std::cout <<"SPHERE IS THE GUY BEING CALLED" << std::endl;
 	sn.normalize();
 	return sn;

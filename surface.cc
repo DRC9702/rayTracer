@@ -25,13 +25,23 @@ void surface::setMaterialIndex(int n)
 	materialIndex = n;
 }
 
+void surface::setBoundingBox(BBox inBox){
+	boundingBox = inBox;
+}
+
 int surface::getMaterialIndex() const
 {
 	return materialIndex;
 }
 
+Intersection surface::checkIntersect(const ray r_ray, int useBBox) const{
+
+}
+
+/*
 double surface::intersectWithBBox(const ray r_ray, bool useBBox) const{
 	if(useBBox){
+		//std::cout<<"Checking if intersection with bounding box: " << boundingBox.intersectRay(r_ray) << std::endl;
 		return boundingBox.intersectRay(r_ray);
 	}
 	else{
@@ -44,7 +54,7 @@ double surface::intersectT(const ray r) const
 	std::cout <<"The virtual surface method inersectT is being called." << std::endl;
 	return -1;
 }
-
+*/
 Vector surface::getSurfaceNormal(const point p) const{
 	std::cout <<"THE VIRTUAL SURFACE METHOD getSurfaceNormal IS BEING CALLED" << std::endl;
 	return Vector();

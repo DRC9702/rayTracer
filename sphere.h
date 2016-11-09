@@ -16,6 +16,7 @@ public:
 	sphere(const point center, const double radius);
 	sphere(const double x, const double y, const double z, const double radius);
 	//virtual double intersectT(ray r);
+	void initBBox();
 	double intersectT(const ray r_ray) const;
 	Vector getSurfaceNormal(const point p) const;
 

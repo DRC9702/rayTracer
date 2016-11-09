@@ -6,12 +6,14 @@
  */
 
 #include "triangle.h"
+#include <algorithm> //So I can use min and max
 
 triangle::triangle() {
 	p1 = point(1,0,0);
 	p2 = point(0,1,0);
 	p3 = point(0,0,1);
 	initTrianglePlane();
+	initBBox();
 	normal = trianglePlane.getNormal();
 }
 
@@ -20,6 +22,7 @@ triangle::triangle(double x1, double y1, double z1, double x2, double y2, double
 	p2 = point(x2,y2,z2);
 	p3 = point(x3,y3,z3);
 	initTrianglePlane();
+	initBBox();
 	normal = trianglePlane.getNormal();
 }
 triangle::triangle(point p1, point p2, point p3){
@@ -27,7 +30,21 @@ triangle::triangle(point p1, point p2, point p3){
 	this->p2 = p2;
 	this->p3 = p3;
 	initTrianglePlane();
+	initBBox();
 	normal = trianglePlane.getNormal();
+}
+
+void triangle::initBBox(){
+	double xMin = std::min(p1.getX(),std::min(p2.getX(),p3.getX()));
+	double xMax = std::max(p1.getX(),std::max(p2.getX(),p3.getX()));
+
+	double yMin = std::min(p1.getY(),std::min(p2.getY(),p3.getY()));
+	double yMax = std::max(p1.getY(),std::max(p2.getY(),p3.getY()));
+
+	double zMin = std::min(p1.getZ(),std::min(p2.getZ(),p3.getZ()));
+	double zMax = std::max(p1.getZ(),std::max(p2.getZ(),p3.getZ()));
+
+	setBoundingBox(BBox(point(xMin,yMin,zMin), point(xMax,yMax,zMax)));
 }
 
 void triangle::initTrianglePlane(){

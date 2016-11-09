@@ -3,6 +3,7 @@
 #include "point.h"
 #include "BBox.h"
 //#include "material.h"
+#include "Intersection.h"
 
 #ifndef SURFACE_H
 #define SURFACE_H
@@ -23,8 +24,10 @@ public:
 	//material* getMaterial();
 	void setMaterialIndex(int n);
 	int getMaterialIndex() const;
-	double intersectWithBBox(const ray r_ray, bool useBBox) const;
-	virtual double intersectT(const ray r_ray) const;
+	//double intersectWithBBox(const ray r_ray, bool useBBox) const;
+	virtual void setBoundingBox(BBox bbox);
+	virtual double checkIntersect(const ray r_ray, int useBBox) const;
+	//virtual double intersectT(const ray r_ray) const;
 	virtual Vector getSurfaceNormal(const point p) const;
 	bool checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) const;
 };
