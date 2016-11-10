@@ -39,11 +39,12 @@ int surface::getMaterialIndex() const
 }
 
 Intersection surface::checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const{
-	if(BBoxFlag==1){
-		return getBoundingBox().checkIntersect(r_ray);
+	if(BBoxFlag==BBOXED){
+		//std::cout << "BBox is one: " << getBoundingBox().checkIntersect(r_ray).isHit() << std::endl;
+		return getBoundingBox().checkIntersect(r_ray, getMaterialIndex());
 	}
-	else if(BBoxFlag==2){
-		Intersection  intersect1 = getBoundingBox().checkIntersect(r_ray);
+	else if(BBoxFlag==USE_BVH_TREE){
+		Intersection  intersect1 = getBoundingBox().checkIntersect(r_ray, getMaterialIndex());
 		if(intersect1.isHit()){
 			return checkIntersect(r_ray);
 		}

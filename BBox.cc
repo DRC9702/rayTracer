@@ -7,9 +7,14 @@
 
 #include "BBox.h"
 
-BBox::BBox(point minVals, point maxVals){
+BBox::BBox(point minVals, point maxVals, int surfaceIndex){
 	this->minVals = minVals;
 	this->maxVals = maxVals;
+	this->surfaceIndex = surfaceIndex;
+}
+
+int BBox::getSurfaceIndex(){
+	return surfaceIndex;
 }
 
 BBox::BBox(){
@@ -21,7 +26,7 @@ BBox::~BBox() {
 	// TODO Auto-generated destructor stub
 }
 
-Intersection BBox::checkIntersect(const ray& r) const{
+Intersection BBox::checkIntersect(const ray& r, int materialIndex) const{
 	point rayO = r.getOrigin();
 	Vector rayDir = r.getDir();
 
@@ -87,17 +92,17 @@ Intersection BBox::checkIntersect(const ray& r) const{
 	if(	(txMin>tyMin) && (txMin>tzMin) && (txMin>0)	){
 		tMin = txMin;
 		//ToDo: Fix vector direction
-		return Intersection(0, tMin, Vector(1,0,0));
+		return Intersection(materialIndex, tMin, Vector((dx<0)?1:-1,0,0));
 	}
 	else if(	(tyMin>txMin) && (tyMin>tzMin) && (tyMin>0)	){
 		tMin = tyMin;
 		//ToDo: Fix vector direction
-		return Intersection(0, tMin, Vector(0,1,0));
+		return Intersection(materialIndex, tMin, Vector(0,(dy<0)?1:-1,0));
 	}
 	else if(	(tzMin>txMin) && (tzMin>tyMin) && (tzMin>0)	){
 		tMin = tzMin;
 		//ToDo: Fix vector direction
-		return Intersection(0, tMin, Vector(0,0,1));
+		return Intersection(materialIndex, tMin, Vector(0,0,(dz<0)?1:-1));
 	}
 	else{
 		tMin = -1; //No intersection;

@@ -44,7 +44,8 @@ rgbTriple material::shading(const point p, const camera cam, const unsigned int 
 			if(j==surfaceIndex){
 				continue; //Skip your own surface
 			}
-			double tempT = surfaceList.at(j) -> intersectT(ray_pToL);
+			//double tempT = surfaceList.at(j) -> intersectT(ray_pToL);
+			double tempT = surfaceList.at(j) -> checkIntersect(ray_pToL).getVal();
 //			std::cout << "tempT[" << tempT << " distanceToLight[" << distanceFromPointToLight << "]" << std::endl;
 			if(tempT > 0){
 				//std::cout << "Hello!" << std::endl;

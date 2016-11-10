@@ -189,7 +189,7 @@ int main (int argc, char *argv[])
 		//Get the renderBoxFlag
 		renderBoxFlag = atoi( argv[3] ); //I tried stoi but it didn't work :(
 		cout << renderBoxFlag << endl;
-		if(renderBoxFlag != 0 && renderBoxFlag != 1){
+		if(renderBoxFlag != NO_BVH_TREE && renderBoxFlag != BBOXED){
 			cerr << "flag_render_bboxes must be of: {omitted,0,1}" << endl;
 			return -1;
 		}
