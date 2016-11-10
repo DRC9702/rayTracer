@@ -29,7 +29,7 @@ public:
 //	Intersection checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const;
 	virtual bool hit(ray r, double t0, double t1, HitRecord &HR,int BBoxFlag);
 	//Tree Creation
-	void create(std::vector<BvhNode> nodeList, int axis);
+	void create(std::vector<surface*> &surfaceList, int axis);
 	virtual ~BvhNode();
 };
 

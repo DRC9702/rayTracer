@@ -24,6 +24,15 @@ public:
 	//double intersectRay(const ray& r) const;
 	Intersection checkIntersect(const ray& r,int materialIndex) const;
 	//double BBox::intersectRay(const ray& r) const;
+	const point& getMaxVals() const;
+	const point& getMinVals() const;
+	double getMinX() const;
+	double getMinY() const;
+	double getMinZ() const;
+	double getMaxX() const;
+	double getMaxY() const;
+	double getMaxZ() const;
+	BBox(const BBox box1, const BBox box2);
 	virtual ~BBox();
 };
 

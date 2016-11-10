@@ -45,18 +45,18 @@ bool BvhNode::hit(ray r, double t0, double t1, HitRecord &HR,int BBoxFlag){
 			return true;
 		}
 		//Not sure if this goes here but why not?
-		HR.surfaceIndex = thisBox.surfaceIndex();
+		HR.surfaceIndex = thisBox.getSurfaceIndex();
 	}
 	return false;
 }
 
-void BvhNode:create(std::vector<BvhNode *> nodeList, int axis){
-	unsigned int N = nodeList.size();
+void BvhNode::create(std::vector<surface*> &surfaceList, int axis){
+	unsigned int N = surfaceList.size();
 
 	if(N == 1){
-		leftSurface = nodeList.get(0);
+		leftSurface = surfaceList.at(0);
 		rightSurface = nullptr;
-		thisBox = boundingBo
+		thisBox = leftSurface->getBoundingBox();
 	}
 
 }

@@ -22,6 +22,55 @@ BBox::BBox(){
 	this->maxVals = point();
 }
 
+const point& BBox::getMaxVals() const {
+	return maxVals;
+}
+
+const point& BBox::getMinVals() const {
+	return minVals;
+}
+
+double BBox::getMinX() const{
+	return getMinVals().getX();
+}
+
+double BBox::getMinY() const{
+	return getMinVals().getY();
+}
+
+double BBox::getMinZ() const{
+	return getMinVals().getZ();
+}
+
+double BBox::getMaxX() const{
+	return getMaxVals().getX();
+}
+
+double BBox::getMaxY() const{
+	return getMaxVals().getY();
+}
+
+double BBox::getMaxZ() const{
+	return getMaxVals().getZ();
+}
+
+BBox::BBox(const BBox box1, const BBox box2){
+	double minX,minY,minZ,maxX,maxY,maxZ;
+	minX = (box1.getMinX()<box2.getMinX()) ? box1.getMinX() : box2.getMinX();
+	minY = (box1.getMinY()<box2.getMinY()) ? box1.getMinY() : box2.getMinY();
+	minZ = (box1.getMinZ()<box2.getMinZ()) ? box1.getMinZ() : box2.getMinZ();
+	maxX = (box1.getMaxX()<box2.getMaxX()) ? box1.getMaxX() : box2.getMaxX();
+	maxY = (box1.getMaxY()<box2.getMaxY()) ? box1.getMaxY() : box2.getMaxY();
+	maxZ = (box1.getMaxZ()<box2.getMaxZ()) ? box1.getMaxZ() : box2.getMaxZ();
+
+	this->minVals = point(minX,minY,minZ);
+	this->maxVals = point(maxX,maxY,maxZ);
+	this->surfaceIndex = -2; //This surfaceIndex should mean it just holds 2 bounding boxes
+	//Will probably get rid of this field later
+
+}
+
+
 BBox::~BBox() {
 	// TODO Auto-generated destructor stub
 }
