@@ -12,9 +12,10 @@ class sphere : public surface
 private:
 	point center; //origin
 	double radius; //radius
+	int surfaceIndex;
 public:
-	sphere(const point center, const double radius);
-	sphere(const double x, const double y, const double z, const double radius);
+	sphere(const point center, const double radius, const int surfaceIndex);
+	sphere(const double x, const double y, const double z, const double radius, const int surfaceIndex);
 	//virtual double intersectT(ray r);
 	void initBBox();
 	double intersectT(const ray r_ray) const;
@@ -27,6 +28,9 @@ public:
 
 	double getRadius() const {
 		return radius;
+	}
+	int getSurfaceIndex() const{
+		return surfaceIndex;
 	}
 };
 

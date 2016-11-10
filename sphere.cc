@@ -3,17 +3,19 @@
 #include <cmath>
 #include <cassert>
 
-sphere::sphere(const point center,const double radius)
+sphere::sphere(const point center,const double radius, const int surfaceIndex)
 {
 	this->center=center;
 	this->radius=radius;
+	this->surfaceIndex=surfaceIndex;
 	initBBox();
 }
 
-sphere::sphere(const double x, const double y, const double z, const double radius)
+sphere::sphere(const double x, const double y, const double z, const double radius, const int surfaceIndex)
 {
 	this->center = point(x,y,z);
 	this->radius=radius;
+	this->surfaceIndex=surfaceIndex;
 	initBBox();
 }
 
@@ -27,7 +29,7 @@ void sphere::initBBox(){
 	double zMin = center.getZ() - radius;
 	double zMax = center.getZ() + radius;
 
-	setBoundingBox(BBox(point(xMin,yMin,zMin), point(xMax,yMax,zMax)));
+	setBoundingBox(BBox(point(xMin,yMin,zMin), point(xMax,yMax,zMax), getSurfaceIndex()));
 }
 
 Intersection sphere::checkIntersect(const ray r_ray) const{

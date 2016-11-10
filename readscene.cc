@@ -152,7 +152,7 @@ void readscene::parseSceneFile (char *filnam)
                 // sphere into the objects list (which can be global)
                 // So something like;
                 // mySphereClass *ms = new mySphereClass (x, y, z, r);   // make a new instance of your sphere class
-                sphere *ms = new sphere(x,y,z,r);
+                sphere *ms = new sphere(x,y,z,r,surfaceList.size());
             	//cout << "Didn't die making a new sphere" << endl;
                 // ms->setMaterial (lastMaterialLoaded)
                 //ms->setMaterial(lastMaterialLoaded);
@@ -187,7 +187,7 @@ void readscene::parseSceneFile (char *filnam)
 			y3 = getTokenAsDouble (line, 8);
 			z3 = getTokenAsDouble (line, 9);
 
-			triangle *mt = new triangle(x1,y1,z1,x2,y2,z2,x3,y3,z3);
+			triangle *mt = new triangle(x1,y1,z1,x2,y2,z2,x3,y3,z3,surfaceList.size());
 			mt->setMaterialIndex(materialList.size()-1);
 			surfaceList.push_back(mt);
 
@@ -356,7 +356,7 @@ void readscene::parseSceneFile (char *filnam)
 					y3 = verts[3*tris[3*i+2]+1];
 					z3 = verts[3*tris[3*i+2]+2];
 
-					triangle *mt = new triangle(x1,y1,z1,x2,y2,z2,x3,y3,z3);
+					triangle *mt = new triangle(x1,y1,z1,x2,y2,z2,x3,y3,z3,surfaceList.size());
 					mt->setMaterialIndex(materialList.size()-1);
 					surfaceList.push_back(mt);
             	}

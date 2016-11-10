@@ -9,12 +9,59 @@
 
 //bool BvhNode::hit (ray r, double t0, double t1, Intersection intersectRecord, int BBoxFlag){
 
-bool BvhNode::hit(ray r, double t0, double t1, &hitRecord,int BBoxFlag){
-	Intersection outsideIntersection = thisBox.checkIntersect(r,intBBoxFlag)
-	if(thisBox.)
+bool BvhNode::hit(ray r, double t0, double t1, HitRecord &HR,int BBoxFlag){
+	Intersection outsideIntersection = thisBox.checkIntersect(r,BBoxFlag);
+	if(outsideIntersection.getVal()<t0 || outsideIntersection.getVal()>t1)
+		outsideIntersection = Intersection();
+
+	if(outsideIntersection.isHit()){
+		HitRecord leftRec, rightRec;
+		bool leftHit, rightHit;
+
+		//leftHit
+		if(leftSurface==nullptr)
+			leftHit = false;
+		else
+			leftHit = hit(r,t0,t1,leftRec,BBoxFlag);
+		//rightHit
+		if(rightSurface==nullptr)
+			rightHit = false;
+		else
+			rightHit = hit(r,t0,t1,rightRec,BBoxFlag);
+
+		if(leftHit && rightHit){
+			if(leftRec.tVal < rightRec.tVal)
+				HR = leftRec;
+			else
+				HR = rightRec;
+			return true;
+		}
+		else if(leftHit){
+			HR = leftRec;
+			return true;
+		}
+		else if(rightHit){
+			HR = rightRec;
+			return true;
+		}
+		//Not sure if this goes here but why not?
+		HR.surfaceIndex = thisBox.surfaceIndex();
+	}
+	return false;
 }
 
-bool checkIsLeaf
+void BvhNode:create(std::vector<BvhNode *> nodeList, int axis){
+	unsigned int N = nodeList.size();
+
+	if(N == 1){
+		leftSurface = nodeList.get(0);
+		rightSurface = nullptr;
+		thisBox = boundingBo
+	}
+
+}
+
+//bool checkIsLeaf
 
 //BvhNode::BvhNode() {
 //	// TODO Auto-generated constructor stub
@@ -24,9 +71,3 @@ bool checkIsLeaf
 BvhNode::~BvhNode() {
 	// TODO Auto-generated destructor stub
 }
-
-class hitRecord{
-public:
-	int surfaceIndex = -1;
-	double tVal = -1;
-};

@@ -12,23 +12,26 @@ triangle::triangle() {
 	p1 = point(1,0,0);
 	p2 = point(0,1,0);
 	p3 = point(0,0,1);
+	surfaceIndex=0;
 	initTrianglePlane();
 	initBBox();
 	normal = trianglePlane.getNormal();
 }
 
-triangle::triangle(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3){
+triangle::triangle(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, int surfaceIndex){
 	p1 = point(x1,y1,z1);
 	p2 = point(x2,y2,z2);
 	p3 = point(x3,y3,z3);
+	this->surfaceIndex = surfaceIndex;
 	initTrianglePlane();
 	initBBox();
 	normal = trianglePlane.getNormal();
 }
-triangle::triangle(point p1, point p2, point p3){
+triangle::triangle(point p1, point p2, point p3, int surfaceIndex){
 	this->p1 = p1;
 	this->p2 = p2;
 	this->p3 = p3;
+	this->surfaceIndex=surfaceIndex;
 	initTrianglePlane();
 	initBBox();
 	normal = trianglePlane.getNormal();
@@ -44,7 +47,11 @@ void triangle::initBBox(){
 	double zMin = std::min(p1.getZ(),std::min(p2.getZ(),p3.getZ()));
 	double zMax = std::max(p1.getZ(),std::max(p2.getZ(),p3.getZ()));
 
-	setBoundingBox(BBox(point(xMin,yMin,zMin), point(xMax,yMax,zMax)));
+	setBoundingBox(BBox(point(xMin,yMin,zMin), point(xMax,yMax,zMax),getSurfaceIndex()));
+}
+
+int triangle::getSurfaceIndex(){
+	return surfaceIndex;
 }
 
 void triangle::initTrianglePlane(){
