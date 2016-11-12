@@ -158,3 +158,21 @@ Intersection BBox::checkIntersect(const ray& r, int materialIndex) const{
 		return Intersection();
 	}
 }
+
+bool BBox::compare(BBox other, int axis){
+	if(axis == 0){ //x axis
+		double avg1 = (getMinX()+getMaxX())/2;
+		double avg2 = (other.getMinX()+other.getMaxX())/2;
+		return avg1 < avg2;
+	}
+	else if(axis == 1){ //y axis
+		double avg1 = (getMinY()+getMaxY())/2;
+		double avg2 = (other.getMinY()+other.getMaxY())/2;
+		return avg1 < avg2;
+	}
+	else{ //z axis
+		double avg1 = (getMinZ()+getMaxZ())/2;
+		double avg2 = (other.getMinZ()+other.getMaxZ())/2;
+		return avg1 < avg2;
+	}
+}

@@ -58,8 +58,14 @@ void BvhNode::create(std::vector<surface*> &surfaceList, int axis){
 		rightSurface = nullptr;
 		thisBox = leftSurface->getBoundingBox();
 	}
+	else if (N==2){
+		leftSurface = surfaceList.at(0);
+		rightSurface = surfaceList.at(1);
+		thisBox = BBox(leftSurface->getBoundingBox(),rightSurface->getBoundingBox());
+	}
 
 }
+
 
 //bool checkIsLeaf
 
