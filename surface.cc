@@ -4,9 +4,10 @@
 
 #include <stdexcept> //This should let me throw standard exceptions
 
-static int USE_BVH_TREE = 2;
-static int NO_BVH_TREE = 0;
-static int BBOXED = 1;
+#include "Constants.h"
+//static int USE_BVH_TREE = 2;
+//static int NO_BVH_TREE = 0;
+//static int BBOXED = 1;
 
 surface::surface()
 {
@@ -38,29 +39,34 @@ int surface::getMaterialIndex() const
 	return materialIndex;
 }
 
-Intersection surface::checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const{
-	if(BBoxFlag==BBOXED){
-		//std::cout << "BBox is one: " << getBoundingBox().checkIntersect(r_ray).isHit() << std::endl;
-		return getBoundingBox().checkIntersect(r_ray, getMaterialIndex());
-	}
-	else if(BBoxFlag==USE_BVH_TREE){
-		Intersection  intersect1 = getBoundingBox().checkIntersect(r_ray, getMaterialIndex());
-		if(intersect1.isHit()){
-			return checkIntersect(r_ray);
-		}
-		else{
-			return intersect1;
-		}
-	}
-	else{ //BBoxFlag==0
-		return checkIntersect(r_ray);
-	}
+bool surface::intersectHit(ray r, double bestT, Intersection &intersect) const{
+	std::cout <<"The virtual surface method intersectHit is being called." << std::endl;
+	return false;
 }
 
-Intersection surface::checkIntersect(const ray r_ray) const{
-	std::cout <<"The virtual surface method checkIntersect is being called." << std::endl;
-	return Intersection();
-}
+//Intersection surface::checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const{
+//	if(BBoxFlag==BBOXED){
+//		//std::cout << "BBox is one: " << getBoundingBox().checkIntersect(r_ray).isHit() << std::endl;
+//		return getBoundingBox().checkIntersect(r_ray, getMaterialIndex());
+//	}
+//	else if(BBoxFlag==USE_BVH_TREE){
+//		Intersection  intersect1 = getBoundingBox().checkIntersect(r_ray, getMaterialIndex());
+//		if(intersect1.isHit()){
+//			return checkIntersect(r_ray);
+//		}
+//		else{
+//			return intersect1;
+//		}
+//	}
+//	else{ //BBoxFlag==0
+//		return checkIntersect(r_ray);
+//	}
+//}
+//
+//Intersection surface::checkIntersect(const ray r_ray) const{
+//	std::cout <<"The virtual surface method checkIntersect is being called." << std::endl;
+//	return Intersection();
+//}
 
 /*
 double surface::intersectWithBBox(const ray r_ray, bool useBBox) const{

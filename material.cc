@@ -30,6 +30,8 @@ rgbTriple material::shading(const point p, const camera cam, const unsigned int 
 		const std::vector<surface*> &surfaceList, const std::vector<pointLight*> &pointLightList,
 		const ambientLight &ambLight, const Vector surfaceNormal, const Vector pToSource, const bool isFlipped) const{
 
+
+
 	rgbTriple shadeLight;
 	rgbTriple lambertianShading;
 	rgbTriple specularShading;
@@ -45,7 +47,14 @@ rgbTriple material::shading(const point p, const camera cam, const unsigned int 
 				continue; //Skip your own surface
 			}
 			//double tempT = surfaceList.at(j) -> intersectT(ray_pToL);
-			double tempT = surfaceList.at(j) -> checkIntersect(ray_pToL).getVal();
+			Intersection intersect;
+//			if(!surfaceList.at(j) -> intersectHit(ray_pToL,distanceFromPointToLight,intersect));
+
+			surfaceList.at(j) -> intersectHit(ray_pToL,distanceFromPointToLight,intersect);
+			double tempT = intersect.getVal();
+			std::cout << "tempT[" << tempT << std::endl;
+
+
 //			std::cout << "tempT[" << tempT << " distanceToLight[" << distanceFromPointToLight << "]" << std::endl;
 			if(tempT > 0){
 				//std::cout << "Hello!" << std::endl;
@@ -97,6 +106,7 @@ void material::lambertianShadingForPointLight(const point p,const pointLight* pL
 	Vector l = pL->getPosition().subtract(p); l.normalize();
 	double distance = pL->getPosition().subtract(p).getMagnitude();
 
+	std::cout << "LambertianShading!" << std::endl;
 	//std::cout << "l.x:" << l.x << std::endl;
 	//std::cout << "sn.x:" << surfaceNormal.x << std::endl;
 

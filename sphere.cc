@@ -2,6 +2,8 @@
 #include "surface.h"
 #include <cmath>
 #include <cassert>
+#include <iostream>
+
 
 sphere::sphere(const point center,const double radius, const int surfaceIndex)
 {
@@ -38,6 +40,31 @@ Intersection sphere::checkIntersect(const ray r_ray) const{
 		return Intersection();
 	else
 		return Intersection(getMaterialIndex(), tVal, getSurfaceNormal(r_ray.getPointFromT(tVal)));
+}
+
+
+bool sphere::intersectHit(ray r, double bestT, Intersection &intersect) const{
+	if(RENDER_BOX_FLAG==BBOXED){
+		//return getBoundingBox().checkIntersect(r, getMaterialIndex());
+		intersect = getBoundingBox().checkIntersect(r, getMaterialIndex());
+		return intersect.isHit();
+
+	}
+	else if(RENDER_BOX_FLAG==USE_BVH_TREE){
+		Intersection  intersect1 = getBoundingBox().checkIntersect(r, getMaterialIndex());
+		if(intersect1.isHit()){
+			intersect = checkIntersect(r);
+			return intersect.isHit();
+		}
+		else{
+			intersect = intersect1;
+			return intersect.isHit();
+		}
+	}
+	else{ //BBoxFlag==0
+		intersect = checkIntersect(r);
+		return intersect.isHit();
+	}
 }
 
 double sphere::intersectT(const ray r_ray) const

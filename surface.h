@@ -4,6 +4,7 @@
 #include "BBox.h"
 //#include "material.h"
 #include "Intersection.h"
+#include "Constants.h"
 
 #ifndef SURFACE_H
 #define SURFACE_H
@@ -27,7 +28,7 @@ public:
 	//double intersectWithBBox(const ray r_ray, bool useBBox) const;
 	virtual void setBoundingBox(BBox bbox);
 
-	bool intersectHit(ray r, double bestT, Intersection &intersect) const;
+	virtual bool intersectHit(ray r, double bestT, Intersection &intersect) const;
 
 //	Intersection checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const;
 //	virtual Intersection checkIntersect(const ray r_ray) const;

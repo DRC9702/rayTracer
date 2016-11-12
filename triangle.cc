@@ -173,3 +173,26 @@ triangle::~triangle() {
 	// TODO Auto-generated destructor stub
 }
 
+bool triangle::intersectHit(ray r, double bestT, Intersection &intersect) const{
+	if(RENDER_BOX_FLAG==BBOXED){
+		//return getBoundingBox().checkIntersect(r, getMaterialIndex());
+		intersect = getBoundingBox().checkIntersect(r, getMaterialIndex());
+		return intersect.isHit();
+
+	}
+	else if(RENDER_BOX_FLAG==USE_BVH_TREE){
+		Intersection  intersect1 = getBoundingBox().checkIntersect(r, getMaterialIndex());
+		if(intersect1.isHit()){
+			intersect = checkIntersect(r);
+			return intersect.isHit();
+		}
+		else{
+			intersect = intersect1;
+			return intersect.isHit();
+		}
+	}
+	else{ //BBoxFlag==0
+		intersect = checkIntersect(r);
+		return intersect.isHit();
+	}
+}

@@ -33,6 +33,7 @@ public:
 	bool crossProductInsideTriangle(const point p) const;
 	bool checkIfRaySameDirectionAsNormal(const ray ray_r) const;
 	Vector getSurfaceNormal(const point p) const;
+	bool intersectHit(ray r, double bestT, Intersection &intersect) const;
 };
 
 #endif /* TRIANGLE_H_ */

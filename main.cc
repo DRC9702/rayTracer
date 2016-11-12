@@ -21,6 +21,9 @@
 #include <cstdlib>	//Nope! Don't need this!
 #include <limits>
 
+#include "Constants.h"
+
+
 using namespace std;
 
 std::vector<surface*> surfaceList = std::vector<surface*>();
@@ -37,10 +40,11 @@ static int PRIMARY_RAY = 0; //This one tells you when to do ambient shading
 static int REGULAR_RAY = 1;
 static int SHADOW_RAY = 2;
 
-int renderBoxFlag = -1;
-static int USE_BVH_TREE = 2;
-static int NO_BVH_TREE = 0;
-static int BBOXED = 1;
+int RENDER_BOX_FLAG;
+//int renderBoxFlag = -1;
+int USE_BVH_TREE = 2;
+int NO_BVH_TREE = 0;
+int BBOXED = 1;
 
 void writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
 {
@@ -65,9 +69,14 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 
 	  if (rayType == SHADOW_RAY) {
 		  //bool intersectionFound = false; //I don't think I need it here at all
+		  Intersection intersect;
 		  for(unsigned int k=0; k < surfaceList.size(); k++){
 			  //double tempT = surfaceList.at(k) -> intersectWithBBox(inputRay,renderBoxFlag==1);
-			  double tempT = surfaceList.at(k) -> checkIntersectWithBBox(inputRay,renderBoxFlag).getVal();
+//			  if(!surfaceList.at(k) -> intersectHit(inputRay,maxT,intersect))
+//				  return rgbTriple(0,0,0);
+			  surfaceList.at(k) -> intersectHit(inputRay,maxT,intersect);
+
+			  double tempT = intersect.getVal();
 			  if (tempT > minT && tempT < maxT){
 				  return rgbTriple(0,0,0);
 			  }
@@ -82,13 +91,21 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  double closestT = -1;
 	  for(unsigned int k=0; k < surfaceList.size(); k++){
 		  //double tempT = surfaceList.at(k) -> intersectWithBBox(inputRay,renderBoxFlag	==1);
-		  Intersection tempIntersect = surfaceList.at(k) ->checkIntersectWithBBox(inputRay,renderBoxFlag);
+		  //Intersection tempIntersect = surfaceList.at(k) ->checkIntersectWithBBox(inputRay,RENDER_BOX_FLAG);
+		  Intersection tempIntersect;
+		  if(!surfaceList.at(k) ->intersectHit(inputRay,closestT,tempIntersect)){
+//			  std::cout << tempIntersect.isHit() << std::endl;
+			  continue;
+		  }
+
 		  double tempT = tempIntersect.getVal();
+//		  std::cout << tempT << std::endl;
 		  if(tempT < minT || tempT > maxT){
 			  continue;
 		  }
 		  if(	(!intersectionFound && tempT > 0) || (intersectionFound && tempT < closestT && tempT != -1)	){
 			  intersect = tempIntersect;
+			  tempT = tempIntersect.getVal();
 			  intersectionFound = true;
 			  //index = k;
 			  closestT = tempT;
@@ -111,6 +128,7 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  materialPointer = (isFlipped) ? BACKSIDE_MATERIAL : materialPointer;
 
 	  //Do lighting and shading calcuation now?
+
 	  rgbTriple R;
 	  for(unsigned int k=0; k < pointLightList.size(); k++){
 		  Vector pToLight = pointLightList.at(k)->getPosition().subtract(p);
@@ -118,6 +136,7 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 		  ray s_ray = ray(p,pToLight);
 		  rgbTriple L_rgb = L(s_ray, 0.0001, s_maxT, 1, SHADOW_RAY, *pointLightList.at(k));
 		  if(!L_rgb.isBlank()){
+			  std::cout << "Beginning shading" << std::endl;
 			  rgbTriple lambertianShading;
 			  rgbTriple specularShading;
 			  materialPointer -> lambertianShadingForPointLight(p, pointLightList.at(k), lambertianShading, tempSurfaceNormal);
@@ -183,13 +202,13 @@ int main (int argc, char *argv[])
 {
 
 	if(argc == 3){
-		renderBoxFlag = USE_BVH_TREE;
+		RENDER_BOX_FLAG = USE_BVH_TREE;
 	}
 	else if(argc==4){
 		//Get the renderBoxFlag
-		renderBoxFlag = atoi( argv[3] ); //I tried stoi but it didn't work :(
-		cout << renderBoxFlag << endl;
-		if(renderBoxFlag != NO_BVH_TREE && renderBoxFlag != BBOXED){
+		RENDER_BOX_FLAG = atoi( argv[3] ); //I tried stoi but it didn't work :(
+		cout << RENDER_BOX_FLAG << endl;
+		if(RENDER_BOX_FLAG != NO_BVH_TREE && RENDER_BOX_FLAG != BBOXED){
 			cerr << "flag_render_bboxes must be of: {omitted,0,1}" << endl;
 			return -1;
 		}
