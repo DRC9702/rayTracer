@@ -6,6 +6,7 @@
  */
 
 #include "BvhNode.h"
+#include <algorithm>
 
 //bool BvhNode::hit (ray r, double t0, double t1, Intersection intersectRecord, int BBoxFlag){
 
@@ -50,29 +51,54 @@ bool BvhNode::hit(ray r, double t0, double t1, HitRecord &HR,int BBoxFlag){
 	return false;
 }
 
-void BvhNode::create(std::vector<surface*> &surfaceList, int axis){
-	unsigned int N = surfaceList.size();
+bool compareX(surface* a, surface* b){
+	return a->getBoundingBox().compare(b->getBoundingBox(),0);
+}
+
+bool compareY(const surface* a, const surface* b){
+	return a->getBoundingBox().compare(b->getBoundingBox(),1);
+}
+
+bool compareZ(const surface* a, const surface* b){
+	return a->getBoundingBox().compare(b->getBoundingBox(),2);
+}
+
+void BvhNode::create(std::vector<surface*>::iterator begin, std::vector<surface*>::iterator end, int axis){
+	unsigned int N = end-begin;
 
 	if(N == 1){
-		leftSurface = surfaceList.at(0);
+		leftSurface = *begin;
 		rightSurface = nullptr;
 		thisBox = leftSurface->getBoundingBox();
 	}
 	else if (N==2){
-		leftSurface = surfaceList.at(0);
-		rightSurface = surfaceList.at(1);
+		leftSurface = *begin;
+		rightSurface = *(begin+1);
 		thisBox = BBox(leftSurface->getBoundingBox(),rightSurface->getBoundingBox());
 	}
-
+	else{
+		switch(axis){
+			case 0: std::sort(begin,end,compareX); break;
+			case 1: std::sort(begin,end,compareY); break;
+			case 2: std::sort(begin,end,compareZ); break;
+		}
+		BvhNode *leftNode = new BvhNode();
+		leftNode->create(begin, begin + (end-begin)/2, (axis+1)%3);
+		leftSurface = leftNode;
+		BvhNode *rightNode = new BvhNode();
+		rightNode->create(begin + (end-begin)/2, end, (axis+1)%3);
+		rightSurface = rightNode;
+		thisBox = BBox(leftSurface->getBoundingBox(),rightSurface->getBoundingBox());
+	}
 }
 
 
 //bool checkIsLeaf
 
-//BvhNode::BvhNode() {
-//	// TODO Auto-generated constructor stub
-//
-//}
+BvhNode::BvhNode() {
+	// TODO Auto-generated constructor stub
+
+}
 
 BvhNode::~BvhNode() {
 	// TODO Auto-generated destructor stub

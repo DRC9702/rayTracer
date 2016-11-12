@@ -33,7 +33,7 @@ public:
 	double getMaxY() const;
 	double getMaxZ() const;
 	BBox(const BBox box1, const BBox box2);
-	bool compare(BBox other,int axis);
+	bool compare(const BBox other,int axis) const;
 	virtual ~BBox();
 };
 

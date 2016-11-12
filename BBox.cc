@@ -159,7 +159,7 @@ Intersection BBox::checkIntersect(const ray& r, int materialIndex) const{
 	}
 }
 
-bool BBox::compare(BBox other, int axis){
+bool BBox::compare(const BBox other, int axis) const{
 	if(axis == 0){ //x axis
 		double avg1 = (getMinX()+getMaxX())/2;
 		double avg2 = (other.getMinX()+other.getMaxX())/2;
