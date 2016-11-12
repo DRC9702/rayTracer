@@ -11,23 +11,17 @@
 #include "surface.h"
 #include <vector>
 
-class HitRecord{
-public:
-	int surfaceIndex = -1;
-	double tVal = -1;
-};
-
 
 class BvhNode: public surface { //No real need to make it extend surface that I can see yet
 private:
 	surface *leftSurface;
 	surface *rightSurface;
-	BBox thisBox;
 public:
 	BvhNode();
 //	virtual bool hit (ray r, double t0, double t1, Intersection intersectRecord, int BBoxFlag);
 //	Intersection checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const;
-	virtual bool hit(ray r, double t0, double t1, HitRecord &HR,int BBoxFlag);
+//	virtual bool hit(ray r, double t0, double t1, HitRecord &HR,int BBoxFlag);
+	bool intersectHit(ray r, double bestT, Intersection &intersect);
 	//Tree Creation
 	void create(std::vector<surface*>::iterator begin, std::vector<surface*>::iterator end, int axis);
 	virtual ~BvhNode();

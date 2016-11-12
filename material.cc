@@ -52,7 +52,7 @@ rgbTriple material::shading(const point p, const camera cam, const unsigned int 
 
 			surfaceList.at(j) -> intersectHit(ray_pToL,distanceFromPointToLight,intersect);
 			double tempT = intersect.getVal();
-			std::cout << "tempT[" << tempT << std::endl;
+//			std::cout << "tempT[" << tempT << std::endl;
 
 
 //			std::cout << "tempT[" << tempT << " distanceToLight[" << distanceFromPointToLight << "]" << std::endl;
@@ -106,7 +106,7 @@ void material::lambertianShadingForPointLight(const point p,const pointLight* pL
 	Vector l = pL->getPosition().subtract(p); l.normalize();
 	double distance = pL->getPosition().subtract(p).getMagnitude();
 
-	std::cout << "LambertianShading!" << std::endl;
+//	std::cout << "LambertianShading!" << std::endl;
 	//std::cout << "l.x:" << l.x << std::endl;
 	//std::cout << "sn.x:" << surfaceNormal.x << std::endl;
 

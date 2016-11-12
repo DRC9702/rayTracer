@@ -23,6 +23,7 @@
 
 #include "Constants.h"
 
+#include "BvhNode.h"
 
 using namespace std;
 
@@ -46,6 +47,8 @@ int USE_BVH_TREE = 2;
 int NO_BVH_TREE = 0;
 int BBOXED = 1;
 
+BvhNode root;
+
 void writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
 {
     //
@@ -61,8 +64,100 @@ void writeRgba (const char fileName[], const Rgba *pixels, int width, int height
 }
 
 
+rgbTriple L2 (ray inputRay, double minT, double maxT, int recursionLimit, int rayType, pointLight light){
 
-rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int rayType, pointLight light){
+	if(recursionLimit==0)
+		return rgbTriple(0,0,0);
+
+	  if (rayType == SHADOW_RAY) {
+		  //bool intersectionFound = false; //I don't think I need it here at all
+		  Intersection intersect;
+		  if(root.intersectHit(inputRay, maxT, intersect))
+			  return rgbTriple(0,0,0);
+		  else{
+			  return light.getLightValue();
+		  }
+	  }
+
+	  //Get closest intersection with scene
+	  Intersection intersect;
+	  bool intersectionFound = false;
+//	  int index = -1;
+	  double closestT = -1;
+//	  for(unsigned int k=0; k < surfaceList.size(); k++){
+//		  Intersection tempIntersect;
+//		  if(!surfaceList.at(k) ->intersectHit(inputRay,closestT,tempIntersect)){
+//			  continue;
+//		  }
+//
+//		  double tempT = tempIntersect.getVal();
+//		  if(tempT < minT || tempT > maxT){
+//			  continue;
+//		  }
+//		  if(	(!intersectionFound && tempT > 0) || (intersectionFound && tempT < closestT && tempT != -1)	){
+//			  intersect = tempIntersect;
+//			  tempT = tempIntersect.getVal();
+//			  intersectionFound = true;
+//			  //index = k;
+//			  closestT = tempT;
+//		  }
+//	  }
+	  intersectionFound = (root.intersectHit(inputRay, maxT, intersect));
+	  closestT = intersect.getVal();
+
+	  if(!intersectionFound)
+		  return rgbTriple(0,0,0);
+
+	  point p = inputRay.getPointFromT(closestT);
+	  Vector surfaceNormal = intersect.getSurfaceNormal();
+	  material *materialPointer = materialList.at(intersect.getMaterialIndex());
+	  bool isFlipped = surfaceNormal.dotProduct(inputRay.getDir()) > 0; //Check if you're hitting the backside
+
+	  Vector tempSurfaceNormal = (isFlipped)? surfaceNormal.scalarMultiply(-1) : surfaceNormal;
+	  materialPointer = (isFlipped) ? BACKSIDE_MATERIAL : materialPointer;
+
+	  //Do lighting and shading calcuation now?
+
+	  rgbTriple R;
+	  for(unsigned int k=0; k < pointLightList.size(); k++){
+		  Vector pToLight = pointLightList.at(k)->getPosition().subtract(p);
+		  double s_maxT = pToLight.getMagnitude();
+		  ray s_ray = ray(p,pToLight);
+		  rgbTriple L_rgb = L2(s_ray, 0.0001, s_maxT, 1, SHADOW_RAY, *pointLightList.at(k));
+		  if(!L_rgb.isBlank()){
+//			  std::cout << "Beginning shading" << std::endl;
+			  rgbTriple lambertianShading;
+			  rgbTriple specularShading;
+			  materialPointer -> lambertianShadingForPointLight(p, pointLightList.at(k), lambertianShading, tempSurfaceNormal);
+			  materialPointer -> specularShadingForPointLight(p, pointLightList.at(k), specularShading, tempSurfaceNormal, inputRay.getDir().scalarMultiply(-1));
+			  R.addRGBFrom(lambertianShading);
+			  R.addRGBFrom(specularShading);
+		  }
+	  }
+
+	  if(rayType == PRIMARY_RAY){
+		  rgbTriple ambientShading;
+		  materialPointer -> shadingFromAmbientLight(ambLight,ambientShading);
+		  R.addRGBFrom(ambientShading);
+	  }
+
+//	  cout << "r" << materialPointer -> getIdealSpec().getR() << "g" << materialPointer -> getIdealSpec().getG() << endl;
+
+	  if(materialPointer -> getIdealSpec().isBlank()){
+		  return R;
+	  }
+	  else{
+//		  cout << "reflections happening" << endl;
+		  ray reflectedRay = ray(p, inputRay.getDir().subtract(		tempSurfaceNormal.scalarMultiply(2*inputRay.getDir().dotProduct(tempSurfaceNormal))		)	);
+		  rgbTriple newL_rgb = L2(reflectedRay, 0.0001, INFINITY, recursionLimit-1, REGULAR_RAY, pointLight());
+		  //This shouldn't get a pointlight but i didn't know what to do.
+				  //(ref_ray, .0001, +infinity, recurselimit - 1, REGULAR_RAY, ...)
+		  R.addRGBFrom(materialPointer -> getIdealSpec().componentMultiplication(newL_rgb));
+		  return R;
+	  }
+}
+
+rgbTriple L1 (ray inputRay, double minT, double maxT, int recursionLimit, int rayType, pointLight light){
 
 	if(recursionLimit==0)
 		return rgbTriple(0,0,0);
@@ -134,9 +229,9 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 		  Vector pToLight = pointLightList.at(k)->getPosition().subtract(p);
 		  double s_maxT = pToLight.getMagnitude();
 		  ray s_ray = ray(p,pToLight);
-		  rgbTriple L_rgb = L(s_ray, 0.0001, s_maxT, 1, SHADOW_RAY, *pointLightList.at(k));
+		  rgbTriple L_rgb = L1(s_ray, 0.0001, s_maxT, 1, SHADOW_RAY, *pointLightList.at(k));
 		  if(!L_rgb.isBlank()){
-			  std::cout << "Beginning shading" << std::endl;
+//			  std::cout << "Beginning shading" << std::endl;
 			  rgbTriple lambertianShading;
 			  rgbTriple specularShading;
 			  materialPointer -> lambertianShadingForPointLight(p, pointLightList.at(k), lambertianShading, tempSurfaceNormal);
@@ -160,7 +255,7 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  else{
 //		  cout << "reflections happening" << endl;
 		  ray reflectedRay = ray(p, inputRay.getDir().subtract(		tempSurfaceNormal.scalarMultiply(2*inputRay.getDir().dotProduct(tempSurfaceNormal))		)	);
-		  rgbTriple newL_rgb = L(reflectedRay, 0.0001, INFINITY, recursionLimit-1, REGULAR_RAY, pointLight());
+		  rgbTriple newL_rgb = L1(reflectedRay, 0.0001, INFINITY, recursionLimit-1, REGULAR_RAY, pointLight());
 		  //This shouldn't get a pointlight but i didn't know what to do.
 				  //(ref_ray, .0001, +infinity, recurselimit - 1, REGULAR_RAY, ...)
 		  R.addRGBFrom(materialPointer -> getIdealSpec().componentMultiplication(newL_rgb));
@@ -168,6 +263,12 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  }
 }
 
+rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int rayType, pointLight light){
+	if(RENDER_BOX_FLAG==0)
+		return L1(inputRay, minT, maxT, recursionLimit, rayType, light);
+	else
+		return L2(inputRay, minT, maxT, recursionLimit, rayType, light);
+}
 
 void writePixels(char* outputName){
 	int w = cam.getNx();
@@ -180,7 +281,7 @@ void writePixels(char* outputName){
 				for(int j=0; j < w; j++) {
 					ray pixelRay = cam.generateRayForPixel(j,h-1-i);
 
-					rgbTriple pixelLight = L (pixelRay, 0.0001, INFINITY, RECURSION_LIMIT, PRIMARY_RAY, pointLight());
+					rgbTriple pixelLight = L(pixelRay, 0.0001, INFINITY, RECURSION_LIMIT, PRIMARY_RAY, pointLight());
 					Rgba &px = p[i][j];
 					px.r = pixelLight.getR(); px.g = pixelLight.getG(); px.b =pixelLight.getB();
 				}
@@ -225,7 +326,10 @@ int main (int argc, char *argv[])
     RS.parseSceneFile (argv[1]);
 
     RS.getData(&surfaceList, &materialList, &pointLightList, &cam, &ambLight);
-
+    if(RENDER_BOX_FLAG){
+    	root = BvhNode();
+    	root.create(surfaceList.begin(), surfaceList.end(), 0);
+    }
     //cout << cam.nx << "\t" << cam.ny << endl;
 
 

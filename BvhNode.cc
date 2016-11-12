@@ -7,46 +7,47 @@
 
 #include "BvhNode.h"
 #include <algorithm>
+#include <iostream>
 
 //bool BvhNode::hit (ray r, double t0, double t1, Intersection intersectRecord, int BBoxFlag){
 
-bool BvhNode::hit(ray r, double t0, double t1, HitRecord &HR,int BBoxFlag){
-	Intersection outsideIntersection = thisBox.checkIntersect(r,BBoxFlag);
-	if(outsideIntersection.getVal()<t0 || outsideIntersection.getVal()>t1)
+bool BvhNode::intersectHit(ray r, double bestT, Intersection &intersect){
+	Intersection outsideIntersection = getBoundingBox().checkIntersect(r,0);
+	if(outsideIntersection.getVal()<bestT || outsideIntersection.getVal()>0.001)
 		outsideIntersection = Intersection();
 
 	if(outsideIntersection.isHit()){
-		HitRecord leftRec, rightRec;
+		Intersection leftRec, rightRec;
 		bool leftHit, rightHit;
 
 		//leftHit
 		if(leftSurface==nullptr)
 			leftHit = false;
 		else
-			leftHit = hit(r,t0,t1,leftRec,BBoxFlag);
+			leftHit = intersectHit(r,bestT,leftRec);
 		//rightHit
 		if(rightSurface==nullptr)
 			rightHit = false;
 		else
-			rightHit = hit(r,t0,t1,rightRec,BBoxFlag);
+			rightHit = intersectHit(r,bestT,rightRec);
 
 		if(leftHit && rightHit){
-			if(leftRec.tVal < rightRec.tVal)
-				HR = leftRec;
+			if(leftRec.getVal() < rightRec.getVal())
+				intersect = leftRec;
 			else
-				HR = rightRec;
+				intersect = rightRec;
 			return true;
 		}
 		else if(leftHit){
-			HR = leftRec;
+			intersect = leftRec;
 			return true;
 		}
 		else if(rightHit){
-			HR = rightRec;
+			intersect = rightRec;
 			return true;
 		}
 		//Not sure if this goes here but why not?
-		HR.surfaceIndex = thisBox.getSurfaceIndex();
+//		intersect.surfaceIndex = thisBox.getSurfaceIndex();
 	}
 	return false;
 }
@@ -65,16 +66,16 @@ bool compareZ(const surface* a, const surface* b){
 
 void BvhNode::create(std::vector<surface*>::iterator begin, std::vector<surface*>::iterator end, int axis){
 	unsigned int N = end-begin;
-
+	std::cout << N << std::endl;
 	if(N == 1){
 		leftSurface = *begin;
 		rightSurface = nullptr;
-		thisBox = leftSurface->getBoundingBox();
+		setBoundingBox(leftSurface->getBoundingBox());
 	}
 	else if (N==2){
 		leftSurface = *begin;
 		rightSurface = *(begin+1);
-		thisBox = BBox(leftSurface->getBoundingBox(),rightSurface->getBoundingBox());
+		setBoundingBox(BBox(leftSurface->getBoundingBox(),rightSurface->getBoundingBox()));
 	}
 	else{
 		switch(axis){
@@ -88,7 +89,7 @@ void BvhNode::create(std::vector<surface*>::iterator begin, std::vector<surface*
 		BvhNode *rightNode = new BvhNode();
 		rightNode->create(begin + (end-begin)/2, end, (axis+1)%3);
 		rightSurface = rightNode;
-		thisBox = BBox(leftSurface->getBoundingBox(),rightSurface->getBoundingBox());
+		setBoundingBox(BBox(leftSurface->getBoundingBox(),rightSurface->getBoundingBox()));
 	}
 }
 
