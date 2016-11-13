@@ -330,6 +330,8 @@ int main (int argc, char *argv[])
     	root = BvhNode();
     	root.create(surfaceList.begin(), surfaceList.end(), 0);
     }
+//    cout << root.leftSurface << endl;
+//    cout << surfaceList.at(0) << endl;
     //cout << cam.nx << "\t" << cam.ny << endl;
 
 

@@ -13,23 +13,29 @@
 
 bool BvhNode::intersectHit(ray r, double bestT, Intersection &intersect){
 	Intersection outsideIntersection = getBoundingBox().checkIntersect(r,0);
-	if(outsideIntersection.getVal()<bestT || outsideIntersection.getVal()>0.001)
+	if(!(outsideIntersection.getVal()<bestT || outsideIntersection.getVal()>0.001))
 		outsideIntersection = Intersection();
 
 	if(outsideIntersection.isHit()){
+//		std::cout << "hit outside bounding box checking" << std::endl;
 		Intersection leftRec, rightRec;
-		bool leftHit, rightHit;
+		bool leftHit = false;
+		bool rightHit = false;
 
 		//leftHit
 		if(leftSurface==nullptr)
 			leftHit = false;
-		else
-			leftHit = intersectHit(r,bestT,leftRec);
+		else{
+			std::cout << "leftHit checking" << std::endl;
+			leftHit = leftSurface->intersectHit(r,bestT,leftRec);
+			std::cout << "Hello!" << std::endl;
+			std::cout << &leftRec << std::endl;
+		}
 		//rightHit
 		if(rightSurface==nullptr)
 			rightHit = false;
 		else
-			rightHit = intersectHit(r,bestT,rightRec);
+			rightHit = rightSurface->intersectHit(r,bestT,rightRec);
 
 		if(leftHit && rightHit){
 			if(leftRec.getVal() < rightRec.getVal())
@@ -40,6 +46,7 @@ bool BvhNode::intersectHit(ray r, double bestT, Intersection &intersect){
 		}
 		else if(leftHit){
 			intersect = leftRec;
+//			std::cout << "Intersection with left child." << std::endl;
 			return true;
 		}
 		else if(rightHit){

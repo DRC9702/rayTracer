@@ -13,10 +13,12 @@
 
 
 class BvhNode: public surface { //No real need to make it extend surface that I can see yet
-private:
+//private:
+//	surface *leftSurface;
+//	surface *rightSurface;
+public:
 	surface *leftSurface;
 	surface *rightSurface;
-public:
 	BvhNode();
 //	virtual bool hit (ray r, double t0, double t1, Intersection intersectRecord, int BBoxFlag);
 //	Intersection checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const;

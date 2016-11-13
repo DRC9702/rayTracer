@@ -13,7 +13,7 @@ BBox::BBox(point minVals, point maxVals, int surfaceIndex){
 	this->surfaceIndex = surfaceIndex;
 }
 
-int BBox::getSurfaceIndex(){
+int BBox::getSurfaceIndex() const{
 	return surfaceIndex;
 }
 
@@ -59,9 +59,9 @@ BBox::BBox(const BBox box1, const BBox box2){
 	minX = (box1.getMinX()<box2.getMinX()) ? box1.getMinX() : box2.getMinX();
 	minY = (box1.getMinY()<box2.getMinY()) ? box1.getMinY() : box2.getMinY();
 	minZ = (box1.getMinZ()<box2.getMinZ()) ? box1.getMinZ() : box2.getMinZ();
-	maxX = (box1.getMaxX()<box2.getMaxX()) ? box1.getMaxX() : box2.getMaxX();
-	maxY = (box1.getMaxY()<box2.getMaxY()) ? box1.getMaxY() : box2.getMaxY();
-	maxZ = (box1.getMaxZ()<box2.getMaxZ()) ? box1.getMaxZ() : box2.getMaxZ();
+	maxX = (box1.getMaxX()>box2.getMaxX()) ? box1.getMaxX() : box2.getMaxX();
+	maxY = (box1.getMaxY()>box2.getMaxY()) ? box1.getMaxY() : box2.getMaxY();
+	maxZ = (box1.getMaxZ()>box2.getMaxZ()) ? box1.getMaxZ() : box2.getMaxZ();
 
 	this->minVals = point(minX,minY,minZ);
 	this->maxVals = point(maxX,maxY,maxZ);

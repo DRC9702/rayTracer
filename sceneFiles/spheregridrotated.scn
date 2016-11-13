@@ -1,3 +1,4 @@
+/rotated sphere grid
 / camera: pointing towards -Z, 35mmx25mm "film", 35mm focal length
 / making 320x240 pixels
 c 170. 222. 83. -.5 -.7 -.5 35.0 35.0 25.0 640 480
@@ -7,8 +8,12 @@ m 0.5 0.5 0.5 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 
 / ground plane:
 p 0.0 1.0 0.0 -50.0
-/ one point light:
+
+/ three point lights
 l p -80. 120. -46.6 15000.0 15000.0 15000.0
+l p 30. 80. -50 12000.0 12000.0 12000.0
+l p 30. 80. -100 10000.0 10000.0 10000.0
+
 
 / red material, w/ specular highlight
 m 0.7 0.0 0.0 0.5 0.5 0.5 100. 0.0 0.0 0.0

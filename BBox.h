@@ -20,7 +20,7 @@ private:
 public:
 	BBox(); //Don't know what to do with this guy
 	BBox(point minVals, point maxVals, int surfaceIndex);
-	int getSurfaceIndex();
+	int getSurfaceIndex() const;
 	//double intersectRay(const ray& r) const;
 	Intersection checkIntersect(const ray& r,int materialIndex) const;
 	//double BBox::intersectRay(const ray& r) const;
