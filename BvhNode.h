@@ -23,7 +23,7 @@ public:
 //	virtual bool hit (ray r, double t0, double t1, Intersection intersectRecord, int BBoxFlag);
 //	Intersection checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const;
 //	virtual bool hit(ray r, double t0, double t1, HitRecord &HR,int BBoxFlag);
-	bool intersectHit(ray r, double bestT, Intersection &intersect);
+	bool intersectHit(ray r, double bestT, Intersection &intersect) const;
 	//Tree Creation
 	void create(std::vector<surface*>::iterator begin, std::vector<surface*>::iterator end, int axis);
 	virtual ~BvhNode();

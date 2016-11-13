@@ -7,6 +7,7 @@
 
 #include "triangle.h"
 #include <algorithm> //So I can use min and max
+#include <iostream>
 
 triangle::triangle() {
 	p1 = point(1,0,0);
@@ -174,6 +175,7 @@ triangle::~triangle() {
 }
 
 bool triangle::intersectHit(ray r, double bestT, Intersection &intersect) const{
+//	std::cout << "Hello from triangle::intersectHit" << std::endl;
 	if(RENDER_BOX_FLAG==BBOXED){
 		//return getBoundingBox().checkIntersect(r, getMaterialIndex());
 		intersect = getBoundingBox().checkIntersect(r, getMaterialIndex());

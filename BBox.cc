@@ -138,17 +138,23 @@ Intersection BBox::checkIntersect(const ray& r, int materialIndex) const{
 	//Now find the largest minimum t to return (in terms of x,y,and z)
 	//Must make sure they're non-negative
 	double tMin;
-	if(	(txMin>tyMin) && (txMin>tzMin) && (txMin>0)	){
+	if(	(txMin>tyMin) && (txMin>tzMin)
+//			&& (txMin>0)
+			){
 		tMin = txMin;
 		//ToDo: Fix vector direction
 		return Intersection(materialIndex, tMin, Vector((dx<0)?1:-1,0,0));
 	}
-	else if(	(tyMin>txMin) && (tyMin>tzMin) && (tyMin>0)	){
+	else if(	(tyMin>txMin) && (tyMin>tzMin)
+//			&& (tyMin>0)
+			){
 		tMin = tyMin;
 		//ToDo: Fix vector direction
 		return Intersection(materialIndex, tMin, Vector(0,(dy<0)?1:-1,0));
 	}
-	else if(	(tzMin>txMin) && (tzMin>tyMin) && (tzMin>0)	){
+	else if(	(tzMin>txMin) && (tzMin>tyMin)
+//			&& (tzMin>0)
+			){
 		tMin = tzMin;
 		//ToDo: Fix vector direction
 		return Intersection(materialIndex, tMin, Vector(0,0,(dz<0)?1:-1));

@@ -44,7 +44,7 @@ Intersection sphere::checkIntersect(const ray r_ray) const{
 
 
 bool sphere::intersectHit(ray r, double bestT, Intersection &intersect) const{
-	std::cout << "Hit sphere!" << std::endl;
+	//std::cout << "Hit sphere!" << std::endl;
 	if(RENDER_BOX_FLAG==BBOXED){
 		//return getBoundingBox().checkIntersect(r, getMaterialIndex());
 		intersect = getBoundingBox().checkIntersect(r, getMaterialIndex());

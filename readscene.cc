@@ -338,10 +338,14 @@ void readscene::parseSceneFile (char *filnam)
             case 'w':{ //obj file
             	std::vector<int> tris;
             	std::vector<double> verts;
-            	const char *fileLoc = line.substr(2).c_str();
-
-            	read_wavefront_file(fileLoc, tris, verts); //
+//            	const char *fileLoc = line.substr(2).c_str();
+//            	cout << line << endl;
+//            	cout << line.substr(2).c_str() << endl;
+//            	printf("%s", fileLoc);
+//            	cout << fileLoc << endl;
+            	read_wavefront_file(line.substr(2).c_str(), tris, verts); //
             	for(unsigned int i=0; i<tris.size()/3; i++){
+//            		cout << "Hello!" << endl;
             		double x1, y1, z1, x2, y2, z2, x3, y3, z3;
 					//Point1
 					x1 = verts[3*tris[3*i]];
@@ -387,8 +391,8 @@ void readscene::read_wavefront_file (const char *file, std::vector< int > &tris,
     char buffer[1025];
     string cmd;
     
-    
     for (int line=1; in.good(); line++) {
+    	cout << "Reading in line[" << line << "] of wavefront file." << endl;
         in.getline(buffer,1024);
         buffer[in.gcount()]=0;
 

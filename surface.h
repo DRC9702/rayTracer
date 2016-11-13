@@ -29,6 +29,7 @@ public:
 	virtual void setBoundingBox(BBox bbox);
 
 	virtual bool intersectHit(ray r, double bestT, Intersection &intersect) const;
+//	virtual bool intersectHit(ray r, double bestT, Intersection &intersect) const = 0;
 
 //	Intersection checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const;
 //	virtual Intersection checkIntersect(const ray r_ray) const;

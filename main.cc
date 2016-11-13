@@ -65,7 +65,7 @@ void writeRgba (const char fileName[], const Rgba *pixels, int width, int height
 
 
 rgbTriple L2 (ray inputRay, double minT, double maxT, int recursionLimit, int rayType, pointLight light){
-
+//	cout << "L2 says hi." << endl;
 	if(recursionLimit==0)
 		return rgbTriple(0,0,0);
 
@@ -326,6 +326,7 @@ int main (int argc, char *argv[])
     RS.parseSceneFile (argv[1]);
 
     RS.getData(&surfaceList, &materialList, &pointLightList, &cam, &ambLight);
+    cout << surfaceList.size() << endl;
     if(RENDER_BOX_FLAG){
     	root = BvhNode();
     	root.create(surfaceList.begin(), surfaceList.end(), 0);

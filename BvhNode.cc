@@ -11,7 +11,8 @@
 
 //bool BvhNode::hit (ray r, double t0, double t1, Intersection intersectRecord, int BBoxFlag){
 
-bool BvhNode::intersectHit(ray r, double bestT, Intersection &intersect){
+bool BvhNode::intersectHit(ray r, double bestT, Intersection &intersect) const{
+//	std::cout << "Hello from BvhNode intersectHit" << std::endl;
 	Intersection outsideIntersection = getBoundingBox().checkIntersect(r,0);
 	if(!(outsideIntersection.getVal()<bestT || outsideIntersection.getVal()>0.001))
 		outsideIntersection = Intersection();
@@ -27,7 +28,7 @@ bool BvhNode::intersectHit(ray r, double bestT, Intersection &intersect){
 			leftHit = false;
 		else{
 //			std::cout << "leftHit checking" << std::endl;
-			leftHit = leftSurface->intersectHit(r,bestT,leftRec);
+			leftHit = leftSurface->intersectHit(r,bestT,leftRec) && leftRec.getVal() > 0.0001;
 //			std::cout << "Hello!" << std::endl;
 //			std::cout << &leftRec << std::endl;
 		}
@@ -35,7 +36,7 @@ bool BvhNode::intersectHit(ray r, double bestT, Intersection &intersect){
 		if(rightSurface==nullptr)
 			rightHit = false;
 		else
-			rightHit = rightSurface->intersectHit(r,bestT,rightRec);
+			rightHit = rightSurface->intersectHit(r,bestT,rightRec) && rightRec.getVal() > 0.0001;
 
 		if(leftHit && rightHit){
 			if(leftRec.getVal() < rightRec.getVal())
