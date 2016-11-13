@@ -26,10 +26,10 @@ bool BvhNode::intersectHit(ray r, double bestT, Intersection &intersect){
 		if(leftSurface==nullptr)
 			leftHit = false;
 		else{
-			std::cout << "leftHit checking" << std::endl;
+//			std::cout << "leftHit checking" << std::endl;
 			leftHit = leftSurface->intersectHit(r,bestT,leftRec);
-			std::cout << "Hello!" << std::endl;
-			std::cout << &leftRec << std::endl;
+//			std::cout << "Hello!" << std::endl;
+//			std::cout << &leftRec << std::endl;
 		}
 		//rightHit
 		if(rightSurface==nullptr)
