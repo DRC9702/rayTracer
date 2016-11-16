@@ -7,6 +7,6 @@ cp ../prog_out .
 
 for file in ./*.scn; do
 	echo ${file##*/}
-	./prog_out ${file##*/} "test.exr" 0
+	./prog_out ${file##*/} "test.exr"
 	exrdisplay test.exr
 done
