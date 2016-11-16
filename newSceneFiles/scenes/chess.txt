@@ -15,17 +15,17 @@ t -1000.00 5.00 -1000.00 1000.00 5.00 1000.00 1000.00 5.00 -1000.00
 / Chess board
 m 0.04 0.04 0.09 0.1 0.1 0.1 5. 0 0 0
 
-w scenes/blacksquares.obj
+w blacksquares.obj
 
 m 0.95 0.82 0.45 0.1 0.1 0.1 5. 0 0 0
 
-w scenes/whitesquares.obj
+w whitesquares.obj
 
 / Chess pieces
 m 0.04 0.04 0.09 0.1 0.1 0.1 5. 0 0 0
 
-w scenes/blackpieces.obj
+w blackpieces.obj
 
 m 0.95 0.82 0.45 0.1 0.1 0.1 5. 0 0 0
 
-w scenes/whitepieces.obj
+w whitepieces.obj

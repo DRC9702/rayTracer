@@ -74,7 +74,7 @@ bool compareZ(const surface* a, const surface* b){
 
 void BvhNode::create(std::vector<surface*>::iterator begin, std::vector<surface*>::iterator end, int axis){
 	unsigned int N = end-begin;
-	std::cout << N << std::endl;
+//	std::cout << N << std::endl;
 	if(N == 1){
 		leftSurface = *begin;
 		rightSurface = nullptr;
@@ -110,5 +110,8 @@ BvhNode::BvhNode() {
 }
 
 BvhNode::~BvhNode() {
-	// TODO Auto-generated destructor stub
+	if(leftSurface != nullptr)
+		delete(leftSurface);
+	if(rightSurface != nullptr)
+		delete(rightSurface);
 }
