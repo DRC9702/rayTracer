@@ -47,7 +47,7 @@ int USE_BVH_TREE = 2;
 int NO_BVH_TREE = 0;
 int BBOXED = 1;
 
-BvhNode root;
+BvhNode *root;
 
 void writeRgba (const char fileName[], const Rgba *pixels, int width, int height)
 {
@@ -72,7 +72,7 @@ rgbTriple L2 (ray inputRay, double minT, double maxT, int recursionLimit, int ra
 	  if (rayType == SHADOW_RAY) {
 		  //bool intersectionFound = false; //I don't think I need it here at all
 		  Intersection intersect;
-		  if(root.intersectHit(inputRay, maxT, intersect))
+		  if(root->intersectHit(inputRay, maxT, intersect))
 			  return rgbTriple(0,0,0);
 		  else{
 			  return light.getLightValue();
@@ -102,7 +102,7 @@ rgbTriple L2 (ray inputRay, double minT, double maxT, int recursionLimit, int ra
 //			  closestT = tempT;
 //		  }
 //	  }
-	  intersectionFound = (root.intersectHit(inputRay, maxT, intersect));
+	  intersectionFound = (root->intersectHit(inputRay, maxT, intersect));
 	  closestT = intersect.getVal();
 
 	  if(!intersectionFound)
@@ -304,11 +304,12 @@ int main (int argc, char *argv[])
 
 	if(argc == 3){
 		RENDER_BOX_FLAG = USE_BVH_TREE;
+		cout << "RenderFlag: " << "[Empty]" << endl;
 	}
 	else if(argc==4){
 		//Get the renderBoxFlag
 		RENDER_BOX_FLAG = atoi( argv[3] ); //I tried stoi but it didn't work :(
-		cout << RENDER_BOX_FLAG << endl;
+		cout << "RenderFlag: " << RENDER_BOX_FLAG << endl;
 		if(RENDER_BOX_FLAG != NO_BVH_TREE && RENDER_BOX_FLAG != BBOXED){
 			cerr << "flag_render_bboxes must be of: {omitted,0,1}" << endl;
 			return -1;
@@ -326,10 +327,10 @@ int main (int argc, char *argv[])
     RS.parseSceneFile (argv[1]);
 
     RS.getData(&surfaceList, &materialList, &pointLightList, &cam, &ambLight);
-    cout << surfaceList.size() << endl;
+    cout << "Number Of Surfaces: " << surfaceList.size() << endl;
     if(RENDER_BOX_FLAG){
-    	root = BvhNode();
-    	root.create(surfaceList.begin(), surfaceList.end(), 0);
+    	root = new BvhNode();
+    	root->create(surfaceList.begin(), surfaceList.end(), 0);
     }
 //    cout << root.leftSurface << endl;
 //    cout << surfaceList.at(0) << endl;
@@ -345,14 +346,23 @@ int main (int argc, char *argv[])
         return 1;
     }
 
-    //Free surfaces pointed to in surface list
-    for(surface* s : surfaceList){
-    	delete(s);
+
+
+    delete(root);
+
+    if(RENDER_BOX_FLAG == NO_BVH_TREE){
+		//Free surfaces pointed to in surface list
+		for(surface* s : surfaceList){
+			delete(s);
+		}
     }
+
     //Free materials pointed to in material list
     for(material* m : materialList){
     	delete(m);
     }
+    delete(BACKSIDE_MATERIAL);
+
     //Free pointLights pointed to in pointLight list
     for(pointLight* p : pointLightList){
     	delete(p);

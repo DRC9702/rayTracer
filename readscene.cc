@@ -224,7 +224,7 @@ void readscene::parseSceneFile (char *filnam)
 //                //cout << "parameters: nx[" << nx << "] ny[" << ny << "] nz[" << nz << "] d[" << d << "]" <<  endl;
 //				//cout << "Current material index: " << ms->getMaterialIndex() << endl;
 //#endif
-            	cout << "We got a plane but no way to handle them as inputs because of bounding boxes. :/. Will figure out later." << endl;
+            	cout << "Ignoring input plane." << endl;
                 break;
             }
                 
@@ -392,7 +392,7 @@ void readscene::read_wavefront_file (const char *file, std::vector< int > &tris,
     string cmd;
     
     for (int line=1; in.good(); line++) {
-    	cout << "Reading in line[" << line << "] of wavefront file." << endl;
+//    	cout << "Reading in line[" << line << "] of wavefront file." << endl;
         in.getline(buffer,1024);
         buffer[in.gcount()]=0;
 
