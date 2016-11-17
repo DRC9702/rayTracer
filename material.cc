@@ -168,6 +168,9 @@ void material::lambertianShadingForAreaLight(const point p, const point surfaceP
 	//double intensityCoefficient = 1 / (l.getMagnitude()*l.getMagnitude());
 	double intensityCoefficient = 1.0/((double)distance*distance); //WHAT IS I?!?!?!
 
+	//Added for arealights
+	intensityCoefficient *= aL->getDirection().dotProduct(l.scalarMultiply(-1));
+
 	double dotMultiplier = l.dotProduct(surfaceNormal);
 	dotMultiplier = (dotMultiplier < 0) ? 0 : dotMultiplier;
 
@@ -191,6 +194,9 @@ void material::specularShadingForAreaLight(const point p, const point surfacePoi
 	double sb = specular.getB();
 	double phong = r; //my phong exponent
 	double intensityCoefficient = 1.0/((double)distance*distance); //WHAT IS I?!?!?!
+
+	//Added for arealights
+	intensityCoefficient *= aL->getDirection().dotProduct(l.scalarMultiply(-1));
 
 	double dotMultiplier = h.dotProduct(surfaceNormal);
 	dotMultiplier = (dotMultiplier < 0) ? 0 : dotMultiplier;

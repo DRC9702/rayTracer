@@ -234,7 +234,7 @@ void writePixels(char* outputName){
 
 int main (int argc, char *argv[])
 {
-
+	srand(1);
 	if(argc == 3){
 		PRAYS_N = 1;
 		SRAYS_N = 1;
