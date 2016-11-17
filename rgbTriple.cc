@@ -57,3 +57,9 @@ bool rgbTriple::isBlank() const{
 rgbTriple rgbTriple::componentMultiplication(const rgbTriple other) const{
 	return rgbTriple(r*other.r, g*other.g, b*other.b);
 }
+
+void rgbTriple::scale(const double s){
+	r*=s;
+	g*=s;
+	b*=s;
+}

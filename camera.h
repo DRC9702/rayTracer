@@ -29,6 +29,7 @@ public:
 	camera(point p, Vector dir, double d, int nx, int ny, double width, double height);
 	camera(double x, double y, double z, double vx, double vy, double vz, double d, int nx, int ny, double width, double height);
 	ray generateRayForPixel(int i, int j);
+	ray generateRayForPixel(int i, int j, int p, int q, int n);
 
 	double getB() const {
 		return b;

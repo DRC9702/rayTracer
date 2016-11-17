@@ -24,6 +24,7 @@ public:
 	void setRGB(const double r, const double g, const double b);
 	void addRGBFrom(const rgbTriple other);
 	rgbTriple componentMultiplication(const rgbTriple other) const;
+	void scale(const double s);
 	rgbTriple();
 	rgbTriple(double r, double g, double b);
 	virtual ~rgbTriple();

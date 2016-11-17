@@ -1,5 +1,6 @@
 #include "camera.h"
 #include <iostream>
+#include <cstdlib>
 
 //Constructor // Don't know how valid this is yet.
 
@@ -76,4 +77,14 @@ ray camera::generateRayForPixel(int i, int j)
 	//std::cout << "camera generated a ray with magnitude[" << dir.getMagnitude() << "]" << std::endl;
 	return ray(eye,dir);
 	//Ask the TA.
+}
+
+ray camera::generateRayForPixel(int i, int j, int p, int q, int n){
+	double su = l + (r-l)*(i+ (p+rand()/RAND_MAX)/n)/nx;
+	double sv = b + (t-b)*(j+ (q+rand()/RAND_MAX)/n)/ny;
+//	std::cout << "Su:" << su << ", sv:" << sv << std::endl;
+	Vector dir = (((w.scalarMultiply(-d)).add(u.scalarMultiply(su))).add(v.scalarMultiply(sv))).getNormalizedVector();
+	//std::cout << "camera generated a ray with magnitude[" << dir.getMagnitude() << "]" << std::endl;
+	return ray(eye,dir);
+	//TA is busy, can't ask him right now, lol
 }
