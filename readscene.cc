@@ -271,7 +271,8 @@ void readscene::parseSceneFile (char *filnam)
 						b = getTokenAsDouble (line, 7);
 
 						pointLight *pl = new pointLight(x,y,z,r,g,b,1); //I have no idea what intensity should be set to.
-						pointLightList.push_back(pl);
+						//pointLightList.push_back(pl);
+						lightList.push_back(pl);
 
 #ifdef IM_DEBUGGING
 		                // if we're debugging, show what we got:
@@ -281,8 +282,26 @@ void readscene::parseSceneFile (char *filnam)
 
                     	break;
                     }
-                    case 'd':   // directional light
+                    case 's':{   // area light
+                    	double x,y,z,nx,ny,nz,ux,uy,uz,len,r,g,b;
+                    	x  = getTokenAsDouble(line, 2);
+                    	y  = getTokenAsDouble(line, 3);
+                    	z  = getTokenAsDouble(line, 4);
+                    	nx = getTokenAsDouble(line, 5);
+                    	ny = getTokenAsDouble(line, 6);
+                    	nz = getTokenAsDouble(line, 7);
+                    	ux = getTokenAsDouble(line, 8);
+                    	uy = getTokenAsDouble(line, 9);
+                    	uz = getTokenAsDouble(line, 10);
+                    	len= getTokenAsDouble(line, 11);
+                    	r  = getTokenAsDouble(line, 12);
+                    	g  = getTokenAsDouble(line, 13);
+                    	b  = getTokenAsDouble(line, 14);
+                    	areaLight *al = new areaLight(x,y,z,nx,ny,nz,ux,uy,uz,len,r,g,b);
+//                    	areaLightList.push_back(al);
+                    	lightList.push_back(al);
                         break;
+                    }
                     case 'a':{   // ambient light
                     	double r,g,b;
                     	r = getTokenAsDouble (line, 2);
@@ -372,10 +391,13 @@ void readscene::parseSceneFile (char *filnam)
 }
 
 
-void readscene::getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, camera *cam, ambientLight *ambLight){
+//void readscene::getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<pointLight*> *pointLightList, std::vector<areaLight*> *areaLightList, camera *cam, ambientLight *ambLight){
+void readscene::getData(std::vector<surface*> *surfaceList, std::vector<material*> *materialList, std::vector<Light*> *lightList, camera *cam, ambientLight *ambLight){
 	*surfaceList = this->surfaceList;
 	*materialList = this->materialList;
-	*pointLightList = this->pointLightList;
+//	*pointLightList = this->pointLightList;
+//	*areaLightList = this->areaLightList;
+	*lightList = this->lightList;
 	*cam = this->cam;
 	*ambLight = this->ambLight;
 }

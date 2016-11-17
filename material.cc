@@ -152,3 +152,54 @@ void material::specularShadingForPointLight(const point p, const pointLight* pL,
 	specularRGB.setB(sb * pow(dotMultiplier,phong) * pL->getLightValue().getB() * intensityCoefficient);
 
 }
+
+void material::lambertianShadingForAreaLight(const point p, const point surfacePoint, const areaLight* aL, rgbTriple &lambertianRGB, const Vector surfaceNormal) const{
+	Vector l = surfacePoint.subtract(p); l.normalize();
+	double distance = surfacePoint.subtract(p).getMagnitude();
+
+//	std::cout << "LambertianShading!" << std::endl;
+	//std::cout << "l.x:" << l.x << std::endl;
+	//std::cout << "sn.x:" << surfaceNormal.x << std::endl;
+
+	//These are my diffuse coefficients
+	double dr = diffuse.getR();
+	double dg = diffuse.getG();
+	double db = diffuse.getB();
+	//double intensityCoefficient = 1 / (l.getMagnitude()*l.getMagnitude());
+	double intensityCoefficient = 1.0/((double)distance*distance); //WHAT IS I?!?!?!
+
+	double dotMultiplier = l.dotProduct(surfaceNormal);
+	dotMultiplier = (dotMultiplier < 0) ? 0 : dotMultiplier;
+
+	//Diffusely reflect light in each of the three channels
+	lambertianRGB.setR(dr * dotMultiplier * (aL->getLightValue().getR()) * intensityCoefficient);
+	lambertianRGB.setG(dg * dotMultiplier * (aL->getLightValue().getG()) * intensityCoefficient);
+	lambertianRGB.setB(db * dotMultiplier * (aL->getLightValue().getB()) * intensityCoefficient);
+}
+
+
+void material::specularShadingForAreaLight(const point p, const point surfacePoint, const areaLight* aL, rgbTriple &specularRGB, const Vector &surfaceNormal, const Vector &pToSource) const{
+	Vector v = pToSource;
+	//std::cout << "surface normal before stuff[" << surfaceNormal.getMagnitude() << "]" << std::endl;
+	Vector l = surfacePoint.subtract(p); l.normalize();
+	double distance = surfacePoint.subtract(p).getMagnitude();
+	Vector h = v.add(l); h.normalize(); //Since both v and l are unit vectors, this should bisect them
+
+	//These are my specular coefficients
+	double sr = specular.getR();
+	double sg = specular.getG();
+	double sb = specular.getB();
+	double phong = r; //my phong exponent
+	double intensityCoefficient = 1.0/((double)distance*distance); //WHAT IS I?!?!?!
+
+	double dotMultiplier = h.dotProduct(surfaceNormal);
+	dotMultiplier = (dotMultiplier < 0) ? 0 : dotMultiplier;
+
+//	std::cout << "dotMultiplier[" << dotMultiplier << "]" << std::endl;
+//	std::cout << "h[" << h.getMagnitude() << "]" << std::endl;
+//	std::cout << "n[" << surfaceNormal.getMagnitude() << "]" << std::endl;
+
+	specularRGB.setR(sr * pow(dotMultiplier,phong) * (aL->getLightValue().getR()) * intensityCoefficient);
+	specularRGB.setG(sg * pow(dotMultiplier,phong) * (aL->getLightValue().getG()) * intensityCoefficient);
+	specularRGB.setB(sb * pow(dotMultiplier,phong) * (aL->getLightValue().getB()) * intensityCoefficient);
+}

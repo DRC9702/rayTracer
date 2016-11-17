@@ -16,7 +16,7 @@
 #include "readscene.h"
 #include "Vector.h"
 #include "pointLight.h"
-
+#include "areaLight.h"
 
 #include <cstdlib>	//Nope! Don't need this!
 #include <limits>
@@ -29,7 +29,9 @@ using namespace std;
 
 std::vector<surface*> surfaceList = std::vector<surface*>();
 std::vector<material*> materialList = std::vector<material*>();
-std::vector<pointLight*> pointLightList = std::vector<pointLight*>();
+//std::vector<pointLight*> pointLightBopList = std::vector<pointLight*>();
+//std::vector<areaLight*> areaLightList = std::vector<areaLight*>();
+std::vector<Light*> lightList = std::vector<Light*>();
 camera cam;
 ambientLight ambLight = ambientLight(.876,0,0);
 
@@ -70,7 +72,7 @@ void writeRgba (const char fileName[], const Rgba *pixels, int width, int height
 }
 
 
-rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int rayType, pointLight light){
+rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int rayType, unsigned int lightIndex){
 //	cout << "L2 says hi." << endl;
 	if(recursionLimit==0)
 		return rgbTriple(0,0,0);
@@ -81,7 +83,7 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 		  if(root->intersectHit(inputRay, maxT, intersect))
 			  return rgbTriple(0,0,0);
 		  else{
-			  return light.getLightValue();
+			  return lightList.at(lightIndex)->getLightValue();
 		  }
 	  }
 
@@ -125,20 +127,47 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  //Do lighting and shading calcuation now?
 
 	  rgbTriple R;
-	  for(unsigned int k=0; k < pointLightList.size(); k++){
-		  Vector pToLight = pointLightList.at(k)->getPosition().subtract(p);
-		  double s_maxT = pToLight.getMagnitude();
-		  ray s_ray = ray(p,pToLight);
-		  rgbTriple L_rgb = L(s_ray, 0.0001, s_maxT, 1, SHADOW_RAY, *pointLightList.at(k));
-		  if(!L_rgb.isBlank()){
-//			  std::cout << "Beginning shading" << std::endl;
+	  for(unsigned int k=0; k < lightList.size(); k++){
+
+		  if(!lightList.at(k)->isAreaLight()){ //Is a pointlight
+			  Vector pToLight = lightList.at(k)->getPosition().subtract(p);
+			  double s_maxT = pToLight.getMagnitude();
+			  ray s_ray = ray(p,pToLight);
+			  rgbTriple L_rgb = L(s_ray, 0.0001, s_maxT, 1, SHADOW_RAY, k);
+			  if(!L_rgb.isBlank()){
+			  //			  std::cout << "Beginning shading" << std::endl;
 			  rgbTriple lambertianShading;
 			  rgbTriple specularShading;
-			  materialPointer -> lambertianShadingForPointLight(p, pointLightList.at(k), lambertianShading, tempSurfaceNormal);
-			  materialPointer -> specularShadingForPointLight(p, pointLightList.at(k), specularShading, tempSurfaceNormal, inputRay.getDir().scalarMultiply(-1));
+			  materialPointer -> lambertianShadingForPointLight(p, (pointLight*)lightList.at(k), lambertianShading, tempSurfaceNormal);
+			  materialPointer -> specularShadingForPointLight(p, (pointLight*)lightList.at(k), specularShading, tempSurfaceNormal, inputRay.getDir().scalarMultiply(-1));
 			  R.addRGBFrom(lambertianShading);
 			  R.addRGBFrom(specularShading);
+			  }
 		  }
+		  else{ //Is an areaLight //Don't do anything yet
+			  areaLight *aL = (areaLight*)lightList.at(k);
+			  rgbTriple totalRGB = rgbTriple(0,0,0);
+			  for(int pIndex=0; pIndex<SRAYS_N; pIndex++){
+				  for(int qIndex=0; qIndex<SRAYS_N; qIndex++){
+					  point surfacePoint = aL->generateSurfacePoint(pIndex,qIndex,SRAYS_N);
+					  Vector pToLight = surfacePoint.subtract(p);
+					  double s_maxT = pToLight.getMagnitude();
+					  ray s_ray = ray(p,pToLight);
+					  rgbTriple L_rgb = L(s_ray, 0.0001, s_maxT, 1, SHADOW_RAY, k);
+					  if(!L_rgb.isBlank()){
+					  rgbTriple lambertianShading;
+					  rgbTriple specularShading;
+					  materialPointer -> lambertianShadingForAreaLight(p, surfacePoint, aL, lambertianShading, tempSurfaceNormal);
+					  materialPointer -> specularShadingForAreaLight(p, surfacePoint, aL, specularShading, tempSurfaceNormal, inputRay.getDir().scalarMultiply(-1));
+					  totalRGB.addRGBFrom(lambertianShading);
+					  totalRGB.addRGBFrom(specularShading);
+					  }
+				  }
+			  }
+			  totalRGB.scale(1/((double)SRAYS_N*SRAYS_N));
+			  R.addRGBFrom(totalRGB);
+		  }
+
 	  }
 
 	  if(rayType == PRIMARY_RAY){
@@ -155,8 +184,8 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  else{
 //		  cout << "reflections happening" << endl;
 		  ray reflectedRay = ray(p, inputRay.getDir().subtract(		tempSurfaceNormal.scalarMultiply(2*inputRay.getDir().dotProduct(tempSurfaceNormal))		)	);
-		  rgbTriple newL_rgb = L(reflectedRay, 0.0001, INFINITY, recursionLimit-1, REGULAR_RAY, pointLight());
-		  //This shouldn't get a pointlight but i didn't know what to do.
+		  rgbTriple newL_rgb = L(reflectedRay, 0.0001, INFINITY, recursionLimit-1, REGULAR_RAY, lightList.size()); //Not sure what this one here doesn't either but we'll leave it as a pointLight
+		  //This shouldn't get a pointLightBopBAP but i didn't know what to do.
 				  //(ref_ray, .0001, +infinity, recurselimit - 1, REGULAR_RAY, ...)
 		  R.addRGBFrom(materialPointer -> getIdealSpec().componentMultiplication(newL_rgb));
 		  return R;
@@ -169,7 +198,7 @@ void writePixels(char* outputName){
 	Array2D<Rgba> p (h,w);
 	p.resizeErase(h,w);
 
-	cout << "Progress: |0|";
+	cerr << "Progress: |0|";
 	        for(int i=0; i < h; i++){
 				for(int j=0; j < w; j++) {
 					//ray pixelRay = cam.generateRayForPixel(j,h-1-i);
@@ -178,13 +207,13 @@ void writePixels(char* outputName){
 						for(int q=0; q<PRAYS_N; q++){
 							ray pixelRay = cam.generateRayForPixel(j,h-1-i,p,q,PRAYS_N);
 //							ray pixelRay = cam.generateRayForPixel(j,h-1-i);
-							rgbTriple tempPixelLight = L(pixelRay, 0.0001, INFINITY, RECURSION_LIMIT, PRIMARY_RAY, pointLight());
+							rgbTriple tempPixelLight = L(pixelRay, 0.0001, INFINITY, RECURSION_LIMIT, PRIMARY_RAY, lightList.size()); //This light doens't matter I think
 //							cout << tempPixelLight.getR() << "\t" << tempPixelLight.getG() << "\t" << tempPixelLight.getB() << endl;
 							pixelLight.addRGBFrom(tempPixelLight);
 						}
 					}
-					//rgbTriple pixelLight = L(pixelRay, 0.0001, INFINITY, RECURSION_LIMIT, PRIMARY_RAY, pointLight());
-					pixelLight.scale(1/(PRAYS_N*PRAYS_N));
+					//rgbTriple pixelLight = L(pixelRay, 0.0001, INFINITY, RECURSION_LIMIT, PRIMARY_RAY, pointLightBopBAP());
+					pixelLight.scale(1/((double)PRAYS_N*PRAYS_N));
 //					cout << pixelLight.getR() << "\t" << pixelLight.getG() << "\t" << pixelLight.getB() << endl;
  					Rgba &px = p[i][j];
 					px.r = pixelLight.getR(); px.g = pixelLight.getG(); px.b =pixelLight.getB();
@@ -194,12 +223,12 @@ void writePixels(char* outputName){
 				if(i%(h/10)==0 && i!=0)
 						cout << "|" << i/(h/10)*10 << "|" ;
 			}
-			cout << "|100|" << endl;
+			cerr << "|100|" << endl;
 
 			writeRgba (outputName, &p[0][0], w, h);
 			//cout << "Didn't die while editing the pixels." << endl;
 
-			cout << "Finished writing file" << endl;
+			cerr << "Finished writing file" << endl;
 }
 
 
@@ -209,15 +238,15 @@ int main (int argc, char *argv[])
 	if(argc == 3){
 		PRAYS_N = 1;
 		SRAYS_N = 1;
-		cout << "SquareRoot Of Primary Ray Sampling Number: " << "[1]" << endl;
-		cout << "SquareRoot Of Shadow Ray Sampling Number: " << "[1]" << endl;
+		cerr << "SquareRoot Of Primary Ray Sampling Number: " << "[1]" << endl;
+		cerr << "SquareRoot Of Shadow Ray Sampling Number: " << "[1]" << endl;
 	}
 	else if(argc==5){
 		//Get the renderBoxFlag
 		PRAYS_N = atoi( argv[3] ); //I tried stoi but it didn't work :(
 		SRAYS_N = atoi( argv[4] );
-		cout << "SquareRoot Of Primary Ray Sampling Number: " << "[" << PRAYS_N << "]" << endl;
-		cout << "SquareRoot Of Shadow Ray Sampling Number: " << "[" << SRAYS_N << "]" << endl;
+		cerr << "SquareRoot Of Primary Ray Sampling Number: " << "[" << PRAYS_N << "]" << endl;
+		cerr << "SquareRoot Of Shadow Ray Sampling Number: " << "[" << SRAYS_N << "]" << endl;
 		if(PRAYS_N < 1 && SRAYS_N < 1){
 			cerr << "Sampling Input Numbers must be >=1" << endl;
 			return -1;
@@ -234,7 +263,8 @@ int main (int argc, char *argv[])
     readscene RS;
     RS.parseSceneFile (argv[1]);
 
-    RS.getData(&surfaceList, &materialList, &pointLightList, &cam, &ambLight);
+    //RS.getData(&surfaceList, &materialList, &pointLightList, &areaLightList, &cam, &ambLight);
+    RS.getData(&surfaceList, &materialList, &lightList, &cam, &ambLight);
     cout << "Number Of Surfaces: " << surfaceList.size() << endl;
 
     root = new BvhNode();
@@ -261,9 +291,18 @@ int main (int argc, char *argv[])
     }
     delete(BACKSIDE_MATERIAL);
 
-    //Free pointLights pointed to in pointLight list
-    for(pointLight* p : pointLightList){
-    	delete(p);
+//    //Free pointLightBopBAPs pointed to in pointLightBopBAP list
+//    for(pointLightBop* p : pointLightBopList){
+//    	delete(p);
+//    }
+//
+//    //Delete all the areaLights pointed to in the areaLight list
+//    for(areaLight* a : areaLightList){
+//    	delete(a);
+//    }
+
+    for(Light* l : lightList){
+    	delete(l);
     }
 
     return 0;

@@ -2,6 +2,7 @@
 #include "rgbTriple.h"
 #include "surface.h"
 #include "pointLight.h"
+#include "areaLight.h" //God damn it.
 #include "ambientLight.h"
 #include "camera.h"
 #include <vector>
@@ -28,6 +29,11 @@ public:
 	rgbTriple shading(const point p, const camera cam, const unsigned int surfaceIndex, const std::vector<surface*> &surfaceList, const std::vector<pointLight*> &pointLightList, const ambientLight &ambLight, const Vector surfaceNormal, const Vector pToSource, const bool isFlipped) const;
 	void lambertianShadingForPointLight(const point p, const pointLight* pL, rgbTriple &lambertianRGB, const Vector surfaceNormal) const;
 	void specularShadingForPointLight(const point p, const pointLight* pL, rgbTriple &specularRGB, const Vector &surfaceNormal, const Vector &pToSource) const;
+	//void lambertianShadingForAreaLight(const point p, const point surfacePoint, const areaLight* aL, rgbTriple &lambertianRGB, const Vector surfaceNormal) const;
+	//void specularShadingForAreaLight(const point p, const point surfacePoint, const areaLight* aL, rgbTriple &specularRGB, const Vector &surfaceNormal, const Vector &pToSource) const;
+	void lambertianShadingForAreaLight(const point p, const point surfacePoint, const areaLight* aL, rgbTriple &lambertianRGB, const Vector surfaceNormal) const;
+	void specularShadingForAreaLight(const point p, const point surfacePoint, const areaLight* aL, rgbTriple &specularRGB, const Vector &surfaceNormal, const Vector &pToSource) const;
+
 	void shadingFromAmbientLight(const ambientLight &ambLight, rgbTriple &ambient) const;
 
 	const rgbTriple& getDiffuse() const {

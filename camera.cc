@@ -80,8 +80,8 @@ ray camera::generateRayForPixel(int i, int j)
 }
 
 ray camera::generateRayForPixel(int i, int j, int p, int q, int n){
-	double su = l + (r-l)*(i+ (p+rand()/RAND_MAX)/n)/nx;
-	double sv = b + (t-b)*(j+ (q+rand()/RAND_MAX)/n)/ny;
+	double su = l + (r-l)*(i+ (p+(rand()+0.0)/((double) RAND_MAX))/n)/nx;
+	double sv = b + (t-b)*(j+ (q+(rand()+0.0)/((double) RAND_MAX))/n)/ny;
 //	std::cout << "Su:" << su << ", sv:" << sv << std::endl;
 	Vector dir = (((w.scalarMultiply(-d)).add(u.scalarMultiply(su))).add(v.scalarMultiply(sv))).getNormalizedVector();
 	//std::cout << "camera generated a ray with magnitude[" << dir.getMagnitude() << "]" << std::endl;
