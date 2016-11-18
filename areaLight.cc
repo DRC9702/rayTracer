@@ -41,8 +41,8 @@ const point& areaLight::getblCorner() const{
 }
 
 const point areaLight::generateSurfacePoint(int p, int q, int N) const{
-	double su = (p+(rand()+0.0)/RAND_MAX)/N;
-	double sv = (q+(rand()+0.0)/RAND_MAX)/N;
+	double su = ((p+(rand()+0.0)/((double)RAND_MAX))/N)*len;
+	double sv = ((q+(rand()+0.0)/((double)RAND_MAX))/N)*len;
 	point returnPoint = blCorner.addVector(uvector.scalarMultiply(su)).addVector(vvector.scalarMultiply(sv));
 	return returnPoint;
 }
