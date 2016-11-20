@@ -363,6 +363,14 @@ void readscene::parseSceneFile (char *filnam)
 //            	printf("%s", fileLoc);
 //            	cout << fileLoc << endl;
             	read_wavefront_file(line.substr(2).c_str(), tris, verts); //
+
+            	std::vector<triangle*> triangleList;
+				std::vector<Vector> normalsList;
+            	for(unsigned int i=0; i<verts.size()/3;i++)
+					normalsList.push_back(Vector(0,0,0));
+//				cout << "Size of normalsList: " << normalsList.size() << endl;
+
+
             	for(unsigned int i=0; i<tris.size()/3; i++){
 //            		cout << "Hello!" << endl;
             		double x1, y1, z1, x2, y2, z2, x3, y3, z3;
@@ -378,11 +386,33 @@ void readscene::parseSceneFile (char *filnam)
 					x3 = verts[3*tris[3*i+2]];
 					y3 = verts[3*tris[3*i+2]+1];
 					z3 = verts[3*tris[3*i+2]+2];
+					
+					//Since we're no longer adding the triangle to the surface list at this point
+					//we'll pass a temporary value for surfaceIndex
+					//triangle *mt = new triangle(x1,y1,z1,x2,y2,z2,x3,y3,z3,surfaceList.size());
+					triangle *mt = new triangle(x1,y1,z1,x2,y2,z2,x3,y3,z3,-9702,true);
 
-					triangle *mt = new triangle(x1,y1,z1,x2,y2,z2,x3,y3,z3,surfaceList.size());
+					normalsList.at(tris[3*i]).addInto(mt->getNormal());
+					normalsList.at(tris[3*i+1]).addInto(mt->getNormal());
+					normalsList.at(tris[3*i+2]).addInto(mt->getNormal());
+					//cout << (normalsList.at(tris[3*i]).getX()) << endl;
+					
 					mt->setMaterialIndex(materialList.size()-1);
-					surfaceList.push_back(mt);
+					//surfaceList.push_back(mt);
+					triangleList.push_back(mt);
             	}
+            	for(unsigned int i=0; i<normalsList.size();i++) normalsList.at(i).normalize();
+            	for(unsigned int i=0; i<triangleList.size(); i++){
+            		triangleList.at(i)->setN1(normalsList.at(tris[3*i]));
+            		triangleList.at(i)->setN2(normalsList.at(tris[3*i+1]));
+            		triangleList.at(i)->setN3(normalsList.at(tris[3*i+2]));
+            		triangleList.at(i)->setSurfaceIndex(surfaceList.size());
+//            		cout << triangleList.at(i)->getN1().getMagnitude() << endl;
+//            		cout << triangleList.at(i)->getN2().getMagnitude() << endl;
+//            		cout << triangleList.at(i)->getN3().getMagnitude() << endl;
+            		surfaceList.push_back(triangleList.at(i));
+            	}
+            	
             	break;
             }
         }

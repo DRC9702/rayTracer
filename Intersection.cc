@@ -18,6 +18,15 @@ Intersection::Intersection(int materialIndex, double tVal, Vector surfaceNormal)
 	this->materialIndex = materialIndex;
 	this->tVal = tVal;
 	this->surfaceNormal = surfaceNormal;
+	this->smoothNormal = surfaceNormal;
+	hit = true;
+}
+
+Intersection::Intersection(int materialIndex, double tVal, Vector surfaceNormal, Vector smoothNormal){
+	this->materialIndex = materialIndex;
+	this->tVal = tVal;
+	this->surfaceNormal = surfaceNormal;
+	this->smoothNormal = smoothNormal;
 	hit = true;
 }
 
@@ -31,6 +40,10 @@ int Intersection::getMaterialIndex() const {
 
 const Vector& Intersection::getSurfaceNormal() const {
 	return surfaceNormal;
+}
+
+const Vector& Intersection::getSmoothNormal() const {
+	return smoothNormal;
 }
 
 double Intersection::getVal() const {

@@ -121,7 +121,7 @@ rgbTriple L (ray inputRay, double minT, double maxT, int recursionLimit, int ray
 	  material *materialPointer = materialList.at(intersect.getMaterialIndex());
 	  bool isFlipped = surfaceNormal.dotProduct(inputRay.getDir()) > 0; //Check if you're hitting the backside
 
-	  Vector tempSurfaceNormal = (isFlipped)? surfaceNormal.scalarMultiply(-1) : surfaceNormal;
+	  Vector tempSurfaceNormal = (isFlipped)? surfaceNormal.scalarMultiply(-1) : intersect.getSmoothNormal();
 	  materialPointer = (isFlipped) ? BACKSIDE_MATERIAL : materialPointer;
 
 	  //Do lighting and shading calcuation now?
@@ -221,7 +221,7 @@ void writePixels(char* outputName){
 	    		//writeRgba (outputName, &p[0][0], w, h);
 				//writeRgba ("hw3.exr", &p[0][0], w, h);
 				if(i%(h/10)==0 && i!=0)
-						cout << "|" << i/(h/10)*10 << "|" ;
+						cerr << "|" << i/(h/10)*10 << "|" ;
 			}
 			cerr << "|100|" << endl;
 

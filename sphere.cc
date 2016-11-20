@@ -43,11 +43,12 @@ Intersection sphere::checkIntersect(const ray r_ray) const{
 }
 
 
-bool sphere::intersectHit(ray r, double bestT, Intersection &intersect) const{
+bool sphere::intersectHit(ray r, double &bestT, Intersection &intersect) const{
 	//std::cout << "Hit sphere!" << std::endl;
 	if(RENDER_BOX_FLAG==BBOXED){
 		//return getBoundingBox().checkIntersect(r, getMaterialIndex());
 		intersect = getBoundingBox().checkIntersect(r, getMaterialIndex());
+		if (intersect.isHit()) bestT = intersect.getVal();
 		return intersect.isHit();
 
 	}
@@ -55,6 +56,7 @@ bool sphere::intersectHit(ray r, double bestT, Intersection &intersect) const{
 		Intersection  intersect1 = getBoundingBox().checkIntersect(r, getMaterialIndex());
 		if(intersect1.isHit()){
 			intersect = checkIntersect(r);
+			if (intersect.isHit()) bestT = intersect.getVal();
 			return intersect.isHit();
 		}
 		else{
@@ -64,6 +66,7 @@ bool sphere::intersectHit(ray r, double bestT, Intersection &intersect) const{
 	}
 	else{ //BBoxFlag==0
 		intersect = checkIntersect(r);
+		if (intersect.isHit()) bestT = intersect.getVal();
 		return intersect.isHit();
 	}
 }

@@ -21,7 +21,7 @@ public:
 	double intersectT(const ray r_ray) const;
 	Intersection checkIntersect(const ray r_ray) const;
 	Vector getSurfaceNormal(const point p) const;
-	bool intersectHit(ray r, double bestT, Intersection &intersect) const;
+	bool intersectHit(ray r, double &bestT, Intersection &intersect) const;
 
 	const point& getCenter() const {
 		return center;

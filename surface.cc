@@ -39,7 +39,7 @@ int surface::getMaterialIndex() const
 	return materialIndex;
 }
 
-bool surface::intersectHit(ray r, double bestT, Intersection &intersect) const{
+bool surface::intersectHit(ray r, double &bestT, Intersection &intersect) const{
 	std::cout <<"The virtual surface method intersectHit is being called." << std::endl;
 	return false;
 }
@@ -104,4 +104,12 @@ bool surface::checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) co
 
 surface::~surface() {
 	// TODO Auto-generated destructor stub
+}
+
+bool surface::isObjTriangle() const {
+	return objTriangle;
+}
+
+void surface::setObjTriangle(bool objTriangle) {
+	this->objTriangle = objTriangle;
 }

@@ -18,6 +18,7 @@ public:
 	Vector add(const Vector other) const;
 	Vector negationVector() const;
 	Vector subtract(const Vector other) const;
+	void addInto(const Vector other);
 	void normalize();
 	Vector getNormalizedVector() const;
 	double dotProduct(const Vector other) const;

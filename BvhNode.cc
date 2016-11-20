@@ -11,7 +11,7 @@
 
 //bool BvhNode::hit (ray r, double t0, double t1, Intersection intersectRecord, int BBoxFlag){
 
-bool BvhNode::intersectHit(ray r, double bestT, Intersection &intersect) const{
+bool BvhNode::intersectHit(ray r, double &bestT, Intersection &intersect) const{
 //	std::cout << "Hello from BvhNode intersectHit" << std::endl;
 	Intersection outsideIntersection = getBoundingBox().checkIntersect(r,0);
 	if(!(outsideIntersection.getVal()<bestT || outsideIntersection.getVal()>0.001))

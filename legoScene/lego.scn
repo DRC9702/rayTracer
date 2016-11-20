@@ -2,25 +2,25 @@
 
 /yellow
 m 1.0 1.0 0.0 0.7 0.7 0.7 100. 0.5 0.5 0.5
-w Lego_Head.obj
-w Lego_Default.obj
+w legoScene/Lego_Head.obj
+w legoScene/Lego_Default.obj
 
 /red
 m 1.0 0.0 0.0 0.7 0.7 0.7 100. 0.5 0.5 0.5
-w Lego_Chest.obj
+w legoScene/Lego_Chest.obj
 
 /green
 m 0.0 0.5450 0.0 0.7 0.7 0.7 100. 0.5 0.5 0.5
-w Lego_Arms.obj
+w legoScene/Lego_Arms.obj
 
 
 /purple
 m 0.3137 0.0 0.3137 0.7 0.7 0.7 100. 0.5 0.5 0.5
-w Lego_Waist.obj
+w legoScene/Lego_Waist.obj
 
 /blue
 m 0.0 0.0 0.678 0.7 0.7 0.7 100. 0.5 0.5 0.5
-w Lego_Legs.obj
+w legoScene/Lego_Legs.obj
 
 /m 1 1 0.0 0.7 0.7 0.7 100. 0.0 0.0 0.0
 / spheres in the above material

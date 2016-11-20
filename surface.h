@@ -18,6 +18,7 @@ private:
 	//material* mat;
 	int materialIndex;
 	BBox boundingBox;
+	bool objTriangle = false;
 public:
 	surface();
 	virtual ~surface();
@@ -28,7 +29,7 @@ public:
 	//double intersectWithBBox(const ray r_ray, bool useBBox) const;
 	virtual void setBoundingBox(BBox bbox);
 
-	virtual bool intersectHit(ray r, double bestT, Intersection &intersect) const;
+	virtual bool intersectHit(ray r, double &bestT, Intersection &intersect) const;
 //	virtual bool intersectHit(ray r, double bestT, Intersection &intersect) const = 0;
 
 //	Intersection checkIntersectWithBBox(const ray r_ray, int BBoxFlag) const;
@@ -37,6 +38,8 @@ public:
 	virtual Vector getSurfaceNormal(const point p) const;
 	bool checkIfRaySameDirectionAsNormal(const ray r_ray, const point p) const;
 	const BBox& getBoundingBox() const;
+	bool isObjTriangle() const;
+	void setObjTriangle(bool objTriangle);
 };
 
 #endif

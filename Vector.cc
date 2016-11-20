@@ -62,6 +62,12 @@ Vector Vector::subtract(const Vector other) const
 	return add(other.negationVector());
 }
 
+void Vector::addInto(const Vector other){
+	this->x += other.getX();
+	this->y += other.getY();
+	this->z += other.getZ();
+}
+
 void Vector::normalize(){
 	double m = getMagnitude();
 	applyScalar(1/m);

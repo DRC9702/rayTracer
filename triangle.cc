@@ -28,6 +28,18 @@ triangle::triangle(double x1, double y1, double z1, double x2, double y2, double
 	initBBox();
 	normal = trianglePlane.getNormal();
 }
+
+triangle::triangle(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, int surfaceIndex, bool objTriangle){
+	p1 = point(x1,y1,z1);
+	p2 = point(x2,y2,z2);
+	p3 = point(x3,y3,z3);
+	this->surfaceIndex = surfaceIndex;
+	initTrianglePlane();
+	initBBox();
+	normal = trianglePlane.getNormal();
+	setObjTriangle(objTriangle);
+}
+
 triangle::triangle(point p1, point p2, point p3, int surfaceIndex){
 	this->p1 = p1;
 	this->p2 = p2;
@@ -69,15 +81,16 @@ plane triangle::getPlane() const{
 
 
 Intersection triangle::checkIntersect(const ray r_ray) const{
-	double tVal = intersectT(r_ray);
+	Vector smoothNormal = Vector(0,0,0);
+	double tVal = intersectT(r_ray, smoothNormal);
 	if(tVal < 0) //Miss
 		return Intersection();
 	else
-		return Intersection(getMaterialIndex(), tVal, getSurfaceNormal(r_ray.getPointFromT(tVal)));
+		return Intersection(getMaterialIndex(), tVal, getSurfaceNormal(r_ray.getPointFromT(tVal)),smoothNormal);
 }
 
 
-double triangle::intersectT(const ray r_ray) const{
+double triangle::intersectT(const ray r_ray, Vector &smoothNormal) const{
 //	if(checkIfRaySameDirectionAsNormal(r_ray)) //This works!
 //		return -1;
 
@@ -89,14 +102,14 @@ double triangle::intersectT(const ray r_ray) const{
 	point p = r_ray.getPointFromT(T);
 	//Gonna use the barycentric method for now
 
-	bool isInside = barycentricInsideTriangle(p);
+	bool isInside = barycentricInsideTriangle(p,smoothNormal);
 //	bool isInside = crossProductInsideTriangle(p);
 	if(isInside)
 		return T;
 	else
 		return -1;
 
-	return T;
+//	return T;
 }
 
 bool triangle::crossProductInsideTriangle(const point p) const{
@@ -121,7 +134,7 @@ bool triangle::crossProductInsideTriangle(const point p) const{
 	return true;
 }
 
-bool triangle::barycentricInsideTriangle(const point p) const{
+bool triangle::barycentricInsideTriangle(const point p, Vector &smoothNormal) const{
 	Vector A = p1.toVectorFromOrigin();
 	Vector B = p2.toVectorFromOrigin();
 	Vector C = p3.toVectorFromOrigin();
@@ -149,6 +162,14 @@ bool triangle::barycentricInsideTriangle(const point p) const{
 	double beta = (N.dotProduct(nb))/ (N.dotProduct(N));
 	double gamma = (N.dotProduct(nc))/ (N.dotProduct(N));
 
+	if(isObjTriangle()){
+		smoothNormal = N1.scalarMultiply(alpha).add(N2.scalarMultiply(beta)).add(N3.scalarMultiply(gamma));
+		smoothNormal.normalize();
+	}
+	else{
+		smoothNormal = normal;
+	}
+
 	if(alpha < 0 || alpha > 1)
 		return false;
 	if(beta<0 || beta>1)
@@ -174,11 +195,12 @@ triangle::~triangle() {
 	// TODO Auto-generated destructor stub
 }
 
-bool triangle::intersectHit(ray r, double bestT, Intersection &intersect) const{
+bool triangle::intersectHit(ray r, double &bestT, Intersection &intersect) const{
 //	std::cout << "Hello from triangle::intersectHit" << std::endl;
 	if(RENDER_BOX_FLAG==BBOXED){
 		//return getBoundingBox().checkIntersect(r, getMaterialIndex());
 		intersect = getBoundingBox().checkIntersect(r, getMaterialIndex());
+		if (intersect.isHit()) bestT = intersect.getVal();
 		return intersect.isHit();
 
 	}
@@ -186,6 +208,7 @@ bool triangle::intersectHit(ray r, double bestT, Intersection &intersect) const{
 		Intersection  intersect1 = getBoundingBox().checkIntersect(r, getMaterialIndex());
 		if(intersect1.isHit()){
 			intersect = checkIntersect(r);
+			if (intersect.isHit()) bestT = intersect.getVal();
 			return intersect.isHit();
 		}
 		else{
@@ -195,6 +218,35 @@ bool triangle::intersectHit(ray r, double bestT, Intersection &intersect) const{
 	}
 	else{ //BBoxFlag==0
 		intersect = checkIntersect(r);
+		if (intersect.isHit()) bestT = intersect.getVal();
 		return intersect.isHit();
 	}
+}
+
+const Vector& triangle::getN1() const {
+	return N1;
+}
+
+void triangle::setN1(const Vector& n1) {
+	N1 = n1;
+}
+
+const Vector& triangle::getN2() const {
+	return N2;
+}
+
+void triangle::setN2(const Vector& n2) {
+	N2 = n2;
+}
+
+const Vector& triangle::getN3() const {
+	return N3;
+}
+
+void triangle::setN3(const Vector& n3) {
+	N3 = n3;
+}
+
+void triangle::setSurfaceIndex(int surfaceIndex) {
+	this->surfaceIndex = surfaceIndex;
 }
