@@ -1,4 +1,4 @@
 # rayTracer
 
 Try running it with arguments:
-./progout lego.scn 2 2
+./progout legoScene/lego.scn 2 2
